@@ -1,0 +1,14 @@
+{
+    "name": "perf-test",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "tsc"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "g-shared-library": "0.0.1"
+    },
+    "devDependencies": {
+        "typescript": "^4.0.5"
+    }
+}

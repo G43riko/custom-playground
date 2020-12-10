@@ -1,0 +1,24 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "baseUrl": ".",
+        /* Redirect output structure to the directory. */
+        "experimentalDecorators": true,
+        "allowJs": true,
+        "paths": {
+            "@dep-graph": [
+                "./src"
+            ],
+            "@dep-graph/*/": [
+                "./src/*"
+            ]
+        },
+        "lib": [
+            "DOM"
+        ]
+    },
+    "files": [
+        "src/index.ts"
+    ]
+}

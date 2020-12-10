@@ -1,0 +1,13 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        /* Redirect output structure to the directory. */
+        "lib": [
+            "dom"
+        ]
+    },
+    "files": [
+        "src/index.ts"
+    ]
+}

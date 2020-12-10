@@ -1,0 +1,23 @@
+{
+    "name": "custom-playgrounds",
+    "version": "0.0.1",
+    "private": true,
+    "workspaces": [
+        "g-shared-library",
+        "perf-test",
+        "docs-test",
+        "dependency-graph",
+        "dependency-injector"
+    ],
+    "scripts": {
+        "build": "yarn workspaces run build",
+        "build:g-shared-library": "yarn workspace g-shared-library build",
+        "build:perf-test": "yarn workspace perf-test build",
+        "build:docs-test": "yarn workspace docs-test build"
+    },
+    "main": "index.js",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/mocha": "^8.0.4"
+    }
+}

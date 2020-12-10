@@ -1,0 +1,19 @@
+{
+    "name": "ecs",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "tsc",
+        "run-test": "ts-node ./test/index.ts",
+        "run-test2": "ts-node ./test/index2.ts"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "g-shared-library": "0.0.1",
+        "gtools": "^0.2.39"
+    },
+    "devDependencies": {
+        "@types/node": "^14.14.8",
+        "chai": "^4.2.0",
+        "ts-node": "^9.1.1"
+    }
+}
