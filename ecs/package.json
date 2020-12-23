@@ -3,8 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "build": "tsc",
-        "run-test": "ts-node ./test/index.ts",
-        "run-test2": "ts-node ./test/index2.ts"
+        "run-test": "ts-node ./test/index.ts"
     },
     "license": "MIT",
     "dependencies": {

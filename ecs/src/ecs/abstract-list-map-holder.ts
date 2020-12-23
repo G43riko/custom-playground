@@ -33,13 +33,13 @@ export class AbstractListMapHolder<T, S extends keyof T = keyof T, U extends T[S
         if (this.pointer < this.list.length) {
             return {
                 done : false,
-                value: this.list[this.pointer++]
+                value: this.list[this.pointer++],
             };
         }
 
         return {
             done : true,
-            value: null
+            value: null,
         };
     }
 

@@ -1,133 +1,217 @@
-import { AbstractListMapHolder } from "./abstract-list-map-holder";
+import { Type } from "gtools";
+import { GLogger } from "gtools/GUtils";
+import { EcsEngineMode } from "./ecs-engine-mode";
 import { EcsEntity } from "./ecs-entity";
 import { EcsEntityManager } from "./ecs-entity-manager";
-import { EcsEntitySystem, EcsEntitySystemMode } from "./ecs-entity-system";
-import { EcsEntitySystemManager } from "./ecs-entity-system-manager";
 import { EcsFamily } from "./ecs-family";
+import { Ecs } from "./ecs-holder";
 import { EcsEntityListener, EcsEntitySystemListener } from "./ecs-listeners";
-import { EcsStatefulFamily } from "./ecs-stateful-family";
+import { EcsSystem } from "./ecs-system";
+import { EcsSystemManager } from "./ecs-system-manager";
+import { EcsSystemMode } from "./ecs-system-mode";
 
-export enum EngineMode {
-    SUCCESSIVE = "SUCCESSIVE",
-    PARALLEL   = "PARALLEL",
-    DEFAULT    = "DEFAULT",
+abstract class AbstractEcsEngine {
+    public readonly id                                                                           = "ECS_ENGINE_" + Date.now() + "_" + Math.random();
+    protected readonly logger                                                                    = GLogger.createClassLogger(this);
+    protected readonly families: EcsFamily[]                                                     = [];
+    private readonly listener: EcsEntityListener<EcsEntity> & EcsEntitySystemListener<EcsSystem> = {
+        entityRemoved: (entity: EcsEntity) => this.removeEntityInternally(entity),
+        entityAdded  : (entity: EcsEntity) => this.addEntityInternally(entity),
+        systemRemoved: (system: EcsSystem) => this.removeSystemInternally(system),
+        systemAdded  : (system: EcsSystem) => this.addSystemInternally(system),
+    }
+    protected readonly systems                                                                   = new EcsSystemManager<EcsSystem & { name?: string }>(this.listener);
+    protected readonly entities                                                                  = new EcsEntityManager<EcsEntity>(this.listener);
+
+    public get systemsLength(): number {
+        return this.systems.length;
+    }
+
+    public get entitiesLength(): number {
+        return this.entities.length;
+    }
+
+    public cleanUp(): void {
+        this.systems.removeAllSystems();
+        this.entities.removeAllEntities();
+    }
+
+    public addEntityInternally(entity: EcsEntity): void {
+        this.logger.log(`Adding ${entity}`);
+        this.families.forEach((family) => family.onEntityAdd(entity));
+        this.systems.forEach((system) => {
+            if (typeof system.onEntityAdded === "function") {
+                system.onEntityAdded(entity);
+            }
+        });
+    }
+
+    public getSystem<T extends EcsSystem>(system: Type<T>): T | undefined {
+        return this.systems.findSystemByInstance(system as any);
+    }
+
+    protected removeEntityInternally(entity: EcsEntity): void {
+        this.logger.log(`Removing ${entity}`);
+        this.families.forEach((family) => family.onEntityRemove(entity));
+        this.systems.forEach((system) => {
+            if (typeof system.onEntityRemoved === "function") {
+                system.onEntityRemoved(entity);
+            }
+        });
+    }
+
+    protected addFamilyInternally(family: EcsFamily): void {
+        this.logger.log(`Adding ${family}`);
+        this.families.push(family);
+
+        this.entities.getEntities().forEach((entity) => family.onEntityAdd(entity));
+    }
+
+    protected removeFamilyInternally(family: EcsFamily): void {
+        this.logger.log(`Removing ${family}`);
+        const index = this.families.findIndex((f) => f.id === family.id);
+
+        if (index < 0) {
+            return;
+        }
+
+        this.families.splice(index, 1);
+    }
+
+    protected addSystemInternally(system: EcsSystem): void {
+        this.logger.log("Adding [EcsSystem]", system.constructor.name);
+        if (typeof system.onAddToEngine === "function") {
+            system.onAddToEngine(this as any);
+        }
+        const systemData = Ecs.getSystemData(system.constructor.name);
+
+        if (systemData) {
+            const familyParams = systemData.params.family;
+            if (familyParams) {
+                Ecs.createFamily(system, familyParams);
+            }
+        }
+
+        Object.defineProperty(system, "engine", {
+            value       : this,
+            configurable: true,
+        });
+
+        Ecs.getFamilies(system).forEach((family) => {
+            this.addFamilyInternally(family);
+        });
+
+    }
+
+    protected removeSystemInternally(system: EcsSystem): void {
+        this.logger.log("Removing [EcsSystem]", system.constructor.name);
+        if (typeof system.onRemoveFromEngine === "function") {
+            system.onRemoveFromEngine(this as any);
+        }
+
+
+        Object.defineProperty(system, "engine", {value: undefined});
+        Ecs.getFamilies(system).forEach((family) => {
+            this.removeFamilyInternally(family);
+        });
+    }
 }
 
-export class EcsEngine {
-    private readonly systemListener: EcsEntitySystemListener = {
-        systemAdded  : (system: EcsEntitySystem): void => {
-            system.setEngine(this);
-        },
-        systemRemoved: (system: EcsEntitySystem): void => {
-            system.setEngine(undefined);
-        },
-    };
-    private updating                                         = false;
-    private async                                            = false;
-    private readonly families                                = new AbstractListMapHolder<EcsStatefulFamily>("id");
-    private readonly entityManager                           = new EcsEntityManager(this.entityListener);
-    private readonly systemManager                           = new EcsEntitySystemManager(this.systemListener);
-    private readonly entityListener: EcsEntityListener       = {
-        entityAdded  : (entity: EcsEntity): void => {
-            this.families.forEach((family) => {
-                family.onEntityAdd(entity);
-            });
-            this.systemManager.forEach((system) => system.entityAdded(entity));
-        },
-        entityRemoved: (entity: EcsEntity): void => {
-            this.families.forEach((family) => family.onEntityRemove(entity));
-            this.systemManager.forEach((system) => system.entityRemoved(entity));
-        },
-    };
+class EcsBasicEngine extends AbstractEcsEngine {
+    public addEntity(entity: EcsEntity): void {
+        console.assert(Ecs.marker.isEntity(entity), "Only EcsEntity can be added to engine ")
+
+        this.entities.addEntity(entity);
+    }
+
+    public removeEntity(entity: EcsEntity): void {
+        this.entities.removeEntity(entity);
+    }
+
+    public addSystem(system: EcsSystem, index?: number): void {
+        console.assert(Ecs.marker.isSystem(system), "Only EcsSystem can be added to engine ");
+        this.systems.addSystem(system as EcsSystem, index);
+    }
+
+    public removeSystem(system: Type<EcsSystem>): void {
+        const systemInstance = this.systems.findSystemByInstance(system)!;
+        this.systems.removeSystem(systemInstance);
+    }
+
+    public removeAllSystems(): void {
+        throw new Error("Not implemented");
+    }
+}
+
+export class EcsEngine extends EcsBasicEngine {
+    private updating = false;
+    private async    = false;
 
     public setAsync(value: boolean): void {
         this.async = value;
     }
 
-    public update(delta: number, mode = EngineMode.DEFAULT): void {
-        this.updating = true;
-        this.systemManager.getSystems().forEach((system) => {
-            if (system.isProcessing()) {
-                system.update(delta);
-            }
+    public update(delta: number, mode = EcsEngineMode.DEFAULT): void {
+        this.run(this.systems.getSortedSystems(), mode, delta);
+    }
 
-            while (this.entityManager.hasPendingOperations()) {
-                this.entityManager.processPendingOperations();
-            }
-        });
+    private async run(systems: readonly EcsSystem[], mode: EcsEngineMode, delta: number): Promise<void> {
+        this.updating = true;
+        await this[mode](systems, delta);
         this.updating = false;
     }
 
-    public addSystem(system: EcsEntitySystem): void {
-        this.systemManager.addSystem(system);
-    }
-
-    public getSystem(systemId: string): void {
-        this.systemManager.getSystem(systemId);
-    }
-
-    public removeSystem(system: EcsEntitySystem): void {
-        this.systemManager.removeSystem(system);
-    }
-
-    public addEntity(entity: EcsEntity): void {
-        this.entityManager.addEntity(entity, this.updating);
-    }
-
-    public removeEntity(entity: EcsEntity): void {
-        this.entityManager.removeEntity(entity, this.updating);
-    }
-
-    public removeAllSystems(): void {
-        this.systemManager.removeAllSystems();
-    }
-
-    public getFamilyMembers(family: EcsFamily): readonly EcsEntity[] {
-        return family.filter(...this.entityManager.getEntities());
-    }
-
-    public addFamily(family: EcsStatefulFamily): void {
-        family.onEntityAdd(...this.entityManager.getEntities());
-        this.families.add(family);
-    }
-
-    public removeFamily(family: EcsStatefulFamily): void {
-        this.families.remove(family.id);
-    }
-
-    private run(systems: EcsEntitySystem[], mode: EngineMode, delta: number): void {
-        this[mode](systems, delta);
-    }
-
     private afterSystemUpdateFinish(): void {
-        while (this.entityManager.hasPendingOperations()) {
-            this.entityManager.processPendingOperations();
+        while (this.entities.hasPendingOperations()) {
+            this.entities.processPendingOperations();
         }
     }
 
-    private [EngineMode.DEFAULT](systems: EcsEntitySystem[], delta: number): void {
+    private [EcsEngineMode.DEFAULT](systems: readonly EcsSystem[], delta: number): void {
         systems.forEach((system) => {
-            if (system.isProcessing()) {
-                system.run(delta, EcsEntitySystemMode.SYNC);
+            if (!system.disabled) {
+                this.runSystem(system, delta, EcsSystemMode.SYNC);
             }
             this.afterSystemUpdateFinish();
         });
     }
 
-    private async [EngineMode.SUCCESSIVE](systems: EcsEntitySystem[], delta: number): Promise<void> {
+    private async [EcsEngineMode.SUCCESSIVE](systems: readonly EcsSystem[], delta: number): Promise<void> {
         for (const system of systems) {
-            if (system.isProcessing()) {
-                await system.run(delta, EcsEntitySystemMode.SYNC);
+            if (!system.disabled) {
+                await this.runSystem(system, delta, EcsSystemMode.SYNC);
             }
             this.afterSystemUpdateFinish();
         }
     }
 
-    private async [EngineMode.PARALLEL](systems: EcsEntitySystem[], delta: number): Promise<void> {
-        const promises = systems.filter((system) => system.isProcessing()).map((system) => async () => {
-            await system.run(delta, EcsEntitySystemMode.ASYNC);
+    private async [EcsEngineMode.PARALLEL](systems: readonly EcsSystem[], delta: number): Promise<void> {
+        const promises = systems.filter((system) => !system.disabled).map((system) => async () => {
+            await this.runSystem(system, delta, EcsSystemMode.ASYNC);
             this.afterSystemUpdateFinish();
         });
         await Promise.all(promises);
+    }
+
+    private async runSystem(system: EcsSystem, delta: number, mode = EcsSystemMode.SYNC): Promise<void> {
+        if (mode === EcsSystemMode.SYNC) {
+            try {
+                system.updating = true;
+                system.update(delta);
+            } catch (e) {
+                system.onError && system.onError(e);
+            } finally {
+                system.updating = false;
+            }
+        } else {
+            system.updating = true;
+            try {
+                await system.update(delta);
+            } catch (e) {
+                system.onError && system.onError(e);
+            } finally {
+                system.updating = false;
+            }
+        }
     }
 }

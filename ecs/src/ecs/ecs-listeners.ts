@@ -1,14 +1,11 @@
-import { EcsEntity } from "./ecs-entity";
-import { EcsEntitySystem } from "./ecs-entity-system";
+export interface EcsEntityListener<T> {
+    entityAdded(entity: T): void;
 
-export interface EcsEntityListener {
-    entityAdded(entity: EcsEntity): void;
-
-    entityRemoved(entity: EcsEntity): void;
+    entityRemoved(entity: T): void;
 }
 
-export interface EcsEntitySystemListener {
-    systemAdded(system: EcsEntitySystem): void;
+export interface EcsEntitySystemListener<T> {
+    systemAdded(system: T): void;
 
-    systemRemoved(system: EcsEntitySystem): void;
+    systemRemoved(system: T): void;
 }
