@@ -28,7 +28,6 @@ var fs = __importStar(require("fs"));
 var FileHolder = /** @class */ (function () {
     function FileHolder() {
     }
-
     FileHolder.writeFileSync = function (path, content, options) {
         if (options === void 0) {
             options = {};

@@ -1,28 +1,29 @@
 import { Type } from "gtools";
-import { Ecs } from "./ecs-holder";
+import { EcsMarker } from "./ecs-marker";
 
-export class EcsEntity<T extends Type = Type, S = any> {
+export class EcsEntity<S = any> {
     // @ts-ignore
     public readonly id: string;
-    private readonly components = new Map<string, S>();
+    private readonly components = new Map<string, unknown>();
 
-    public add<S extends new (...args: any[]) => T>(component: any | T, ...params: ConstructorParameters<S>): void {
-        if (component.constructor.name === "Function") {
-            this.components.set(component.name, Ecs.createComponent(component, ...params));
-        } else {
-            if (!Ecs.marker.isComponent(component)) {
-                Ecs.registerComponentInstance(component);
-            }
-            this.components.set(component.constructor.name, component);
+    public add(component: any): void {
+        console.assert(EcsMarker.isComponent(component), "Component " + component + " must be created via Ecs.createComponent");
+
+        if ("entity" in component) {
+            throw new Error("Property entity is already taken");
         }
+
+        Object.defineProperty(component, "entity", {value: this});
+
+        this.components.set(component.constructor.name, component);
     }
 
-    public getComponent<U>(type: Type<U>): U {
+    public getComponent<U extends S = S>(type: Type<U>): U {
         return this.components.get(type.name as string) as unknown as U;
     }
 
     public forEachComponent(callback: (component: S) => void): void {
-        this.components.forEach((component) => callback(component));
+        this.components.forEach((component) => callback(component as S));
     }
 
     public removeComponent(type: Type<unknown>): void {

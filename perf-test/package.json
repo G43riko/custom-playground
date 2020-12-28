@@ -2,7 +2,10 @@
     "name": "perf-test",
     "version": "1.0.0",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "run:default": "node ./src/bench.js ./performance-tests/addToArray.js",
+        "run": "ts-node ./src/cli-runner.ts ./performance-tests/addToArray.js",
+        "run:memory": "ts-node ./src/cli-runner.ts ./performance-tests/addToArray.js --memory"
     },
     "license": "MIT",
     "dependencies": {

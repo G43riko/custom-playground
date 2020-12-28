@@ -2,9 +2,6 @@ import { PerfTestHolder } from "./perf-test-holder";
 import { PerfTestPrinterHtml } from "./perf-test-printer-html";
 
 class BrowserRunner {
-    private constructor() {
-    }
-
     public static start(): void {
         const tester = new BrowserRunner();
         tester.appendTo("body");
@@ -41,14 +38,14 @@ const a = ["a", "b", "c"];
 const b = Object.assign([], a);
 ////////// Concat
 const a = ["a", "b", "c"];
-const b = [].concat(a);`
+const b = [].concat(a);`;
 
         const outputWrapper = parent.createElement("div");
 
 
         const processButton     = parent.createElement("button");
-        processButton.innerText = "process"
-        processButton.onclick   = () => this.onChange(inputArea.value, outputWrapper)
+        processButton.innerText = "process";
+        processButton.onclick   = () => this.onChange(inputArea.value, outputWrapper);
 
 
         targetElement.append(processButton);
@@ -57,7 +54,7 @@ const b = [].concat(a);`
     }
 
     private onChange(testContent: string, outputWrapper: HTMLDivElement): void {
-        const tests = new PerfTestHolder(testContent, new PerfTestPrinterHtml(outputWrapper));
+        const tests = new PerfTestHolder(testContent, {}, new PerfTestPrinterHtml(outputWrapper));
         tests.runAllTests();
     }
 }

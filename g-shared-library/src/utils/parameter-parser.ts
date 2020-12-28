@@ -26,13 +26,18 @@ export class ParsedArguments {
         return this.globSync.filter(FileHolder.isFile);
     }
 
+    public static createProcessArgs(args = process.argv): ParsedArguments {
+        const [runner, script, ...params] = args;
+
+        return new ParsedArguments(runner, script, params);
+
+    }
+
     public get globResolvedFilesSync(): string[] {
         return this.globFilesSync.map((e) => path.resolve(e));
     }
 
-    public static createProcessArgs(args = process.argv): ParsedArguments {
-        const [runner, script, ...params] = args;
-        return new ParsedArguments(runner, script, params);
-
+    public hasFlag(flag: string): boolean {
+        return this.params.includes(flag);
     }
 }

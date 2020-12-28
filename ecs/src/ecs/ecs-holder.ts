@@ -1,12 +1,12 @@
-import { Type } from "gtools";
-import { GLogger } from "gtools/GUtils";
-import { EcsComponent } from "../old/ecs-component";
-import { EcsComponentParams } from "./ecs-component";
-import { EcsEngine } from "./ecs-engine";
+import type { Type } from "gtools";
+import type { EcsComponentParams } from "./ecs-component";
+import type { EcsEngine } from "./ecs-engine";
 import { EcsEntity } from "./ecs-entity";
 import { EcsFamily } from "./ecs-family";
-import { EcsSystem, EcsSystemParams } from "./ecs-system";
-import { FamilyParams } from "./family-params";
+import { EcsMarker } from "./ecs-marker";
+import { EcsLogger } from "./ecs-setup";
+import type { EcsSystem, EcsSystemParams } from "./ecs-system";
+import type { FamilyParams } from "./family-params";
 
 interface EcsComponentData {
     readonly params: EcsComponentParams;
@@ -19,59 +19,8 @@ interface EcsSystemData {
 }
 
 
-class EcsMarker {
-    public readonly componentSymbol = Symbol.for("ECS_COMPONENT_IDENTIFIER");
-    public readonly engineSymbol    = Symbol.for("ECS_ENGINE_IDENTIFIER");
-    public readonly systemSymbol    = Symbol.for("ECS_SYSTEM_IDENTIFIER");
-    public readonly familySymbol    = Symbol.for("ECS_FAMILY_IDENTIFIER");
-    public readonly entitySymbol    = "id";
-    private componentCounter        = 1;
-    private systemCounter           = 1;
-    private familyCounter           = 1;
-    private entityCounter           = 1;
-    private engineCounter           = 1;
-
-    public markEntity(entity: EcsEntity): void {
-        Object.defineProperty(entity, this.entitySymbol, {value: this.entityCounter++});
-    }
-
-    public isEntity(entity: any): entity is EcsEntity {
-        return this.entitySymbol in entity;
-    }
-
-    public markSystem(entity: any): void {
-        Object.defineProperty(entity, this.systemSymbol, {value: this.systemCounter++});
-    }
-
-    public isSystem(system: any): system is EcsSystem {
-        return this.systemSymbol in system;
-    }
-
-    public markSystemInstance(system: any): void {
-        Object.defineProperty(system, this.systemSymbol, {value: this.systemCounter++});
-    }
-
-    public markFamilyInstance(family: any): void {
-        Object.defineProperty(family, this.familySymbol, {value: this.familyCounter++});
-    }
-
-    public markComponentInstance(component: any): void {
-        Object.defineProperty(component, this.componentSymbol, {value: this.componentCounter++});
-    }
-
-    public isComponent(component: any): component is EcsComponent {
-        return this.componentSymbol in component;
-    }
-
-    public markEngineInstance(engine: any): void {
-        Object.defineProperty(engine, this.engineSymbol, {value: this.engineCounter++});
-    }
-}
-
 class EcsHolder {
-    public readonly marker = new EcsMarker();
-
-    protected readonly logger                     = GLogger.createClassLogger(this);
+    protected readonly logger                     = EcsLogger.extends(this);
     private readonly componentData                = new Map<string, EcsComponentData>();
     private readonly systemData                   = new Map<string, EcsSystemData>();
     private readonly createdEntities: EcsEntity[] = [];
@@ -115,7 +64,7 @@ class EcsHolder {
         this.logger.log("Creating family " + propertyName + " to object " + system);
         const family = new EcsFamily(system.constructor.name + "." + propertyName, familyParams);
 
-        this.marker.markFamilyInstance(family);
+        EcsMarker.markFamilyInstance(family);
 
         const entry = this.familyMap.get(system.constructor.name);
         if (entry) {
@@ -138,7 +87,7 @@ class EcsHolder {
     public createEngineInstance<T, S extends new (...args: any[]) => T>(type: S, ...params: ConstructorParameters<S>): T {
         const instance = new type(...params);
 
-        this.marker.markEngineInstance(instance);
+        EcsMarker.markEngineInstance(instance);
 
         return instance as T;
     }
@@ -150,9 +99,9 @@ class EcsHolder {
     // SYSTEM
 
     public registerSystemData(component: EcsSystemData): void {
-        console.assert(!this.marker.isSystem(component), "System can be registered only from decorator");
+        console.assert(!EcsMarker.isSystem(component), "System can be registered only from decorator");
 
-        this.marker.markSystem(component);
+        EcsMarker.markSystem(component);
 
         this.systemData.set((component.type as any).name, component);
     }
@@ -166,7 +115,7 @@ class EcsHolder {
 
         const instance = new type(...params);
 
-        this.marker.markSystemInstance(instance);
+        EcsMarker.markSystemInstance(instance);
 
         return instance;
     }
@@ -189,7 +138,7 @@ class EcsHolder {
             }
         });
 
-        this.marker.markEntity(result);
+        EcsMarker.markEntity(result);
 
         this.createdEntities.push(result);
 
@@ -198,7 +147,7 @@ class EcsHolder {
     }
 
     public destroyEntity<T extends EcsEntity>(entity: T): void {
-        console.assert(this.marker.isEntity(entity), "Only entity can by destroyed");
+        console.assert(EcsMarker.isEntity(entity), "Only entity can by destroyed");
 
         const index = this.createdEntities.findIndex((e) => e.id === entity.id);
 
@@ -214,7 +163,7 @@ class EcsHolder {
     }
 
     public destroyComponent<T = any>(component: T): void {
-        console.assert(this.marker.isComponent(component), "Only component can by destroyed");
+        console.assert(EcsMarker.isComponent(component), "Only component can by destroyed");
 
         const instances = this.componentInstances.get((component as any).constructor);
 
@@ -228,8 +177,9 @@ class EcsHolder {
 
     }
 
-    public createComponent<T, S extends new (...args: any[]) => T>(type: S, ...params: ConstructorParameters<S>): T {
-        console.assert(this.componentData.has((type as any).name), "Component must be marked via decorator");
+    public createComponentInstance<T, S extends new (...args: any[]) => T>(type: S, ...params: ConstructorParameters<S>): T {
+        const componentName = (type as any).name;
+        console.assert(this.componentData.has(componentName), "Component " + componentName + " must be marked via decorator");
 
         const instance = new type(...params);
 
@@ -244,7 +194,7 @@ class EcsHolder {
 
     public registerComponentInstance<T>(component: T): void {
         const type = (component as any).constructor;
-        this.marker.markComponentInstance(component);
+        EcsMarker.markComponentInstance(component);
 
         const instances = this.componentInstances.get(type);
         if (instances) {

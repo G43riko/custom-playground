@@ -7,6 +7,7 @@ export * from "./ecs-entity";
 export * from "./ecs-family";
 export * from "./ecs-holder";
 export * from "./ecs-listeners";
+export * from "./ecs-decorators";
 export * from "./ecs-system-manager";
 export * from "./ecs-system";
 export * from "./ecs-system-mode";

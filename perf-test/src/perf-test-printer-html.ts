@@ -12,7 +12,7 @@ export class PerfTestPrinterHtml implements PerfTestPrinter {
             titleDivider,
             title,
             titleDivider,
-        ]
+        ];
 
         this.parent.innerHTML += data.join("<br/>") + "<br/>";
     }

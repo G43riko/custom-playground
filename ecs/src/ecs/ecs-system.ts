@@ -28,7 +28,7 @@ export interface EcsSystemParams {
         propertyName?: string;
     }
 }
-
+// TODO: move to ecs-decorators.ts
 export function EcsSystem<T extends Type<any>>(params: EcsSystemParams = {}): (constructor: T) => any {
     return (constructor: T): T => {
         Ecs.registerSystemData({

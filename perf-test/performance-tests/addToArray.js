@@ -1,5 +1,10 @@
 /*
 	title: Add item to array
+    beforeAll: ```
+        function test() {
+            console.log("Running")
+        }
+    ```
 */
 ////////// Slice with spread
 const a = ["a", "b", "d", "e"];

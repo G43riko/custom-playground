@@ -21,7 +21,6 @@ export class EcsEngine {
     private updating                                                          = false;
     private async                                                             = false;
     private readonly families                                                 = new AbstractListMapHolder<EcsStatefulFamily>("id");
-    private readonly entityManager                                            = new EcsEntityManager(this.entityListener);
     private readonly systemManager                                            = new EcsEntitySystemManager(this.systemListener);
     private readonly entityListener: EcsEntityListener<EcsEntity>             = {
         entityAdded  : (entity: EcsEntity): void => {
@@ -35,6 +34,7 @@ export class EcsEngine {
             this.systemManager.forEach((system) => system.entityRemoved(entity));
         },
     };
+    private readonly entityManager                                            = new EcsEntityManager(this.entityListener);
 
     public setAsync(value: boolean): void {
         this.async = value;

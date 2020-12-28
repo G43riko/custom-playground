@@ -1,18 +1,29 @@
 {
-    "name": "ecs",
-    "version": "1.0.0",
+    "name": "@g43/ecs",
+    "version": "1.0.1",
     "scripts": {
         "build": "tsc",
+        "build:ts": "tsc -b ./src/tsconfig.cjs.json ./src/tsconfig.esm.json ./src/tsconfig.esm5.json ./src/tsconfig.types.json",
+        "build:prod": "npm run build:ts && npm run build:webpack:prod && npm run copy",
+        "build:webpack:prod": "webpack --config webpack.prod.js",
+        "copy": "node copy-package.js",
+        "release": "npm publish dist --access public",
         "run-test": "ts-node ./test/index.ts"
+    },
+    "author": {
+        "email": "gcsollei@hotmail.com",
+        "name": "Gabriel Csollei"
     },
     "license": "MIT",
     "dependencies": {
-        "g-shared-library": "0.0.1",
         "gtools": "^0.2.39"
     },
     "devDependencies": {
         "@types/node": "^14.14.8",
         "chai": "^4.2.0",
-        "ts-node": "^9.1.1"
+        "terser-webpack-plugin": "^5.0.3",
+        "ts-node": "^9.1.1",
+        "webpack": "^5.11.0",
+        "webpack-cli": "^4.3.0"
     }
 }

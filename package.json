@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "private": true,
     "workspaces": [
+        "@g43/ecs",
         "g-shared-library",
         "perf-test",
         "docs-test",

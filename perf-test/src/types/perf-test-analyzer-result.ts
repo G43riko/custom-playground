@@ -6,8 +6,8 @@ export interface PerfTestAnalyzerResult {
     readonly tests: {
         readonly title: string;
         readonly count: number;
-        readonly memory: number;
+        readonly memory?: number;
         readonly percentageCount: number;
-        readonly percentageMemory: number;
+        readonly percentageMemory?: number;
     }[]
 }

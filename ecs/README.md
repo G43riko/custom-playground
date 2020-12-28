@@ -44,9 +44,9 @@ class PersonRenderSystem {
 
     public update(delta: number): void {
         this.personComponents.forEach((entity: Entity<Person & Renderable & Colored>) => {
-            const person: Person               = entity.getByType(Person.type);
-            const renderable: Renderable       = entity.get(Renderable);
-            const colored: Colored | undefined = entity.get(Colored);
+            const person: Person               = entity.getComponent(Person);
+            const renderable: Renderable       = entity.getComponent(Renderable);
+            const colored: Colored | undefined = entity.getComponent(Colored);
             this.render(person, renderable, colored?.fillColor || "black");
         })
     }
@@ -105,6 +105,7 @@ update in order: SomeSystem, SomeAnotherSystem, PersonRenderSystem
 
 - [ ] `optional` parameter in family can be multidimensional array
 - [ ] add required systems in EcsSystem
+- [ ] system can have async app_initializer method
 - [x] add family in EcsSystem parameters
 
 ```typescript

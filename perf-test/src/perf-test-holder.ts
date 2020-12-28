@@ -3,19 +3,25 @@ import { PerfTestParser } from "./perf-test-parser";
 import { PerfTestPrinter } from "./perf-test-printer";
 import { PerfTestRunner } from "./perf-test-runner";
 
+export interface PerfTestOptions {
+    testMemory?: boolean;
+}
+
 export class PerfTestHolder {
     private readonly parser   = new PerfTestParser(this.fileContent);
-    private readonly runner   = new PerfTestRunner();
+    private readonly runner   = new PerfTestRunner(this.options);
     private readonly analyzer = new PerfTestAnalyzer();
 
     public constructor(private readonly fileContent: string,
-                       private readonly printer = new PerfTestPrinter()) {
+                       private readonly options: PerfTestOptions = {},
+                       private readonly printer                  = new PerfTestPrinter()) {
     }
 
     public runAllTests(): void {
         this.printer.printTestTitle(this.parser.extractHeader("title"));
-
-        const testResults        = this.runner.runTests(this.parser.data);
+        const beforeAll          = this.parser.extractHeader("beforeAll");
+        const thisArg            = this.parser.extractHeader("thisArg");
+        const testResults        = this.runner.runTests(this.parser.data, thisArg);
         const testAnalyzeResults = this.analyzer.analyzeTestResults(testResults);
 
         this.printer.printAnalyzerResult(testAnalyzeResults);

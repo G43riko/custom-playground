@@ -13,7 +13,6 @@ var ParsedArguments = /** @class */ (function () {
         this.script = script;
         this.params = params;
     }
-
     Object.defineProperty(ParsedArguments.prototype, "first", {
         get: function () {
             return this.params[0];
@@ -42,6 +41,9 @@ var ParsedArguments = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    ParsedArguments.prototype.hasFlag = function (flag) {
+        return this.params.includes(flag);
+    };
     Object.defineProperty(ParsedArguments.prototype, "globResolvedFilesSync", {
         get: function () {
             return this.globFilesSync.map(function (e) {

@@ -6,6 +6,7 @@ export interface EcsComponentParams {
     dependencies?: Type<any>[];
 }
 
+// TODO: move to ecs-decorators.ts
 export function EcsComponent<T extends Type<any>>(params: EcsComponentParams = {}): (constructor: T) => any {
     return (constructor: T): T => {
         Ecs.registerComponentData({

@@ -1,7 +1,8 @@
 import { SimpleVector2 } from "gtools/GUtils";
 import { EcsComponent } from "../src/ecs/ecs-component";
+import { Family } from "../src/ecs/ecs-decorators";
 import { EcsEngine } from "../src/ecs/ecs-engine";
-import { EcsFamily, Family } from "../src/ecs/ecs-family";
+import { EcsFamily } from "../src/ecs/ecs-family";
 import { Ecs } from "../src/ecs/ecs-holder";
 import { EcsSystem } from "../src/ecs/ecs-system";
 
@@ -74,10 +75,10 @@ class PersonRenderSystem implements EcsSystem {
 }
 
 const gabriel = Ecs.createEntity(
-    Ecs.createComponent(Interactive),
-    Ecs.createComponent(Person, "Gabriel", 27),
-    Ecs.createComponent(Colored, "green"),
-    Ecs.createComponent(Renderable, {x: 0, y: 0}, {x: 192, y: 30}),
+    Ecs.createComponentInstance(Interactive),
+    Ecs.createComponentInstance(Person, "Gabriel", 27),
+    Ecs.createComponentInstance(Colored, "green"),
+    Ecs.createComponentInstance(Renderable, {x: 0, y: 0}, {x: 192, y: 30}),
 );
 console.assert(gabriel.getComponent(Interactive) instanceof Interactive);
 console.assert(gabriel.getComponent(Person) instanceof Person);
@@ -85,11 +86,10 @@ console.assert(gabriel.getComponent(Colored) instanceof Colored);
 console.assert(gabriel.getComponent(Renderable) instanceof Renderable);
 
 const nikola = Ecs.createEntity();
-nikola.add(Interactive);
-nikola.add(new Person("Nikola", 25));
-nikola.add(Colored, "pink");
-nikola.add(Renderable, {x: 35, y: 0}, {x: 165, y: 25});
-
+nikola.add(Ecs.createComponentInstance(Interactive));
+nikola.add(Ecs.createComponentInstance(Person, "Nikola", 25));
+nikola.add(Ecs.createComponentInstance(Colored, "pink"));
+nikola.add(Ecs.createComponentInstance(Renderable, {x: 0, y: 0}, {x: 165, y: 25}));
 
 const engine = new EcsEngine();
 console.assert(engine.entitiesLength === 0, "No entities are in engine");

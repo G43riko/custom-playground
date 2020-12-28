@@ -6,6 +6,7 @@ import { EcsEntityManager } from "./ecs-entity-manager";
 import { EcsFamily } from "./ecs-family";
 import { Ecs } from "./ecs-holder";
 import { EcsEntityListener, EcsEntitySystemListener } from "./ecs-listeners";
+import { EcsMarker } from "./ecs-marker";
 import { EcsSystem } from "./ecs-system";
 import { EcsSystemManager } from "./ecs-system-manager";
 import { EcsSystemMode } from "./ecs-system-mode";
@@ -119,7 +120,7 @@ abstract class AbstractEcsEngine {
 
 class EcsBasicEngine extends AbstractEcsEngine {
     public addEntity(entity: EcsEntity): void {
-        console.assert(Ecs.marker.isEntity(entity), "Only EcsEntity can be added to engine ")
+        console.assert(EcsMarker.isEntity(entity), "Only EcsEntity can be added to engine ")
 
         this.entities.addEntity(entity);
     }
@@ -129,7 +130,7 @@ class EcsBasicEngine extends AbstractEcsEngine {
     }
 
     public addSystem(system: EcsSystem, index?: number): void {
-        console.assert(Ecs.marker.isSystem(system), "Only EcsSystem can be added to engine ");
+        console.assert(EcsMarker.isSystem(system), "Only EcsSystem can be added to engine ");
         this.systems.addSystem(system as EcsSystem, index);
     }
 

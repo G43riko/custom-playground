@@ -1,12 +1,5 @@
 import { EcsEntity } from "./ecs-entity";
-import { Ecs } from "./ecs-holder";
 import { FamilyParams } from "./family-params";
-
-export function Family(params: FamilyParams) {
-    return (target: any, name: string): any => {
-        Ecs.createFamily(target, params, name);
-    };
-}
 
 export class EcsFamily<T = any> {
     public readonly id                    = "ECS_FAMILY_" + Date.now() + "_" + Math.random();
@@ -15,7 +8,7 @@ export class EcsFamily<T = any> {
     public constructor(public readonly name: string, private readonly params: FamilyParams) {
     }
 
-    public get entities(): readonly EcsEntity[] {
+    public get entities(): readonly EcsEntity<T>[] {
         return this.internalEntities;
     }
 
@@ -32,7 +25,7 @@ export class EcsFamily<T = any> {
     }
 
     public match(entity: EcsEntity): boolean {
-        if (this.params.exclusive?.some((component) => entity.hasComponent(component))) {
+        if (this.params.except?.some((component) => entity.hasComponent(component))) {
             return false;
         }
 
@@ -40,7 +33,18 @@ export class EcsFamily<T = any> {
             return false;
         }
 
-        return !this.params.optional?.length || this.params.optional.some((component) => entity.hasComponent(component));
+        if (!this.params.optional?.length) {
+            return true;
+        }
+
+        if (!Array.isArray(this.params.optional[0])) {
+            return this.params.optional.some((component: any) => entity.hasComponent(component));
+
+        }
+
+        return this.params.optional.every((optional: any) => {
+            optional.some((component: any) => entity.hasComponent(component));
+        });
     }
 
     public onEntityRemove(...entities: EcsEntity[]): void {

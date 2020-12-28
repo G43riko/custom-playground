@@ -9,7 +9,7 @@ export class PerfTestPrinter {
             titleDivider,
             title,
             titleDivider,
-        ]
+        ];
 
         console.log(data.join(currentEOL));
     }
@@ -17,8 +17,12 @@ export class PerfTestPrinter {
     public printAnalyzerResult(data: PerfTestAnalyzerResult): void {
         data.tests.forEach((item) => {
             console.log(item.title + " - " + " ".repeat(data.maxTitleLength - item.title.length) + item.count + " calls per second");
-            console.log("#".repeat(Math.floor(item.percentageCount)))
-            console.log("%c #".repeat(Math.floor(item.percentageMemory)), "color: red")
+            console.log("#".repeat(Math.floor(item.percentageCount)));
+            // console.log("%c #".repeat(Math.floor(item.percentageMemory)), "color: red");
+
+            if (item.memory) {
+                console.log("#".repeat(Math.floor(item.percentageMemory!)));
+            }
         });
     }
 }
