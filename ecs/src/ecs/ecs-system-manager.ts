@@ -16,6 +16,10 @@ export class EcsSystemManager<T extends { name?: string }> {
     }
 
     public addSystem(system: T, index: number = this.sortedSystems.length): void {
+        if (this.systems.has(system as any)) {
+            throw new Error("Cannot add multiple system instances");
+        }
+
         this.systems.add(system);
         this.systemListeners.systemAdded(system);
 

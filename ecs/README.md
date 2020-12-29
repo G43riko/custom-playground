@@ -103,8 +103,23 @@ update in order: SomeSystem, SomeAnotherSystem, PersonRenderSystem
 
 ## TODO
 
-- [ ] `optional` parameter in family can be multidimensional array
-- [ ] add required systems in EcsSystem
+- [x] `optional` parameter in family can be multidimensional array
+- [x] add required systems in EcsSystem
+- [ ] bind system to property in EcsSystem
+
+```typescript
+@EcsSystem()
+export class SystemA {
+}
+
+@EcsSystem()
+export class SystemB {
+    @EcsBindSystem(SystemA)
+    private readonly systemA: SystemA;
+}
+```
+
+- [ ] add options to EcsFamily specify number of allowed entities
 - [ ] system can have async app_initializer method
 - [x] add family in EcsSystem parameters
 
@@ -194,19 +209,5 @@ export class MassSystem {
             console.log(entity.mass.mass);
         })
     }
-}
-```
-
-- [ ] Allow providing system into another system
-
-```typescript
-@EcsSystem()
-export class SystemA {
-}
-
-@EcsSystem()
-export class SystemB {
-    @EcsExternal(SystemA)
-    private readonly systemA: SystemA;
 }
 ```

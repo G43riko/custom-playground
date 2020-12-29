@@ -6,7 +6,7 @@
         "build:ts": "tsc -b ./src/tsconfig.cjs.json ./src/tsconfig.esm.json ./src/tsconfig.esm5.json ./src/tsconfig.types.json",
         "build:prod": "npm run build:ts && npm run build:webpack:prod && npm run copy",
         "build:webpack:prod": "webpack --config webpack.prod.js",
-        "copy": "node copy-package.js",
+        "copy": "node copy-files.js",
         "release": "npm publish dist --access public",
         "run-test": "ts-node ./test/index.ts"
     },

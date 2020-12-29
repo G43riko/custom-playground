@@ -1,6 +1,6 @@
 import { SimpleVector2 } from "gtools/GUtils";
 import { EcsComponent } from "../src/ecs/ecs-component";
-import { Family } from "../src/ecs/ecs-decorators";
+import { EcsBindFamily, EcsBindSystem } from "../src/ecs/ecs-decorators";
 import { EcsEngine } from "../src/ecs/ecs-engine";
 import { EcsFamily } from "../src/ecs/ecs-family";
 import { Ecs } from "../src/ecs/ecs-holder";
@@ -46,6 +46,10 @@ class Interactive {
     public readonly interactive = true;
 }
 
+@EcsSystem()
+class UnusedSystem {
+}
+
 @EcsSystem({
     family: {
         required: [Person, Renderable],
@@ -53,13 +57,16 @@ class Interactive {
     },
 })
 class PersonRenderSystem implements EcsSystem {
-    @Family({
+    @EcsBindFamily({
         required: [Person, Renderable],
         optional: [Colored],
     })
     // @ts-ignore
     public readonly personComponents: EcsFamily<Person & Renderable & Colored>;
 
+    @EcsBindSystem(UnusedSystem)
+    // @ts-ignore
+    private readonly unusedSystem: UnusedSystem;
 
     public onAddToEngine(engine: EcsEngine): void {
         // console.log("Added to engine: ", engine);
@@ -118,6 +125,8 @@ console.assert(engine.entitiesLength === 2, "No entities are in engine");
 console.assert(engine.systemsLength === 1, "No systems are in engine");
 console.assert(personRenderSystem.personComponents.entities.length === 2, "Wrong number of family entities 2");
 console.assert((personRenderSystem as any).family.entities.length === 2, "Wrong number of family entities 2");
+
+engine.check();
 
 engine.removeEntity(nikola);
 

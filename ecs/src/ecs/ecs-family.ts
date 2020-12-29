@@ -19,6 +19,19 @@ export class EcsFamily<T = any> {
         ];
     }
 
+    public check(): boolean {
+        if (!isNaN(this.params.maxCount) && this.internalEntities.length > this.params.maxCount) {
+            throw new Error("Max entities for " + this + " is " + this.params.maxCount);
+        }
+        if (!isNaN(this.params.minCount) && this.internalEntities.length < this.params.minCount) {
+            throw new Error("Min entities for " + this + " is " + this.params.minCount);
+        }
+        if (!isNaN(this.params.count) && this.internalEntities.length !== this.params.count) {
+            throw new Error("Entities for " + this + " is " + this.params.count);
+        }
+
+        return true;
+    }
 
     public filter(...entities: readonly EcsEntity[]): readonly EcsEntity[] {
         return entities.filter((entity) => this.match(entity));

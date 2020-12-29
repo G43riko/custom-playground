@@ -47,6 +47,24 @@ abstract class AbstractEcsEngine {
         });
     }
 
+    public check(): void {
+        this.logger.log("Checking families");
+        this.families.forEach((family) => family.check());
+
+        this.systems.forEach((system) => {
+            const systemName = system.constructor.name;
+            const systemData = Ecs.getSystemData(systemName);
+
+            if (Array.isArray(systemData.params.require)) {
+                const missingSystems = systemData.params.require.filter((s) => !this.getSystem(s)).map((e) => e.name);
+
+                if (missingSystems.length) {
+                    throw new Error("System " + systemName + " has missing dependencies: " + missingSystems.join(", "));
+                }
+            }
+        });
+    }
+
     public getSystem<T extends EcsSystem>(system: Type<T>): T | undefined {
         return this.systems.findSystemByInstance(system as any);
     }
@@ -87,9 +105,8 @@ abstract class AbstractEcsEngine {
         const systemData = Ecs.getSystemData(system.constructor.name);
 
         if (systemData) {
-            const familyParams = systemData.params.family;
-            if (familyParams) {
-                Ecs.createFamily(system, familyParams);
+            if (systemData.params.family) {
+                Ecs.createFamily(system, systemData.params.family);
             }
         }
 
@@ -198,7 +215,7 @@ export class EcsEngine extends EcsBasicEngine {
         if (mode === EcsSystemMode.SYNC) {
             try {
                 system.updating = true;
-                system.update(delta);
+                system?.update(delta);
             } catch (e) {
                 system.onError && system.onError(e);
             } finally {
@@ -207,7 +224,7 @@ export class EcsEngine extends EcsBasicEngine {
         } else {
             system.updating = true;
             try {
-                await system.update(delta);
+                await system?.update(delta);
             } catch (e) {
                 system.onError && system.onError(e);
             } finally {

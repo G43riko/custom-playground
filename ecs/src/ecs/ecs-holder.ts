@@ -56,6 +56,15 @@ class EcsHolder {
         return this.familyMap.get(system.constructor.name) || [];
     }
 
+    public registerSystemBind(
+        system: EcsSystem,
+        systemToBind: Type<any>,
+        propertyName: string,
+    ): void {
+        this.logger.log("Registering bind property " + propertyName + " to object " + system.constructor.name);
+        debugger;
+    }
+
     public createFamily(
         system: EcsSystem,
         familyParams: FamilyParams & { propertyName?: string },
