@@ -1,5 +1,5 @@
 {
-    "name": "@g43/faces",
+    "name": "faces",
     "version": "1.0.0",
     "scripts": {
         "build": "tsc && node copy-htmls.js",
