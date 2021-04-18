@@ -6,6 +6,7 @@
         "@g43/ecs",
         "g-shared-library",
         "perf-test",
+        "@g43/faces",
         "docs-test",
         "dependency-graph",
         "dependency-injector"
