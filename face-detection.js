@@ -79081,10 +79081,10 @@ var startVideo = function () {
     navigator.getUserMedia({ video: {} }, function (stream) { return video.srcObject = stream; }, function (err) { return console.error(err); });
 };
 Promise.all([
-    custom_1.faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
-    custom_1.faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-    custom_1.faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-    custom_1.faceapi.nets.faceExpressionNet.loadFromUri("/models"),
+    custom_1.faceapi.nets.tinyFaceDetector.loadFromUri("../models"),
+    custom_1.faceapi.nets.faceLandmark68Net.loadFromUri("../models"),
+    custom_1.faceapi.nets.faceRecognitionNet.loadFromUri("../models"),
+    custom_1.faceapi.nets.faceExpressionNet.loadFromUri("../models"),
 ]).then(startVideo);
 video.addEventListener("play", function () {
     var canvas = custom_1.faceapi.createCanvasFromMedia(video);

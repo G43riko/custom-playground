@@ -79078,9 +79078,9 @@ var custom_1 = __webpack_require__(890);
 // declare const faceapi: any;
 var imageUpload = document.getElementById("imageUpload");
 Promise.all([
-    custom_1.faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-    custom_1.faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-    custom_1.faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+    custom_1.faceapi.nets.faceRecognitionNet.loadFromUri("../models"),
+    custom_1.faceapi.nets.faceLandmark68Net.loadFromUri("../models"),
+    custom_1.faceapi.nets.ssdMobilenetv1.loadFromUri("../models"),
 ]).then(start);
 function start() {
     return __awaiter(this, void 0, void 0, function () {
