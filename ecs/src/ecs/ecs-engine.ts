@@ -99,15 +99,17 @@ abstract class AbstractEcsEngine {
 
     protected addSystemInternally(system: EcsSystem): void {
         this.logger.log("Adding [EcsSystem]", system.constructor.name);
-        if (typeof system.onAddToEngine === "function") {
-            system.onAddToEngine(this as any);
-        }
+
         const systemData = Ecs.getSystemData(system.constructor.name);
 
         if (systemData) {
             if (systemData.params.family) {
                 Ecs.createFamily(system, systemData.params.family);
             }
+        }
+
+        if (typeof system.onAddToEngine === "function") {
+            system.onAddToEngine(this as any);
         }
 
         Object.defineProperty(system, "engine", {
