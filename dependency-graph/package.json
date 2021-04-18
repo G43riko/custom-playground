@@ -8,11 +8,11 @@
     "license": "MIT",
     "dependencies": {
         "g-shared-library": "0.0.1",
-        "gtools": "^0.2.39"
+        "gtools": "^0.2.57"
     },
     "devDependencies": {
-        "@types/node": "^14.14.8",
-        "chai": "^4.2.0",
+        "@types/node": "^14.14.41",
+        "chai": "^4.3.4",
         "ts-node": "^9.1.1"
     }
 }
