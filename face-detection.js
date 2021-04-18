@@ -79110,7 +79110,7 @@ video.addEventListener("play", function () {
                     return [2 /*return*/];
             }
         });
-    }); }, 1000 / 240);
+    }); }, 1000 / 60);
 });
 
 
