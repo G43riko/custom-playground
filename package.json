@@ -1,16 +1,23 @@
 {
     "name": "custom-playgrounds",
     "version": "0.0.1",
+    "bugs": "https://github.com/G43riko/custom-playground/issues",
     "private": true,
+    "homepage": "https://github.com/G43riko/custom-playground#readme",
     "workspaces": [
         "@g43/ecs",
         "g-shared-library",
         "perf-test",
         "faces",
         "docs-test",
+        "scripting",
         "dependency-graph",
         "dependency-injector"
     ],
+    "author": {
+        "email": "gcsollei@hotmail.com",
+        "name": "Gabriel Csollei"
+    },
     "scripts": {
         "build": "yarn workspaces run build",
         "build:g-shared-library": "yarn workspace g-shared-library build",
