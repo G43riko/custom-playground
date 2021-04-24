@@ -27,19 +27,21 @@ export class ScriptingParser {
         this.commandsMap = commands.reduce((acc, command) => Object.assign(acc, {[command.name]: new CommandHolder(command, dataHolder)}), {});
     }
 
-    public static fromPatterns(data: string[], dataHolder: ScriptingParserDataHolder): ScriptingParser {
-        return new ScriptingParser(data.map((pattern) => ({
-            pattern,
-            name: pattern.substr(0, pattern.indexOf(" ")),
-        })), dataHolder);
+    /**
+     *
+     * @param data - [Command name, command pattern without title]
+     * @param dataHolder
+     */
+    public static fromPatterns(data: [string, string][], dataHolder: ScriptingParserDataHolder): ScriptingParser {
+        return new ScriptingParser(data.map(([name, pattern]) => ({name, pattern: `${name} ${pattern}`})), dataHolder);
     }
 
-    public parseContent(content: string): void {
+    public parseContent(content: string): { raw: string, data: ({ type: { type: string, array: boolean }, rawData: string, data: unknown } | null)[] | null, command: string }[] {
         const validLines = content.split(this.params.rowDivider)
                                   .map((row) => row.trim())
                                   .filter((row) => row && row.indexOf(this.params.oneLineCommentPrefix) !== 0);
 
-        validLines.forEach((line) => {
+        return validLines.map((line) => {
             const commandMatch = line.match(/^(\w+) /);
             if (!commandMatch) {
                 throw new Error(`Cannot determine command for row '${line}'`);
@@ -50,7 +52,12 @@ export class ScriptingParser {
                 throw new Error("Cannot find command " + commandMatch[1] + " within " + Object.keys(this.commandsMap));
             }
 
-            console.log(`'${line}' was parsed to ${JSON.stringify(command.parse(line))}`);
+            return {
+                raw    : line,
+                data   : command.parse(line),
+                command: commandMatch[1],
+            };
+
         });
     }
 }

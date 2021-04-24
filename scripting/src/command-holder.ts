@@ -17,7 +17,7 @@ export class CommandHolder {
     }
 
 
-    public parse(command: string): unknown[] | null {
+    public parse(command: string): ({ type: { type: string, array: boolean }, rawData: string, data: unknown } | null)[] | null {
         if (command.indexOf(this.command.name + " ") !== 0) {
             console.warn("Not valid command", command, this.command.name);
 

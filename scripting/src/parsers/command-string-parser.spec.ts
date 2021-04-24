@@ -15,4 +15,26 @@ describe("Test string parser", () => {
         expect(parser.parse("\"Gabo Gabo\"   ")).to.deep.eq({result: "Gabo Gabo", remains: "   "});
         expect(parser.parse("   \"Gabo Gabo\"   ")).to.deep.eq({result: "Gabo Gabo", remains: "   "});
     });
+    it("should parse string values with pattern", () => {
+        const parser = new CommandStringParser(/aB/i);
+        expect(parser.parse("Gabo")).to.deep.eq({result: "Gabo", remains: ""});
+        expect(parser.parse("   Gabo")).to.deep.eq({result: "Gabo", remains: ""});
+        expect(parser.parse("Gabo   ")).to.deep.eq({result: "Gabo", remains: "   "});
+        expect(parser.parse("   Gabo   ")).to.deep.eq({result: "Gabo", remains: "   "});
+
+        expect(parser.parse("\"Gabo Gabo\"")).to.deep.eq({result: "Gabo Gabo", remains: ""});
+        expect(parser.parse("   \"Gabo Gabo\"")).to.deep.eq({result: "Gabo Gabo", remains: ""});
+        expect(parser.parse("\"Gabo Gabo\"   ")).to.deep.eq({result: "Gabo Gabo", remains: "   "});
+        expect(parser.parse("   \"Gabo Gabo\"   ")).to.deep.eq({result: "Gabo Gabo", remains: "   "});
+
+        expect(parser.parse("GaRbo")).to.be.null;
+        expect(parser.parse("   GaRbo")).to.be.null;
+        expect(parser.parse("GaRbo   ")).to.be.null;
+        expect(parser.parse("   GaRbo   ")).to.be.null;
+
+        expect(parser.parse("\"GaRbo GaRbo\"")).to.be.null;
+        expect(parser.parse("   \"GaRbo GaRbo\"")).to.be.null;
+        expect(parser.parse("\"GaRbo GaRbo\"   ")).to.be.null;
+        expect(parser.parse("   \"GaRbo GaRbo\"   ")).to.be.null;
+    });
 });

@@ -1,19 +1,20 @@
 import "mocha";
 import { CommandParamTypes } from "./command-param-types";
+import { EchoExecutor } from "./executors/echo-executor";
+import { WaitExecutor } from "./executors/wait-executor";
 import { CommandNumberParser } from "./parsers/command-number-parser";
 import { CommandPositionParser } from "./parsers/command-position-parser";
 import { CommandStringParser } from "./parsers/command-string-parser";
 import { CommandTimeParser } from "./parsers/command-time-parser";
-import { ScriptingParser } from "./scripting-parser";
+import { ScriptingExecutor } from "./scripting-executor";
 import { ScriptingParserDataHolder } from "./scripting-parser-data-holder";
 
-describe("Test basic validator", () => {
-    it("should test basic validation", () => {
-        const parser = ScriptingParser.fromPatterns(
+describe("Test basic executor", () => {
+    it("should test basic execution", async () => {
+        const executor = ScriptingExecutor.fromRowData(
             [
-                ["ECHO", "{s[]}"],
-                ["WAIT", "{t}"],
-                ["MOVE", "{p2} {s[]}"],
+                ["ECHO", "{s[]}", new EchoExecutor()],
+                ["WAIT", "{t}", new WaitExecutor()],
             ],
             ScriptingParserDataHolder.fromFlatArray([
                 [new CommandTimeParser(), CommandParamTypes.TIME, "t"],
@@ -30,14 +31,11 @@ describe("Test basic validator", () => {
             ]),
         );
 
-        const result = parser.parseContent(`
-            ECHO Starting
-            WAIT 10 ms
-            MOVE 5 10 gabo
-            MOVE _5 10 gabo
+        const result = await executor.executeSync(`
+            ECHO Start
+            WAIT 1 s
+            ECHO Finish succeed
+            ECHO "Exit with code 0"
         `);
-
-        result.forEach(({raw, data}) => console.log(`'${raw}' was parsed to ${JSON.stringify(data)}`));
-
     });
 });

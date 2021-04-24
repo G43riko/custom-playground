@@ -1,7 +1,19 @@
 import { CommandParamParser } from "./command-param-parser";
 
 export class CommandStringParser implements CommandParamParser<string> {
+    public constructor(private readonly pattern?: RegExp) {
+    }
+
     public parse(value: string): { remains: string, result: string } | null {
+        if (!this.pattern) {
+            return this.parseLocally(value);
+        }
+        const result = this.parseLocally(value);
+
+        return result && this.pattern.test(result.result) ? result : null;
+    }
+
+    private parseLocally(value: string): { remains: string, result: string } | null {
         const trimmedContent = value.trim();
 
 

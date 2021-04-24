@@ -1,7 +1,7 @@
 import { CommandParamParser } from "./command-param-parser";
 
 export class CommandNumberParser implements CommandParamParser<number> {
-    public constructor(private isInteger = false) {
+    public constructor(private readonly isInteger = false) {
     }
 
     public parse(value: string): { remains: string, result: number } | null {
@@ -16,7 +16,7 @@ export class CommandNumberParser implements CommandParamParser<number> {
         return parsedData;
     }
 
-    public parseLocally(value: string): { remains: string, result: number } | null {
+    private parseLocally(value: string): { remains: string, result: number } | null {
         const result = parseFloat(value);
 
         if (isNaN(result)) {
