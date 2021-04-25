@@ -1,4 +1,5 @@
 import { CommandParamHolder } from "./command-param-holder";
+import { CommandParamParserFinalResult } from "./parsers/command-param-parser";
 import { ScriptingCommand } from "./scripting-command";
 import { ScriptingParserDataHolder } from "./scripting-parser-data-holder";
 
@@ -16,8 +17,7 @@ export class CommandHolder {
         this.params = params.map((param: string) => CommandParamHolder.fromParameter(param, dataHolder));
     }
 
-
-    public parse(command: string): ({ type: { type: string, array: boolean }, rawData: string, data: unknown } | null)[] | null {
+    public parse(command: string): (CommandParamParserFinalResult<unknown> | null)[] | null {
         if (command.indexOf(this.command.name + " ") !== 0) {
             console.warn("Not valid command", command, this.command.name);
 

@@ -5,7 +5,7 @@ import { ScriptingParserDataHolder } from "./scripting-parser-data-holder";
 export class ScriptingExecutor {
     public constructor(
         private readonly parser: ScriptingParser,
-        private readonly executorMap: { [command in string]: ScriptingCommandExecutor },
+        private readonly executorMap: { [command in string]: ScriptingCommandExecutor<unknown, unknown> },
     ) {
     }
 
@@ -14,10 +14,10 @@ export class ScriptingExecutor {
      * @param data - [command name, pattern without command name, ]
      * @param dataHolder
      */
-    public static fromRowData(data: [string, string, ScriptingCommandExecutor][], dataHolder: ScriptingParserDataHolder): ScriptingExecutor {
+    public static fromRowData(data: [string, string, ScriptingCommandExecutor<unknown, unknown>][], dataHolder: ScriptingParserDataHolder): ScriptingExecutor {
         const parser = new ScriptingParser(data.map(([name, pattern]) => ({
             name,
-            pattern: `${name} ${pattern}`
+            pattern: `${name} ${pattern}`,
         })), dataHolder);
 
         return new ScriptingExecutor(

@@ -28,6 +28,11 @@
 
         /* Strict Type-Checking Options */
         "strict": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "alwaysStrict": true,
         /* Enable all strict type-checking options. */
         // "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
         // "strictNullChecks": true,                    /* Enable strict null checks. */

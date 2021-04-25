@@ -1,10 +1,10 @@
-import { CommandParamParser } from "./command-param-parser";
+import { CommandParamParser, CommandParamParserResult } from "./command-param-parser";
 
 export class CommandNumberParser implements CommandParamParser<number> {
     public constructor(private readonly isInteger = false) {
     }
 
-    public parse(value: string): { remains: string, result: number } | null {
+    public parse(value: string): CommandParamParserResult<number> | null {
         if (!this.isInteger) {
             return this.parseLocally(value);
         }
@@ -16,7 +16,7 @@ export class CommandNumberParser implements CommandParamParser<number> {
         return parsedData;
     }
 
-    private parseLocally(value: string): { remains: string, result: number } | null {
+    private parseLocally(value: string): CommandParamParserResult<number> | null {
         const result = parseFloat(value);
 
         if (isNaN(result)) {

@@ -1,4 +1,5 @@
 import { CommandParamTypes } from "./command-param-types";
+import { CommandParamParserResult } from "./parsers/command-param-parser";
 import { ScriptingParserDataHolder } from "./scripting-parser-data-holder";
 
 export class CommandParamHolder {
@@ -27,6 +28,7 @@ export class CommandParamHolder {
                 type, array: !!match[2],
             };
         }
+        console.warn(`Type ${match[1]} is missing from dataHolder`);
         switch (match[1].trim()) {
             case "n":
                 return {
@@ -66,14 +68,14 @@ export class CommandParamHolder {
         return this.typeData.type + (this.typeData.array ? "[]" : "");
     }
 
-    public parse(value: string): { result: unknown, remains: string } | null {
+    public parse<T>(value: string): CommandParamParserResult<T[]> | null {
         if (!this.typeData.array) {
             return this.parseLocally(value);
         }
 
-        const resultData: unknown[] = [];
+        const resultData: T[] = [];
 
-        let result = this.parseLocally(value);
+        let result = this.parseLocally<T>(value);
 
         if (!result) {
             return null;
@@ -93,8 +95,8 @@ export class CommandParamHolder {
         };
     }
 
-    public parseLocally(value: string): { result: unknown, remains: string } | null {
-        const parser = this.dataHolder.getParserByType(this.typeData.type);
+    private parseLocally<T>(value: string): CommandParamParserResult<T> | null {
+        const parser = this.dataHolder.getParserByType<T>(this.typeData.type);
         if (parser) {
             return parser.parse(value);
         }

@@ -1,10 +1,17 @@
 import { CommandHolder } from "./command-holder";
+import { CommandParamParserFinalResult } from "./parsers/command-param-parser";
 import { ScriptingCommand } from "./scripting-command";
 import { ScriptingParserDataHolder } from "./scripting-parser-data-holder";
 
 export interface ScriptingParserOptions {
     readonly oneLineCommentPrefix: string;
     readonly rowDivider: string;
+}
+
+export interface CommandParserResult {
+    readonly raw: string;
+    readonly data: (CommandParamParserFinalResult<unknown> | null)[] | null;
+    readonly command: string;
 }
 
 function processParams(params: Partial<ScriptingParserOptions>): ScriptingParserOptions {
@@ -36,7 +43,7 @@ export class ScriptingParser {
         return new ScriptingParser(data.map(([name, pattern]) => ({name, pattern: `${name} ${pattern}`})), dataHolder);
     }
 
-    public parseContent(content: string): { raw: string, data: ({ type: { type: string, array: boolean }, rawData: string, data: unknown } | null)[] | null, command: string }[] {
+    public parseContent(content: string): CommandParserResult[] {
         const validLines = content.split(this.params.rowDivider)
                                   .map((row) => row.trim())
                                   .filter((row) => row && row.indexOf(this.params.oneLineCommentPrefix) !== 0);

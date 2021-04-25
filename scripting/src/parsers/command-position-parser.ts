@@ -1,4 +1,4 @@
-import { CommandParamParser } from "./command-param-parser";
+import { CommandParamParser, CommandParamParserResult } from "./command-param-parser";
 import { CommandVectorParser } from "./command-vector-parser";
 
 /**
@@ -15,7 +15,7 @@ export class CommandPositionParser implements CommandParamParser<{ values: numbe
     ) {
     }
 
-    public parse(value: string): { remains: string, result: { values: number[], absolute: boolean } } | null {
+    public parse(value: string): CommandParamParserResult<{ values: number[], absolute: boolean }> | null {
         const absolute = value.trim()[0] !== this.relativeFlag;
 
         if (this.requiredType === (absolute ? "RELATIVE" : "ABSOLUTE")) {

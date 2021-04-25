@@ -1,5 +1,5 @@
 import { CommandNumberParser } from "./command-number-parser";
-import { CommandParamParser } from "./command-param-parser";
+import { CommandParamParser, CommandParamParserResult } from "./command-param-parser";
 
 export class CommandTimeParser<T extends string> implements CommandParamParser<{ unit: T, duration: number }> {
     private readonly numberParser = new CommandNumberParser();
@@ -8,7 +8,7 @@ export class CommandTimeParser<T extends string> implements CommandParamParser<{
     public constructor(private readonly allowedUnits = ["MS", "S", "M", "H"] as T[]) {
     }
 
-    public parse(value: string): { remains: string, result: { duration: number, unit: T } } | null {
+    public parse(value: string): CommandParamParserResult<{ duration: number, unit: T }> | null {
         const numberParse = this.numberParser.parse(value);
 
         if (!numberParse) {

@@ -1,11 +1,12 @@
+import { CommandParamParserFinalResult } from "../parsers/command-param-parser";
 import { ScriptingCommandExecutor } from "./scripting-command-executor";
 
-export class EchoExecutor implements ScriptingCommandExecutor {
+export class EchoExecutor implements ScriptingCommandExecutor<string[]> {
     public execute(data: string[]): void {
         console.log(...data);
     }
 
-    public executeRaw(data: ({ type: { type: string; array: boolean }; rawData: string; data: string[] } | null)[] | null): void {
+    public executeRaw(data: (CommandParamParserFinalResult<string[]> | null)[] | null): void {
         if (!data?.[0]) {
             throw new Error("Invalid object " + JSON.stringify(data));
         }

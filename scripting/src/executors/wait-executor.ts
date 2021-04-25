@@ -1,6 +1,7 @@
+import { CommandParamParserFinalResult } from "../parsers/command-param-parser";
 import { ScriptingCommandExecutor } from "./scripting-command-executor";
 
-export class WaitExecutor implements ScriptingCommandExecutor {
+export class WaitExecutor implements ScriptingCommandExecutor<{ unit: string, duration: number }> {
     public execute(time: { unit: string, duration: number }): Promise<void> {
         return new Promise((success, reject) => {
             try {
@@ -11,7 +12,7 @@ export class WaitExecutor implements ScriptingCommandExecutor {
         });
     }
 
-    public executeRaw(data: ({ type: { type: string; array: boolean }; rawData: string; data: { unit: string, duration: number } } | null)[] | null): Promise<void> {
+    public executeRaw(data: (CommandParamParserFinalResult<{ unit: string, duration: number }> | null)[] | null): Promise<void> {
         if (!data?.[0]) {
             throw new Error("Invalid object " + JSON.stringify(data));
         }
