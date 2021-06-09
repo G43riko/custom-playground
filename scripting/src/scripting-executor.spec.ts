@@ -1,13 +1,13 @@
 import "mocha";
-import { CommandParamTypes } from "./command-param-types";
-import { EchoExecutor } from "./executors/echo-executor";
-import { WaitExecutor } from "./executors/wait-executor";
-import { CommandNumberParser } from "./parsers/command-number-parser";
-import { CommandPositionParser } from "./parsers/command-position-parser";
-import { CommandStringParser } from "./parsers/command-string-parser";
-import { CommandTimeParser } from "./parsers/command-time-parser";
-import { ScriptingExecutor } from "./scripting-executor";
-import { ScriptingParserDataHolder } from "./scripting-parser-data-holder";
+import {CommandParamTypes} from "./command-param-types";
+import {EchoExecutor} from "./executors/echo-executor";
+import {WaitExecutor} from "./executors/wait-executor";
+import {CommandNumberParser} from "./parsers/command-number-parser";
+import {CommandPositionParser} from "./parsers/command-position-parser";
+import {CommandStringParser} from "./parsers/command-string-parser";
+import {CommandTimeParser} from "./parsers/command-time-parser";
+import {ScriptingExecutor} from "./scripting-executor";
+import {ScriptingParserDataHolder} from "./scripting-parser-data-holder";
 
 describe("Test basic executor", () => {
     it("should test basic execution", async () => {
@@ -18,7 +18,7 @@ describe("Test basic executor", () => {
             ],
             ScriptingParserDataHolder.fromFlatArray([
                 [new CommandTimeParser(), CommandParamTypes.TIME, "t"],
-                [new CommandStringParser(), CommandParamTypes.STRING, "s"],
+                [new CommandStringParser(), CommandParamTypes.STRING, " s"],
                 [new CommandNumberParser(), CommandParamTypes.NUMBER, "n"],
                 [new CommandNumberParser(), CommandParamTypes.FLOAT, "f"],
                 [new CommandNumberParser(true), CommandParamTypes.INT, "i"],
