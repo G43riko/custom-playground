@@ -1,9 +1,10 @@
 import "mocha";
 import {expect} from "chai";
 import {FileArrayDatabase} from "./file-array-database";
-import {StatefulFileAccessor} from "./stateful-file-accessor";
+import {StatefulDataAccessor} from "./stateful-data-accessor";
 import {catchError, map} from "rxjs/operators";
 import {of} from "rxjs";
+import {SimpleFileAccessor} from "./data-accessors/simple-file-accessor";
 
 
 describe("Test simple array database", () => {
@@ -42,7 +43,7 @@ describe("Test simple array database", () => {
 
     it("should test data inserting", async () => {
         const fileAccessor = new FileArrayDatabase(__dirname + "/test5.txt");
-        const data = new StatefulFileAccessor(__dirname + "/test5.txt");
+        const data = new StatefulDataAccessor(new SimpleFileAccessor(__dirname + "/test5.txt"));
         await data.writeFile(JSON.stringify([1, 2, 3, 4])).toPromise();
         console.log("1", await fileAccessor.getRawDataOnce().pipe(catchError((e) => of(e))).toPromise(), await fileAccessor.getDataOnce().pipe(catchError((e) => of(e))).toPromise());
         console.log(await fileAccessor.insertOne(5).toPromise());

@@ -9,6 +9,7 @@
       "g-shared-library",
       "perf-test",
       "faces",
+      "g-diagrams",
       "docs-test",
       "scripting",
       "dependency-graph",

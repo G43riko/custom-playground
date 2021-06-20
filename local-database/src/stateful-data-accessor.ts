@@ -1,8 +1,9 @@
-import {BasicSimpleFileAccessor, SimpleFileAccessor} from "./simple-file-accessor";
+import {BasicSimpleFileAccessor, SimpleFileAccessor} from "./data-accessors/simple-file-accessor";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {first, shareReplay, startWith, switchMap, tap} from "rxjs/operators";
+import {DataAccessor} from "./data-accessors/data-accessor";
 
-export class StatefulFileAccessor {
+export class StatefulDataAccessor {
     private readonly dataChangedSource$ = new Subject<void>();
     public readonly rawData$ = this.dataChangedSource$.pipe(
         startWith(null as unknown),
@@ -14,8 +15,7 @@ export class StatefulFileAccessor {
     );
 
     public constructor(
-        private readonly filePath: string,
-        private readonly dataAccessor = new SimpleFileAccessor(filePath),
+        private readonly dataAccessor: DataAccessor,
     ) {
     }
 

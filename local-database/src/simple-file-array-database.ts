@@ -1,8 +1,8 @@
-import {StatefulFileAccessor} from "./stateful-file-accessor";
+import {StatefulDataAccessor} from "./stateful-data-accessor";
 import {Observable, of} from "rxjs";
 import {catchError, first, map} from "rxjs/operators";
 
-export class SimpleFileArrayDatabase<Value> extends StatefulFileAccessor {
+export class SimpleFileArrayDatabase<Value> extends StatefulDataAccessor {
     public readonly data$: Observable<Value[]> = this.rawData$.pipe(
         map((rawData) => JSON.parse(rawData)),
         catchError((error) => {

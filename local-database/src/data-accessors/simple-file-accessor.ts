@@ -1,6 +1,7 @@
 import fs from "fs";
 import {bindNodeCallback, Observable} from "rxjs";
 import {map} from "rxjs/operators";
+import {DataAccessor} from "./data-accessor";
 
 export class BasicSimpleFileAccessor {
     public readonly readFile = bindNodeCallback<string, string>((
@@ -31,7 +32,7 @@ export class BasicSimpleFileAccessor {
     }
 }
 
-export class SimpleFileAccessor {
+export class SimpleFileAccessor implements DataAccessor {
     public constructor(
         public readonly pathToFile: string,
         private readonly fileAccessor = new BasicSimpleFileAccessor(),
