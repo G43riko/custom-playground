@@ -11,6 +11,7 @@ import {DiagramGenericContextInstance} from "./diagram-generic-context";
 import {DiagramMethodContext} from "./diagram-method-context";
 import {DiagramMethod} from "../class/method/diagram-method";
 import {DiagramProperty} from "../class/property/diagram-property";
+import {DiagramEntityType} from "../class/entity/diagram-entity-type";
 
 export class DiagramEntityContext extends DiagramGenericContextInstance {
     private readonly childContextMap = new Map<string, DiagramMethodContext | DiagramEntityContext>();
@@ -75,6 +76,30 @@ export class DiagramEntityContext extends DiagramGenericContextInstance {
     public validate(worldContext: DiagramWorldContext): DiagramContextValidationResult {
         const validationResult = new DiagramContextValidationResultInstance();
 
+        // check extends
+        if (this.entity.parentExtend) {
+            const canResolveExtends = this.canResolveType(this.entity.parentExtend, worldContext);
+
+            if (!canResolveExtends) {
+                validationResult.addError("Cannot resolve extends type (" + JSON.stringify(this.entity.parentExtend) + ") for entity " + this.entity.name);
+            }
+        }
+
+        // check implements
+        if (Array.isArray(this.entity.parentImplements)) {
+            if (this.entity.type !== DiagramEntityType.CLASS) {
+                validationResult.addError("Only classes can implements objects");
+            }
+            this.entity.parentImplements.forEach((impl) => {
+                const canResolveImplements = this.canResolveType(impl, worldContext);
+
+                if (!canResolveImplements) {
+                    validationResult.addError("Cannot resolve implements type (" + JSON.stringify(impl) + ") for entity " + this.entity.name);
+                }
+            });
+        }
+
+        // check items
         this.items.forEach((value) => {
             if (value === this.entity) {
                 return;

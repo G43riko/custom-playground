@@ -1,6 +1,6 @@
 import {DiagramAccessModifier} from "../class/common/diagram-access-modifier";
-import {DiagramGeneric} from "../class/common/diagram-generic";
-import {DiagramType} from "../class/common/diagram-type";
+import {DiagramGeneric, DiagramGenericToString} from "../class/common/diagram-generic";
+import {DiagramTypeToString} from "../class/common/diagram-type";
 import {DiagramClass} from "../class/entity/diagram-class";
 import {DiagramMethod} from "../class/method/diagram-method";
 import {DiagramMethodParameter} from "../class/method/diagram-method-parameter";
@@ -18,31 +18,14 @@ const keyWords = {
     abstract: "abstract",
 };
 
-function getDataFromType(param: DiagramType): string {
-    if (Array.isArray(param.enumValues)) {
-        return param.enumValues.join(" | ");
-    }
 
-    return [
-        param.name,
-        param.array ? "[]" : "",
-    ].filter((e) => e).join("");
-}
-
-function getGeneric(generic: DiagramGeneric): string {
-    return [
-        generic.name,
-        generic.extends ? `extends ${getDataFromType(generic.extends)}` : "",
-        generic.defaultValue ? `= ${getDataFromType(generic.defaultValue)}` : "",
-    ].filter((e) => e).join(" ");
-}
 
 function getGenerics(generics: DiagramGeneric[]): string {
     if (!Array.isArray(generics)) {
         return "";
     }
 
-    return `<${generics.map(getGeneric).join(", ")}>`;
+    return `<${generics.map(DiagramGenericToString).join(", ")}>`;
 }
 
 function getDataFromProperty(param: DiagramProperty): string[] {
@@ -54,7 +37,7 @@ function getDataFromProperty(param: DiagramProperty): string[] {
         param.name,
         param.optional ? "?" : "",
         ": ",
-        getDataFromType(param.type),
+        DiagramTypeToString(param.type),
         param.defaultValue ? ` = ${param.defaultValue}` : "",
     ];
 
@@ -66,7 +49,7 @@ function getDataFromParameter(param: DiagramMethodParameter): string {
         param.name,
         param.optional ? "?" : "",
         ": ",
-        getDataFromType(param.type),
+        DiagramTypeToString(param.type),
         param.defaultValue ? ` = ${param.defaultValue}` : "",
     ];
 
@@ -80,12 +63,12 @@ function getDataFromMethod(param: DiagramMethod): string[] {
         param.final ? ` ${keyWords.final} ` : " ",
         param.name,
         param.optional ? "?" : "",
-        getGenerics(param.generics),
+        getGenerics(param.generics ?? []),
         "(",
         (param.parameters || []).map(getDataFromParameter).join(", "),
         ")",
         ": ",
-        getDataFromType(param.returnType),
+        DiagramTypeToString(param.returnType),
     ];
 
     return [subData.filter((e) => e).join("")];
@@ -98,7 +81,7 @@ export function getDataFromClass(param: DiagramClass): { titles: string[], data:
         param.abstract ? keyWords.abstract : "",
         param.final ? keyWords.final : "",
         param.name,
-        getGenerics(param.generics),
+        getGenerics(param.generics ?? []),
     ].filter((e) => e).join(" ");
 
     data.push(...param.properties.map(getDataFromProperty));

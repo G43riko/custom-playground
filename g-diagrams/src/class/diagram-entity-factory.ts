@@ -16,6 +16,8 @@ const defaultAccess = DiagramAccessModifier.PUBLIC;
 export class DiagramEntityFactory<T extends DiagramEntity> {
     private readonly properties: DiagramProperty[] = [];
     private readonly methods: DiagramMethod[] = [];
+    private parentExtend?: DiagramType;
+    private parentImplements: DiagramType[] = [];
     private readonly generics: DiagramGeneric[] = [];
     private access: DiagramAccessModifier = defaultAccess;
     private abstract = false;
@@ -30,11 +32,11 @@ export class DiagramEntityFactory<T extends DiagramEntity> {
         return new DiagramEntityFactory(DiagramEntityType.CLASS, name);
     }
 
-    public static createEnum(name: string): DiagramEntityFactory<DiagramClass> {
+    public static createEnum(name: string): DiagramEntityFactory<DiagramEnum> {
         return new DiagramEntityFactory(DiagramEntityType.ENUM, name);
     }
 
-    public static createInterface(name: string): DiagramEntityFactory<DiagramClass> {
+    public static createInterface(name: string): DiagramEntityFactory<DiagramInterface> {
         return new DiagramEntityFactory(DiagramEntityType.INTERFACE, name);
     }
 
@@ -44,6 +46,17 @@ export class DiagramEntityFactory<T extends DiagramEntity> {
         );
 
         return this;
+    }
+
+    public setParentExtends(parent: string): void {
+        this.parentExtend = DiagramType.Link(parent);
+    }
+
+    public addParentImplements(parent: string): void {
+        if (this.type !== DiagramEntityType.CLASS) {
+            throw new Error("Only class cen implements objects");
+        }
+        this.parentImplements.push(DiagramType.Link(parent));
     }
 
     public addGenerics(...generics: DiagramGeneric[]): this {
@@ -141,7 +154,9 @@ export class DiagramEntityFactory<T extends DiagramEntity> {
             properties: this.properties,
             methods: this.methods,
             generics: this.generics,
-            abstract: !!this.abstract
+            abstract: this.abstract,
+            parentExtend: this.parentExtend,
+            parentImplements: this.parentImplements,
         };
     }
 
@@ -164,6 +179,7 @@ export class DiagramEntityFactory<T extends DiagramEntity> {
             properties: this.properties,
             methods: this.methods,
             generics: this.generics,
+            parentExtend: this.parentExtend,
         };
     }
 }

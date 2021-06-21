@@ -1,30 +1,31 @@
-import { GLogger } from "gtools/GUtils";
-import { CustomProvider, CustomProviderClass, isCustomProvider } from "..";
-import { ProviderTokenToString, ProviderTypeToString } from "../providers/provider-utils";
-import { ProviderToken, ProviderType } from "../providers/provider.interface";
-import { createTypeProvider, TypeProvider } from "../providers/type-provider";
-import { Type } from "../type";
-import { DependencyRecord } from "./dependency-record";
-import { DependencyTypeRecord } from "./dependency-type-record";
-import { Factory } from "./factory.interface";
-import { resolveTypeProvider } from "./type-provider-resolver";
+import {GLogger} from "gtools/GUtils";
+import {CustomProvider, CustomProviderClass, isCustomProvider} from "..";
+import {ProviderTokenToString, ProviderTypeToString} from "../providers/provider-utils";
+import {ProviderToken, ProviderType} from "../providers/provider.interface";
+import {createTypeProvider, TypeProvider} from "../providers/type-provider";
+import {Type} from "../type";
+import {DependencyRecord} from "./dependency-record";
+import {DependencyTypeRecord} from "./dependency-type-record";
+import {Factory} from "./factory.interface";
+import {resolveTypeProvider} from "./type-provider-resolver";
 
 export class FactoryInstance implements Factory {
-    private resolved                                            = false;
-    private readonly typeRegistry: DependencyTypeRecord         = new DependencyTypeRecord();
+    private resolved = false;
+    private readonly typeRegistry: DependencyTypeRecord = new DependencyTypeRecord();
     private readonly customDependencyRegistry: DependencyRecord = new DependencyRecord();
-    private readonly factories: Factory[]                       = [];
+    private readonly factories: Factory[] = [];
 
     public constructor(private readonly type: Type<any> | "static",
                        private readonly parent?: FactoryInstance) {
-        GLogger.log(this + " was created", "Factory")
+        GLogger.log(this + " was created", "Factory");
     }
 
     public require<T>(token: ProviderToken<T>): T {
         const result = this.getDependency(token);
         if (!result) {
-            throw new Error("Cannot resolve dependency for token: " + ProviderTokenToString(token))
+            throw new Error("Cannot resolve dependency for token: " + ProviderTokenToString(token));
         }
+
         return result;
     }
 
@@ -79,6 +80,7 @@ export class FactoryInstance implements Factory {
                 return this.parent.getProvider(token);
             }
         }
+
         return result;
     }
 
@@ -88,6 +90,7 @@ export class FactoryInstance implements Factory {
     public resolve(): void {
         if (this.resolved) {
             GLogger.warn("Trying to resolve factory multiple times", "Factory");
+
             return;
         }
         this.typeRegistry.forEach((injectableHolder) => {

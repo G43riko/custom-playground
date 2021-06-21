@@ -4,17 +4,28 @@ import {DiagramClass} from "../class/entity/diagram-class";
 import {DiagramEntity} from "../class/entity/diagram-entity";
 import {DiagramWorldContext} from "../context/diagram-world-context";
 import {DiagramContextValidationResult} from "../context/diagram-context-validation-result";
+import {DiagramCheckers} from "../diagram-checkers";
+import {DiagramLink} from "./diagram-link";
 
 export class DiagramModel {
     private readonly entityMap = new Map<DiagramEntity["name"], DiagramEntity>();
     private readonly entitiesNames: DiagramEntity["name"][] = [];
     private readonly customTypes: DiagramType[] = [];
+    private readonly links: DiagramLink[] = []
+
+    public static getAllRequiredTypesOfDiagramModel(diagramModel: DiagramModel): DiagramType[] {
+        const result: DiagramType[] = [];
+
+        diagramModel.entityMap.forEach((entity) => result.push(...DiagramModel.getAllRequiredTypesOfEntity(entity)));
+
+        return result;
+    }
 
     /**
      * @param diagramClass - {@link DiagramClass} to inspect
      * @returns all types used in {@link DiagramClass}
      */
-    public static getAllRequiredTypesOf(diagramClass: DiagramClass): DiagramType[] {
+    public static getAllRequiredTypesOfEntity(diagramClass: DiagramEntity): DiagramType[] {
         const result: DiagramType[] = diagramClass.properties.map((property) => property.type);
 
         const addGenerics = (generics: DiagramGeneric[]) => {
@@ -25,24 +36,38 @@ export class DiagramModel {
             });
         };
 
-        // tslint:disable-next-line:no-for-each-push
-        diagramClass.methods.forEach((method) => {
-            result.push(method.returnType);
+        if (DiagramCheckers.isClass(diagramClass) || DiagramCheckers.isInterface(diagramClass)) {
+            // tslint:disable-next-line:no-for-each-push
+            diagramClass.methods.forEach((method) => {
+                result.push(method.returnType);
 
-            result.push(
-                ...(method.parameters?.map((parameter) => parameter.type) ?? []),
-            );
+                result.push(
+                    ...(method.parameters?.map((parameter) => parameter.type) ?? []),
+                );
 
-            if (method.generics) {
-                addGenerics(method.generics);
+                if (method.generics) {
+                    addGenerics(method.generics);
+                }
+            });
+
+            if (diagramClass.generics) {
+                addGenerics(diagramClass.generics);
             }
-        });
-
-        if (diagramClass.generics) {
-            addGenerics(diagramClass.generics);
         }
 
         return result;
+    }
+
+    public forEachEntity(callback: (entity: DiagramEntity) => unknown): void {
+        this.entityMap.forEach(callback);
+    }
+
+    public forEachLink(callback: (link: DiagramLink) => unknown): void {
+        this.links.forEach(callback);
+    }
+
+    public addLink(link: DiagramLink): void {
+        this.links.push(link);
     }
 
     public defineType(type: DiagramType): void {
