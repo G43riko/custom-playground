@@ -5,7 +5,7 @@
     <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <script src="diagram.js"></script>
+    <script src="diagram2.js"></script>
     <script src="https://unpkg.com/gojs"></script>
     <title>Document</title>
 </head>
@@ -32,7 +32,9 @@
     function convertEntityTypeToBGColor(type) {
         switch (type) {
             case "INTERFACE":
-                return "mediumpurple"
+                return "mediumpurple";
+            case "ENUM":
+                return "palegreen";
             default:
                 return "lightyellow";
         }
@@ -197,16 +199,26 @@
                 fromSpot: go.Spot.AllSides,
                 toSpot: go.Spot.AllSides
             },
-            $(go.Shape, new go.Binding("fill", "entityType", convertEntityTypeToBGColor)),
+            $(go.Shape, "RoundedRectangle", new go.Binding("fill", "entityType", convertEntityTypeToBGColor)),
             $(
                 go.Panel,
                 "Table",
                 {defaultRowSeparatorStroke: "black"},
-                // header
+                // stereotype
                 $(
                     go.TextBlock,
                     {
                         row: 0, columnSpan: 2, margin: 3, alignment: go.Spot.Center,
+                        font: "italic 12pt sans-serif",
+                        isMultiline: false, editable: true
+                    },
+                    new go.Binding("text", "entityType", (type) => "<<" + type.toLowerCase() + ">>")
+                ),
+                // header
+                $(
+                    go.TextBlock,
+                    {
+                        row: 1, columnSpan: 2, margin: 3, alignment: go.Spot.Center,
                         font: "bold 12pt sans-serif",
                         isMultiline: false, editable: true
                     },
@@ -216,7 +228,7 @@
                 $(
                     go.TextBlock,
                     "Properties",
-                    {row: 1, font: "italic 10pt sans-serif"},
+                    {row: 2, font: "italic 10pt sans-serif"},
                     new go.Binding("visible", "visible", v => !v).ofObject("PROPERTIES")
                 ),
                 $(
@@ -226,7 +238,7 @@
                     new go.Binding("itemArray", "properties"),
                     new go.Binding("background", "entityType", convertEntityTypeToBGColor),
                     {
-                        row: 1,
+                        row: 2,
                         margin: 3,
                         stretch: go.GraphObject.Fill,
                         defaultAlignment: go.Spot.Left,
@@ -237,7 +249,7 @@
                     "PanelExpanderButton",
                     "PROPERTIES",
                     {
-                        row: 1,
+                        row: 2,
                         column: 1,
                         alignment: go.Spot.TopRight,
                         visible: false
@@ -248,7 +260,7 @@
                 $(
                     go.TextBlock,
                     "Methods",
-                    {row: 2, font: "italic 10pt sans-serif"},
+                    {row: 3, font: "italic 10pt sans-serif"},
                     new go.Binding("visible", "visible", v => !v).ofObject("METHODS")
                 ),
                 $(
@@ -258,7 +270,7 @@
                     new go.Binding("itemArray", "methods"),
                     new go.Binding("background", "entityType", convertEntityTypeToBGColor),
                     {
-                        row: 2,
+                        row: 3,
                         margin: 3,
                         stretch: go.GraphObject.Fill,
                         defaultAlignment: go.Spot.Left,
@@ -268,7 +280,7 @@
                 $(
                     "PanelExpanderButton",
                     "METHODS",
-                    {row: 2, column: 1, alignment: go.Spot.TopRight, visible: false},
+                    {row: 3, column: 1, alignment: go.Spot.TopRight, visible: false},
                     new go.Binding("visible", "methods", arr => arr.length > 0)
                 )
             )

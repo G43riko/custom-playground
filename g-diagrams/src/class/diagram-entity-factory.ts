@@ -22,7 +22,7 @@ export class DiagramEntityFactory<T extends DiagramEntity> {
     private access: DiagramAccessModifier = defaultAccess;
     private abstract = false;
 
-    private constructor(
+    public constructor(
         private readonly type: DiagramEntityType,
         private readonly name: string,
     ) {

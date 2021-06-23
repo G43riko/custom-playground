@@ -6,6 +6,7 @@ export enum DiagramTypeNames {
     BOOLEAN = "BOOLEAN",
     VOID = "VOID",
     LINK = "LINK",
+    UNKNOWN = "UNKNOWN",
     UNION = "UNION",
 }
 
@@ -34,7 +35,9 @@ export const AdvancedDiagramType = {
 // tslint:disable-next-line:variable-name
 export const DiagramType = {
     String: {name: DiagramTypeNames.STRING},
+    StringArray: {name: DiagramTypeNames.STRING, array: true},
     Number: {name: DiagramTypeNames.NUMBER},
+    Unknown: {name: DiagramTypeNames.UNKNOWN},
     NumberArray: {name: DiagramTypeNames.NUMBER, array: true},
     Boolean: {name: DiagramTypeNames.BOOLEAN},
     BooleanArray: {name: DiagramTypeNames.BOOLEAN, array: true},
@@ -73,12 +76,20 @@ export function DiagramTypeToString(type: DiagramType): string {
     if (Array.isArray(type.enumValues)) {
         const joinedEnumValues = type.enumValues.join(" | ");
 
+        if (joinedEnumValues.length === 1) {
+            return type.array ? `${joinedEnumValues}[]` : joinedEnumValues;
+        }
+
         return type.array ? `(${joinedEnumValues})[]` : joinedEnumValues;
     }
 
     const realName = type.name === DiagramTypeNames.LINK ? type.className : type.name;
     const typeName = realName + generics();
 
-    return type.array ? `(${typeName})[]` : typeName;
+    if (typeName.match(/[< |]/)) {
+        return type.array ? `(${typeName})[]` : typeName;
+    }
+
+    return type.array ? `${typeName}[]` : typeName;
 }
 

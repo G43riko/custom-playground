@@ -3,4 +3,5 @@ export enum DiagramElementType {
     ENTITY = "ENTITY",
     PROPERTY = "PROPERTY",
     GENERIC = "GENERIC",
+    PRIMITIVE = "PRIMITIVE",
 }

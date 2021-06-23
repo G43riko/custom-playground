@@ -1,16 +1,10 @@
-import {DiagramAccessModifier} from "../class/common/diagram-access-modifier";
+import {DiagramAccessModifier, DiagramAccessModifierToString} from "../class/common/diagram-access-modifier";
 import {DiagramGeneric, DiagramGenericToString} from "../class/common/diagram-generic";
 import {DiagramTypeToString} from "../class/common/diagram-type";
 import {DiagramClass} from "../class/entity/diagram-class";
 import {DiagramMethod} from "../class/method/diagram-method";
 import {DiagramMethodParameter} from "../class/method/diagram-method-parameter";
 import {DiagramProperty} from "../class/property/diagram-property";
-
-const accessModifierSigns = {
-    [DiagramAccessModifier.PRIVATE]: "-",
-    [DiagramAccessModifier.PUBLIC]: "+",
-    [DiagramAccessModifier.PROTECTED]: "/",
-};
 
 const keyWords = {
     static: "static",
@@ -30,7 +24,7 @@ function getGenerics(generics: DiagramGeneric[]): string {
 
 function getDataFromProperty(param: DiagramProperty): string[] {
     const subData: string[] = [
-        accessModifierSigns[param.access || DiagramAccessModifier.PUBLIC],
+        DiagramAccessModifierToString(param.access || DiagramAccessModifier.PUBLIC),
         param.static ? ` ${keyWords.static} ` : " ",
         param.final ? ` ${keyWords.final} ` : " ",
         param.abstract ? ` ${keyWords.abstract} ` : " ",
@@ -58,7 +52,7 @@ function getDataFromParameter(param: DiagramMethodParameter): string {
 
 function getDataFromMethod(param: DiagramMethod): string[] {
     const subData: string[] = [
-        accessModifierSigns[param.access || DiagramAccessModifier.PUBLIC],
+        DiagramAccessModifierToString(param.access || DiagramAccessModifier.PUBLIC),
         param.static ? ` ${keyWords.static} ` : "",
         param.final ? ` ${keyWords.final} ` : " ",
         param.name,
@@ -77,7 +71,7 @@ function getDataFromMethod(param: DiagramMethod): string[] {
 export function getDataFromClass(param: DiagramClass): { titles: string[], data: string[][] } {
     const data: string[][] = [];
     const title: string = [
-        accessModifierSigns[param.access || DiagramAccessModifier.PUBLIC],
+        DiagramAccessModifierToString(param.access || DiagramAccessModifier.PUBLIC),
         param.abstract ? keyWords.abstract : "",
         param.final ? keyWords.final : "",
         param.name,

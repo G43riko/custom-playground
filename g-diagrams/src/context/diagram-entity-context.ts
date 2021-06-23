@@ -42,7 +42,6 @@ export class DiagramEntityContext extends DiagramGenericContextInstance {
 
     public addItem(value: DiagramEntity | DiagramMethod | DiagramProperty): void {
         super.addItem(value);
-
         if (DiagramCheckers.isMethod(value)) {
             this.childContextMap.set(value.name, new DiagramMethodContext(value));
         } else if (DiagramCheckers.isEntity(value)) {

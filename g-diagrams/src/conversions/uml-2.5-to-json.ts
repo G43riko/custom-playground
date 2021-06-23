@@ -1,6 +1,10 @@
 import {DiagramAccessModifier} from "../class/common/diagram-access-modifier";
 import {DiagramEntityType} from "../class/entity/diagram-entity-type";
 
+type Nullable<T> = {
+    [P in keyof T]?: T[P] | null;
+};
+
 interface ElementAttributeData {
     id: string;
     name: string;
@@ -81,6 +85,9 @@ export class Uml25ToJson {
             .map<PackageElementData>((pck) => ({...pck, children: []}))
             .reduce((acc, pck) => Object.assign(acc, {[pck.id]: pck}), {} as { [key in string]: PackageElementData });
         const rootElement = elements.find((element) => element.name === "ROOT");
+        if (!rootElement) {
+            throw new Error("Cannot find root element");
+        }
         const rootObject = packageMap[rootElement.id] as PackageElementData;
 
         if (!rootObject) {
@@ -99,7 +106,7 @@ export class Uml25ToJson {
 
     private parseAttributes(attributeElements: Element[]): ElementAttributeData[] {
         return attributeElements.map((element) => {
-            const attribute: Partial<ElementAttributeData> = {
+            const attribute: Nullable<ElementAttributeData> = {
                 name: element.getAttribute("name"),
                 id: element.getAttribute("xmi:idref"),
                 accessor: this.parseScope(element.getAttribute("scope")),
@@ -124,7 +131,7 @@ export class Uml25ToJson {
 
     private parseParameters(parameterElements: Element[]): ElementParameterData[] {
         return parameterElements.map((element) => {
-            const parameter: Partial<ElementParameterData> = {
+            const parameter: Nullable<ElementParameterData> = {
                 // name: element.getAttribute("name"),
                 id: element.getAttribute("xmi:idref"),
                 accessor: this.parseScope(element.getAttribute("scope")),
@@ -148,11 +155,11 @@ export class Uml25ToJson {
 
     private parseOperations(operationElements: Element[]): ElementOperationData[] {
         return operationElements.map((element) => {
-            const operation: Partial<ElementOperationData> = {
+            const operation: Nullable<ElementOperationData> = {
                 name: element.getAttribute("name"),
                 id: element.getAttribute("xmi:idref"),
                 accessor: this.parseScope(element.getAttribute("scope")),
-                parameters: this.parseParameters(Array.from(element.getElementsByTagName("parameter")))
+                parameters: this.parseParameters(Array.from(element.getElementsByTagName("parameter"))),
             };
 
             const documentation = element.getElementsByTagName("documentation")[0];
@@ -171,7 +178,7 @@ export class Uml25ToJson {
         });
     }
 
-    private parseScope(type: string): DiagramAccessModifier {
+    private parseScope(type: string | null): DiagramAccessModifier | null {
         switch (type) {
             case "Public":
                 return DiagramAccessModifier.PUBLIC;
@@ -179,11 +186,15 @@ export class Uml25ToJson {
                 return DiagramAccessModifier.PRIVATE;
             case "Protected":
                 return DiagramAccessModifier.PROTECTED;
+            case "Package":
+                return DiagramAccessModifier.PACKAGE;
+            default:
+                return null;
         }
     }
 
     private parseObjects(elementNodeListOf: Element[]): ElementData[] {
-        const parseXmlType = (type: string): string => {
+        const parseXmlType = (type: string | null): string => {
             switch (type) {
                 case "uml:Interface":
                 case "Interface":
@@ -215,7 +226,7 @@ export class Uml25ToJson {
                 case "uml:InteractionFragment":
                 case "uml:PrimitiveType":
                 case null:
-                    return type;
+                    return type ?? "";
                 default:
                     console.warn("Unknown type ", type);
 
@@ -273,7 +284,7 @@ export class Uml25ToJson {
 
         return elementNodeListOf.map((element) => {
             const id = element.getAttribute("xmi:idref");
-            const result: Partial<ElementData> = {
+            const result: Nullable<ElementData> = {
                 id,
                 type: parseXmlType(element.getAttribute("xmi:type")),
                 name: getName(element),

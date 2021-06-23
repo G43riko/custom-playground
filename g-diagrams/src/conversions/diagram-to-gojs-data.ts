@@ -7,7 +7,7 @@ import * as go from "gojs";
 const $ = go.GraphObject.make;
 
 function getData(diagram: DiagramModel): { nodeData: any[], linkData: { from: number, to: number, relationship: string }[] } {
-    const nodeData: any[] = [];
+    const nodeData: unknown[] = [];
     const linkData: { from: number, to: number, relationship: string }[] = [];
     const entityNameKeyMap = new Map<string, number>();
 
@@ -26,7 +26,7 @@ function getData(diagram: DiagramModel): { nodeData: any[], linkData: { from: nu
     diagram.forEachEntity((entity) => {
         const key = requireKeyFor(entity.name);
 
-        const methods: any[] = [];
+        const methods: unknown[] = [];
 
         if (DiagramCheckers.isClass(entity) || DiagramCheckers.isInterface(entity)) {
             methods.push(...entity.methods.map((method) => ({
