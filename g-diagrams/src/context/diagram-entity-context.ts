@@ -1,5 +1,5 @@
 import {DiagramAccessModifier} from "../class/common/diagram-access-modifier";
-import {DiagramType, DiagramTypeNames} from "../class/common/diagram-type";
+import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
 import {DiagramEntity} from "../class/entity/diagram-entity";
 import {DiagramCheckers} from "../diagram-checkers";
 import {DiagramWorldContext} from "./diagram-world-context";
@@ -133,13 +133,13 @@ export class DiagramEntityContext extends DiagramGenericContextInstance {
         type: DiagramType,
         worldContext: DiagramWorldContext,
     ): boolean {
-        const name = type.name === DiagramTypeNames.LINK ? type.className : type.name;
+        const name = type.name === DiagramTypeName.LINK ? type.className : type.name;
         if (!name) {
             throw new Error("Cannot get name from type " + JSON.stringify(type));
         }
 
         // if it global name etc STRING, NUMBER...
-        if (name in DiagramTypeNames) {
+        if (name in DiagramTypeName) {
             return true;
         }
 

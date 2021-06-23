@@ -2,14 +2,14 @@ import "mocha";
 import {expect} from "chai";
 import {DiagramModel} from "../model/diagram-model";
 import {DiagramEntityFactory} from "./diagram-entity-factory";
-import {DiagramType, DiagramTypeNames} from "./common/diagram-type";
+import {DiagramType, DiagramTypeName} from "./common/diagram-type";
 import {DiagramAccessModifier} from "./common/diagram-access-modifier";
 
 
 function createAdvancedModel(): DiagramModel {
     const personClass = DiagramEntityFactory.createClass("Person")
         .addPublicProperty("Age", DiagramType.Number)
-        .addPublicProperty("Children", {name: DiagramTypeNames.LINK, className: "Person", array: true})
+        .addPublicProperty("Children", {name: DiagramTypeName.LINK, className: "Person", array: true})
         .addPublicProperty("Name", DiagramType.String, "Jon Doe")
         .addProperty("Type", DiagramType.String, DiagramAccessModifier.PUBLIC, {
             static: true,

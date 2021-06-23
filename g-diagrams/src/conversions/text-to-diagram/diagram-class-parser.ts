@@ -4,6 +4,7 @@ import {DiagramEntityFactory} from "../../class/diagram-entity-factory";
 import {DiagramEntity} from "../../class/entity/diagram-entity";
 import {DiagramType} from "../../class/common/diagram-type";
 import {DiagramMethodParameter} from "../../class/method/diagram-method-parameter";
+import {DiagramMethod} from "../../class/method/diagram-method";
 import {DiagramProperty} from "../../class/property/diagram-property";
 import {DiagramElementType} from "../../class/common/diagram-element-type";
 
@@ -13,9 +14,9 @@ export class DiagramClassParser extends DiagramEntityParser {
             const isMethod = row.match(/\(.*\)/);
 
             if (isMethod) {
-                return this.parseMethod(row, this.options, factory);
+                return factory.addMethodRaw(this.parseMethod(row));
             }
-            factory.addPropertyRaw(this.getParsedProperty(row, this.options));
+            factory.addPropertyRaw(this.parseProperty(row));
         });
     }
 
@@ -32,51 +33,72 @@ export class DiagramClassParser extends DiagramEntityParser {
         };
     }
 
-    private parseMethod(content: string, options: ClassDiagramParserOptions, factory: DiagramEntityFactory<DiagramEntity>): void {
+    public parseMethod(content: string): DiagramMethod {
         const params = content.match(/\((.|\n)*\)/);
 
         const {method, returnType} = this.getMethodAndReturnTypeFromMethod(content);
 
         const tokens = method.replace(/\((.|\n)*\)/g, "").trim().split(" ");
 
-        const modifiers = this.parseModifiersFromToken(tokens, options);
+        const modifiers = this.parseModifiersFromToken(tokens, this.options);
         const rawName = tokens[tokens.length - 1];
         const name = rawName;
 
         const trimmedReturnType = returnType?.trim();
 
-        factory.addMethodRaw({
+        return {
             name,
             abstract: modifiers.abstract,
             final: modifiers.final,
+            elementType: DiagramElementType.METHOD,
             access: modifiers.accessor,
             static: modifiers.static,
             returnType: trimmedReturnType ? DiagramType.Link(trimmedReturnType) : DiagramType.Unknown,
-            parameters: params ? params[0].match(/\(\W*\)/) ? undefined : this.getMethodParams(params[0].trim(), options) : undefined,
-
-        });
+            parameters: params ? params[0].match(/\(\W*\)/) ? undefined : this.getMethodParams(params[0].trim(), this.options) : undefined,
+        };
     }
 
     /**
-     * @param params - `^(.*)$`
-     * @param options - options to parse params
-     * @private
+     * TODO: determine type from default value
      */
-    private getMethodParams(params: string, options: ClassDiagramParserOptions): DiagramMethodParameter[] {
-        const cleanedParams = params.substring(1, params.length - 1);
+    public parseProperty(content: string): DiagramProperty {
+        const [data, defaultValue] = content.split("=");
+        const [info, rawType] = data.split(":");
+        const type = this.getTypeFromRawType(rawType);
 
-        return cleanedParams.split(",").map((param, index) => {
-            const trimmedParams = param.trim();
-            const propertyData = this.getParsedProperty(trimmedParams, options);
+        const infoTokens = info.trim().split(" ");
 
-            return {
-                index,
-                name: propertyData.name,
-                type: propertyData.type,
-                defaultValue: propertyData.defaultValue,
-                optional: propertyData.optional,
-            };
-        });
+        let optional = false;
+        // check 'name ?: string' or 'age ? :number'
+        if (infoTokens[infoTokens.length - 1].endsWith("?")) {
+            const lastToken = infoTokens[infoTokens.length - 1];
+            if (lastToken === "?") {
+                infoTokens.pop();
+            } else {
+                infoTokens[infoTokens.length - 1] = lastToken.substring(0, lastToken.length - 1);
+            }
+            optional = true;
+        }
+
+        // TODO: check accessorPrefix
+        const rawName = infoTokens[infoTokens.length - 1].replace(/[;]/g, "");
+        const name = rawName;
+
+        const modifiers = this.parseModifiersFromToken(infoTokens, this.options);
+        const trimmedDefaultValue = defaultValue?.trim();
+
+        return {
+            name,
+            optional,
+            type,
+            defaultValue: trimmedDefaultValue,
+            final: modifiers.final,
+            abstract: modifiers.abstract,
+            static: modifiers.static,
+            access: modifiers.accessor,
+            value: trimmedDefaultValue,
+            elementType: DiagramElementType.PROPERTY,
+        };
     }
 
     private getTypeFromRawType(rawType: string): DiagramType {
@@ -100,34 +122,25 @@ export class DiagramClassParser extends DiagramEntityParser {
         return isArray ? DiagramType.LinkArray(trimmedType.replace("[]", "")) : DiagramType.Link(trimmedType);
     }
 
-
     /**
-     * TODO: Check arrays
+     * @param params - `^(.*)$`
+     * @param options - options to parse params
+     * @private
      */
-    private getParsedProperty(content: string, options: ClassDiagramParserOptions): DiagramProperty {
-        const [data, defaultValue] = content.split("=");
-        const [info, rawType] = data.split(":");
-        const type = this.getTypeFromRawType(rawType);
+    private getMethodParams(params: string, options: ClassDiagramParserOptions): DiagramMethodParameter[] {
+        const cleanedParams = params.substring(1, params.length - 1);
 
-        const infoTokens = info.trim().split(" ");
+        return cleanedParams.split(",").map((param, index) => {
+            const trimmedParams = param.trim();
+            const propertyData = this.parseProperty(trimmedParams);
 
-        // TODO: check accessorPrefix
-        const rawName = infoTokens[infoTokens.length - 1];
-        const name = rawName;
-
-        const modifiers = this.parseModifiersFromToken(infoTokens, options);
-
-        return {
-            name,
-            defaultValue: defaultValue?.trim(),
-            type,
-            final: modifiers.final,
-            abstract: modifiers.abstract,
-            static: modifiers.static,
-            access: modifiers.accessor,
-            optional: false,
-            value: defaultValue,
-            elementType: DiagramElementType.PROPERTY,
-        };
+            return {
+                index,
+                name: propertyData.name,
+                type: propertyData.type,
+                defaultValue: propertyData.defaultValue,
+                optional: propertyData.optional,
+            };
+        });
     }
 }

@@ -7,9 +7,124 @@ import {DiagramParserTexts} from "./diagram-parser-texts";
 import {DiagramElementType} from "../../class/common/diagram-element-type";
 import {DiagramAccessModifier} from "../../class/common/diagram-access-modifier";
 
-
 describe("Test text to diagram parser", () => {
-    it("Parse basic text", async () => {
+    it("Parse attributes", () => {
+        const parser = new DiagramClassParser({
+            prefixAccessorMap: {
+                [DiagramAccessModifier.PRIVATE]: "_",
+            },
+        });
+
+        expect(parser.parseProperty("name")).to.deep.equal({
+            name: "name",
+            type: {name: "UNKNOWN"},
+            final: false,
+            abstract: false,
+            value: undefined,
+            defaultValue: undefined,
+            static: false,
+            access: "PUBLIC",
+            optional: false,
+            elementType: "PROPERTY",
+        });
+        expect(parser.parseProperty("age: number")).to.deep.equal({
+            name: "age",
+            type: {name: "NUMBER"},
+            final: false,
+            abstract: false,
+            value: undefined,
+            defaultValue: undefined,
+            static: false,
+            access: "PUBLIC",
+            optional: false,
+            elementType: "PROPERTY",
+        });
+        expect(parser.parseProperty("readonly surname;")).to.deep.equal({
+            name: "surname",
+            type: {name: "UNKNOWN"},
+            final: true,
+            abstract: false,
+            value: undefined,
+            defaultValue: undefined,
+            static: false,
+            access: "PUBLIC",
+            optional: false,
+            elementType: "PROPERTY",
+        });
+        expect(parser.parseProperty("favouriteNumbers: number[]")).to.deep.equal({
+            name: "favouriteNumbers",
+            type: {name: "NUMBER", array: true},
+            final: false,
+            abstract: false,
+            value: undefined,
+            defaultValue: undefined,
+            static: false,
+            access: "PUBLIC",
+            optional: false,
+            elementType: "PROPERTY",
+        });
+        expect(parser.parseProperty("nickNames:string[];")).to.deep.equal({
+            name: "nickNames",
+            type: {name: "STRING", array: true},
+            final: false,
+            abstract: false,
+            value: undefined,
+            defaultValue: undefined,
+            static: false,
+            access: "PUBLIC",
+            optional: false,
+            elementType: "PROPERTY",
+        });
+        expect(parser.parseProperty("gender: string = 'UNKNOWN'")).to.deep.equal({
+            name: "gender",
+            type: {name: "STRING"},
+            final: false,
+            abstract: false,
+            value: "'UNKNOWN'",
+            defaultValue: "'UNKNOWN'",
+            static: false,
+            access: "PUBLIC",
+            optional: false,
+            elementType: "PROPERTY",
+        });
+        expect(parser.parseProperty("middleName?:string")).to.deep.equal({
+            name: "middleName",
+            type: {name: "STRING"},
+            final: false,
+            abstract: false,
+            value: undefined,
+            defaultValue: undefined,
+            static: false,
+            access: "PUBLIC",
+            optional: true,
+            elementType: "PROPERTY",
+        });
+        expect(parser.parseProperty("alias ? :string = 'none'")).to.deep.equal({
+            name: "alias",
+            type: {name: "STRING"},
+            final: false,
+            abstract: false,
+            value: "'none'",
+            defaultValue: "'none'",
+            static: false,
+            access: "PUBLIC",
+            optional: true,
+            elementType: "PROPERTY",
+        });
+        expect(parser.parseProperty("protected favouriteLetter = 'g'")).to.deep.equal({
+            name: "favouriteLetter",
+            type: {name: "UNKNOWN"},
+            final: false,
+            abstract: false,
+            value: "'g'",
+            defaultValue: "'g'",
+            static: false,
+            access: DiagramAccessModifier.PROTECTED,
+            optional: false,
+            elementType: "PROPERTY",
+        });
+    });
+    it("Parse basic text", () => {
         const parser = new DiagramClassParser();
         const {type, bodyRows, name} = parser.parseEntityBasic(DiagramParserTexts.classAttributes1);
 
@@ -28,115 +143,5 @@ describe("Test text to diagram parser", () => {
         expect(parsedDiagram.type).to.be.equal(DiagramEntityType.CLASS);
 
         expect(parsedDiagram.type).to.be.equal(DiagramEntityType.CLASS);
-
-        expect(parsedDiagram).to.not.deep.equal(
-            {
-                "elementType": "ENTITY",
-                "name": "Person",
-                "access": "PUBLIC",
-                "type": "CLASS",
-                "properties": [{
-                    "name": "Name",
-                    "type": {"name": "UNKNOWN"},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "Age",
-                    "type": {"name": "NUMBER"},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "SurName;",
-                    "type": {"name": "UNKNOWN"},
-                    "final": true,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "FavouriteNumbers",
-                    "type": {"name": "NUMBER", "array": true},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "NickNames",
-                    "type": {"name": "STRING", "array": true},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "Gender",
-                    "defaultValue": "\"unknown\"",
-                    "type": {"name": "STRING"},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "value": " \"unknown\"",
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "MiddleName?",
-                    "type": {"name": "STRING"},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "Alias?",
-                    "defaultValue": "\"none\"",
-                    "type": {"name": "STRING"},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "value": " \"none\"",
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "FavouriteLetter",
-                    "defaultValue": "\"g\"",
-                    "type": {"name": "UNKNOWN"},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "value": " \"g\"",
-                    "elementType": "PROPERTY",
-                }, {
-                    "name": "#address",
-                    "type": {"name": "LINK", "className": "Address"},
-                    "final": false,
-                    "abstract": false,
-                    "static": false,
-                    "access": "PUBLIC",
-                    "optional": false,
-                    "elementType": "PROPERTY",
-                }],
-                "methods": [],
-                "generics": [],
-                "abstract": false,
-                "parentImplements": [],
-            },
-        );
     });
 });

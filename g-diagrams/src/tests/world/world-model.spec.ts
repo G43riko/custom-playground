@@ -11,6 +11,8 @@ describe("Test World model", () => {
 
 
         console.log(DiagramModel.getAllRequiredTypesOfDiagramModel(model));
+        console.log("----------------------------");
+        console.log(DiagramModel.getAllAvailableTypesOfDiagramModel(model));
         expect(model.validate()).to.deep.equal({
             errors: [],
             warnings: [],

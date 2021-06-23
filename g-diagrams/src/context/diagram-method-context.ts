@@ -7,7 +7,7 @@ import {
 } from "./diagram-context-validation-result";
 import {DiagramGenericContextInstance} from "./diagram-generic-context";
 import {DiagramGeneric} from "../class/common/diagram-generic";
-import {DiagramType, DiagramTypeNames} from "../class/common/diagram-type";
+import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
 
 export class DiagramMethodContext extends DiagramGenericContextInstance {
     public constructor(private readonly method: DiagramMethod) {
@@ -55,13 +55,13 @@ export class DiagramMethodContext extends DiagramGenericContextInstance {
         worldContext: DiagramWorldContext,
         classGenerics: DiagramGeneric[],
     ): boolean {
-        const name = type.name === DiagramTypeNames.LINK ? type.className : type.name;
+        const name = type.name === DiagramTypeName.LINK ? type.className : type.name;
         if (!name) {
             throw new Error("Cannot get name from type " + JSON.stringify(type));
         }
 
         // if it global name etc STRING, NUMBER...
-        if (name in DiagramTypeNames) {
+        if (name in DiagramTypeName) {
             return true;
         }
 

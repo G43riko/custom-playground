@@ -1,4 +1,4 @@
-import {DiagramType, DiagramTypeNames} from "../class/common/diagram-type";
+import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
 import {DiagramContextInstance} from "./diagram-context";
 import {DiagramEntityContext} from "./diagram-entity-context";
 import {
@@ -36,7 +36,7 @@ export class DiagramWorldContext extends DiagramContextInstance {
         // search in custom defined types
         if (this.customTypes.some((type) => {
             // if it is link, it is required to compare target object name
-            if (type.name === DiagramTypeNames.LINK && type.className === name) {
+            if (type.name === DiagramTypeName.LINK && type.className === name) {
                 return true;
             }
 
@@ -93,13 +93,13 @@ export class DiagramWorldContext extends DiagramContextInstance {
     private canResolveType(
         type: DiagramType,
     ): boolean {
-        const name = type.name === DiagramTypeNames.LINK ? type.className : type.name;
+        const name = type.name === DiagramTypeName.LINK ? type.className : type.name;
         if (!name) {
             throw new Error("Cannot get name from type " + JSON.stringify(type));
         }
 
         // if it global name etc STRING, NUMBER...
-        if (name in DiagramTypeNames) {
+        if (name in DiagramTypeName) {
             return true;
         }
 

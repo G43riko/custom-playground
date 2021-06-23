@@ -1,6 +1,6 @@
 import {DiagramGeneric, DiagramGenericToString} from "./diagram-generic";
 
-export enum DiagramTypeNames {
+export enum DiagramTypeName {
     STRING = "STRING",
     NUMBER = "NUMBER",
     BOOLEAN = "BOOLEAN",
@@ -11,7 +11,7 @@ export enum DiagramTypeNames {
 }
 
 export interface DiagramType {
-    readonly name?: string | DiagramTypeNames;
+    readonly name?: string | DiagramTypeName;
     /**
      * Target link name
      */
@@ -34,24 +34,24 @@ export const AdvancedDiagramType = {
 // TODO: add Observable
 // tslint:disable-next-line:variable-name
 export const DiagramType = {
-    String: {name: DiagramTypeNames.STRING},
-    StringArray: {name: DiagramTypeNames.STRING, array: true},
-    Number: {name: DiagramTypeNames.NUMBER},
-    Unknown: {name: DiagramTypeNames.UNKNOWN},
-    NumberArray: {name: DiagramTypeNames.NUMBER, array: true},
-    Boolean: {name: DiagramTypeNames.BOOLEAN},
-    BooleanArray: {name: DiagramTypeNames.BOOLEAN, array: true},
-    Union: (...enumValues: string[]): DiagramType => ({enumValues, name: DiagramTypeNames.UNION}),
-    Void: {name: DiagramTypeNames.VOID},
+    String: {name: DiagramTypeName.STRING},
+    StringArray: {name: DiagramTypeName.STRING, array: true},
+    Number: {name: DiagramTypeName.NUMBER},
+    Unknown: {name: DiagramTypeName.UNKNOWN},
+    NumberArray: {name: DiagramTypeName.NUMBER, array: true},
+    Boolean: {name: DiagramTypeName.BOOLEAN},
+    BooleanArray: {name: DiagramTypeName.BOOLEAN, array: true},
+    Union: (...enumValues: string[]): DiagramType => ({enumValues, name: DiagramTypeName.UNION}),
+    Void: {name: DiagramTypeName.VOID},
 
     /**
      * Link to entity
      * @param targetName - entity name
      */
-    Link: (targetName: string): DiagramType => ({name: DiagramTypeNames.LINK, className: targetName}),
+    Link: (targetName: string): DiagramType => ({name: DiagramTypeName.LINK, className: targetName}),
     LinkGeneric: (targetName: string, ...generics: DiagramGeneric[]): DiagramType => ({
         generics,
-        name: DiagramTypeNames.LINK,
+        name: DiagramTypeName.LINK,
         className: targetName,
     }),
 
@@ -59,7 +59,7 @@ export const DiagramType = {
      * Array of links to entity
      * @param targetName - entity name
      */
-    LinkArray: (targetName: string): DiagramType => ({name: DiagramTypeNames.LINK, className: targetName, array: true}),
+    LinkArray: (targetName: string): DiagramType => ({name: DiagramTypeName.LINK, className: targetName, array: true}),
     // Observable: AdvancedDiagramType.Observable,
 };
 
@@ -83,7 +83,7 @@ export function DiagramTypeToString(type: DiagramType): string {
         return type.array ? `(${joinedEnumValues})[]` : joinedEnumValues;
     }
 
-    const realName = type.name === DiagramTypeNames.LINK ? type.className : type.name;
+    const realName = type.name === DiagramTypeName.LINK ? type.className : type.name;
     const typeName = realName + generics();
 
     if (typeName.match(/[< |]/)) {

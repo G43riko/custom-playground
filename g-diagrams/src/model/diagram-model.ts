@@ -1,5 +1,5 @@
 import {DiagramGeneric} from "../class/common/diagram-generic";
-import {DiagramType} from "../class/common/diagram-type";
+import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
 import {DiagramClass} from "../class/entity/diagram-class";
 import {DiagramEntity} from "../class/entity/diagram-entity";
 import {DiagramWorldContext} from "../context/diagram-world-context";
@@ -17,6 +17,18 @@ export class DiagramModel {
         const result: DiagramType[] = [];
 
         diagramModel.entityMap.forEach((entity) => result.push(...DiagramModel.getAllRequiredTypesOfEntity(entity)));
+
+        return result;
+    }
+
+    public static getAllAvailableTypesOfDiagramModel(diagramModel: DiagramModel, includeBasic = true): string[] {
+        const result: string[] = [];
+
+        if (includeBasic) {
+            result.push(DiagramTypeName.STRING, DiagramTypeName.BOOLEAN, DiagramTypeName.NUMBER, DiagramTypeName.UNKNOWN, DiagramTypeName.VOID);
+        }
+
+        diagramModel.entityMap.forEach((entity) => result.push(entity.name));
 
         return result;
     }
