@@ -67,7 +67,7 @@ class DiagramParser extends DiagramAbstractParser {
 
 //--
 class DiagramEntityParser extends DiagramAbstractParser {
-    public parseEntityBasic(content: string);
+    public parseEntityBasic(content: string): DiagramEntity;
 }
 
 //--
@@ -78,4 +78,39 @@ class DiagramClassParser extends DiagramEntityParser implements DiagramMethodPar
 //--
 class DiagramEnumParser extends DiagramEntityParser {
 
+}
+
+//--
+interface DiagramContextValidationResult {
+
+}
+
+//--
+class DiagramContext {
+
+}
+
+//--
+class DiagramWorldContext extends DiagramContext {
+    public addProperty(property: DiagramProperty): void;
+
+    public addMethod(method: DiagramMethod): void;
+
+    public addEntity(entity: DiagramEntity): void;
+
+    public defineTypes(customTypes: DiagramType[]): void
+
+    public validate(): DiagramContextValidationResult;
+}
+
+//--
+class DiagramEntityContext extends DiagramContext {
+    public hasPublic(name: string): boolean
+
+    public validate(worldContext: DiagramWorldContext): DiagramContextValidationResult
+}
+
+//--
+class DiagramGenericContextInstance extends DiagramContext {
+    public validate(worldContext: DiagramWorldContext, entityContext: DiagramEntityContext): DiagramContextValidationResult
 }

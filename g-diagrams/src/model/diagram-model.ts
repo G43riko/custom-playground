@@ -105,7 +105,7 @@ export class DiagramModel {
         this.entitiesNames.forEach((entityName) => {
             const entity = this.entityMap.get(entityName);
             if (entity) {
-                worldContext.addItem(entity);
+                worldContext.addEntity(entity);
             }
         });
 

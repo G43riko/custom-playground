@@ -67,7 +67,7 @@ export class DiagramParser extends DiagramAbstractParser {
             console.warn("Cannot map item to diagram: " + JSON.stringify(item));
         });
 
-        if (this.options.generateLinksFromExtends) {
+        if (this.options.generateAllLinks || this.options.generateLinksFromExtends) {
             createdEntities.forEach((entity) => {
                 if (!entity.parentExtend) {
                     return;
@@ -76,7 +76,7 @@ export class DiagramParser extends DiagramAbstractParser {
                 result.addLink(DiagramLink.Generalization(entity.parentExtend.className ?? entity.parentExtend.name ?? "", entity.name));
             });
         }
-        if (this.options.generateLinksFromInterfaces) {
+        if (this.options.generateAllLinks || this.options.generateLinksFromInterfaces) {
             createdEntities.forEach((entity) => {
                 if (!entity.parentImplements?.length) {
                     return;

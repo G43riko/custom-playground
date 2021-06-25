@@ -1,7 +1,7 @@
-import {GojsData} from "./text-to-diagram/gojs-data";
-import {DiagramModel} from "../model/diagram-model";
-import {DiagramType, ParseDiagramType} from "../class/common/diagram-type";
-import {DiagramEntityFactory} from "../class/diagram-entity-factory";
+import {GojsData} from "./gojs-data";
+import {DiagramModel} from "../../model/diagram-model";
+import {DiagramType, ParseDiagramType} from "../../class/common/diagram-type";
+import {DiagramEntityFactory} from "../../class/diagram-entity-factory";
 
 export function GojsDataToDiagram(data: GojsData): DiagramModel {
     const model = new DiagramModel();

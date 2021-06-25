@@ -1,13 +1,13 @@
-import {DiagramModel} from "../model/diagram-model";
-import {DiagramAccessModifier} from "../class/common/diagram-access-modifier";
-import {DiagramCheckers} from "../diagram-checkers";
-import {DiagramTypeToString} from "../class/common/diagram-type";
+import {DiagramModel} from "../../model/diagram-model";
+import {DiagramAccessModifier} from "../../class/common/diagram-access-modifier";
+import {DiagramCheckers} from "../../diagram-checkers";
+import {DiagramTypeToString} from "../../class/common/diagram-type";
 import * as go from "gojs";
-import {GojsData, GojsLinkData, GojsNodeData} from "./text-to-diagram/gojs-data";
+import {GojsData, GojsLinkData, GojsNodeData} from "./gojs-data";
 
 const $ = go.GraphObject.make;
 
-function getData(diagram: DiagramModel): GojsData {
+function getData(diagram: DiagramModel, onlyTypes?: string[]): GojsData {
     const nodeData: GojsNodeData[] = [];
     const linkData: GojsLinkData[] = [];
     const entityNameKeyMap = new Map<string, number>();
@@ -70,6 +70,16 @@ function getData(diagram: DiagramModel): GojsData {
         linkData.push({to, from, relationship: link.type});
     });
 
+    if (onlyTypes) {
+        const filteredNodeData = nodeData.filter((node) => onlyTypes.includes(node.name));
+
+        return {
+            nodeData: filteredNodeData,
+            linkData: linkData.filter((link) =>
+                filteredNodeData.some((item) => item.key === link.from) &&
+                filteredNodeData.some((item) => item.key === link.to)),
+        };
+    }
 
     return {
         nodeData,
@@ -81,9 +91,10 @@ function getData(diagram: DiagramModel): GojsData {
 /**
  * Same as {@link go.Model.toJson}
  * @param diagram
+ * @param onlyTypes
  */
-export function getGoModelJSONFromModel(diagram: DiagramModel): string {
-    const data = getData(diagram);
+export function getGoModelJSONFromModel(diagram: DiagramModel, onlyTypes?: string[]): string {
+    const data = getData(diagram, onlyTypes);
 
     return JSON.stringify({
         class: "GraphLinksModel",
@@ -94,8 +105,8 @@ export function getGoModelJSONFromModel(diagram: DiagramModel): string {
     });
 }
 
-export function getGoModelFromModel(diagram: DiagramModel): go.Model {
-    const data = getData(diagram);
+export function getGoModelFromModel(diagram: DiagramModel, onlyTypes?: string[]): go.Model {
+    const data = getData(diagram, onlyTypes);
 
     // setup a few example class nodes and relationships
     return $(go.GraphLinksModel,

@@ -1,6 +1,6 @@
 import {DiagramModel} from "../../model/diagram-model";
 import * as fs from "fs";
-import {getGoModelJSONFromModel} from "../../conversions/diagram-to-gojs-data";
+import {getGoModelJSONFromModel} from "../../conversions/gojs-conversions/diagram-to-gojs-data";
 import {DiagramParser} from "../../conversions/text-to-diagram/diagram-parser";
 
 function loadFileContentToModel(file: string): DiagramModel {

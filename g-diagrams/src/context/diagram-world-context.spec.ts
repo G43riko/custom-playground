@@ -18,7 +18,7 @@ describe("Test World context", () => {
 
     it("test basic context validations", async () => {
         const context = new DiagramWorldContext();
-        context.addItem({
+        context.addProperty({
             name: "someProperty",
             access: DiagramAccessModifier.PUBLIC,
             elementType: DiagramElementType.PROPERTY,

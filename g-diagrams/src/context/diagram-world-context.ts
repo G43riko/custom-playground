@@ -1,5 +1,5 @@
 import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
-import {DiagramContextInstance} from "./diagram-context";
+import {DiagramContext} from "./diagram-context";
 import {DiagramEntityContext} from "./diagram-entity-context";
 import {
     DiagramContextValidationResult,
@@ -10,16 +10,29 @@ import {DiagramMethod} from "../class/method/diagram-method";
 import {DiagramProperty} from "../class/property/diagram-property";
 import {DiagramCheckers} from "../diagram-checkers";
 
-export class DiagramWorldContext extends DiagramContextInstance {
+export class DiagramWorldContext extends DiagramContext {
     private readonly entitiesContextMap = new Map<string, DiagramEntityContext>();
     private readonly customTypes: DiagramType[] = [];
 
-    public addItem(value: DiagramEntity | DiagramMethod | DiagramProperty): void {
-        super.addItem(value);
+    /**
+     * Add global property/variable to the world context
+     * @param property
+     */
+    public addProperty(property: DiagramProperty): void {
+        this.addItem(property);
+    }
 
-        if (DiagramCheckers.isEntity(value)) {
-            this.entitiesContextMap.set(value.name, new DiagramEntityContext(value));
-        }
+    /**
+     * add global method/function to the world context
+     * @param method
+     */
+    public addMethod(method: DiagramMethod): void {
+        this.addItem(method);
+    }
+
+    public addEntity(entity: DiagramEntity): void {
+        this.addItem(entity);
+        this.entitiesContextMap.set(entity.name, new DiagramEntityContext(entity));
     }
 
     /**

@@ -1,7 +1,7 @@
-import {DiagramContextInstance} from "./diagram-context";
+import {DiagramContext} from "./diagram-context";
 import {DiagramGeneric} from "../class/common/diagram-generic";
 
-export class DiagramGenericContextInstance extends DiagramContextInstance {
+export class DiagramGenericContextInstance extends DiagramContext {
     public readonly generics: DiagramGeneric[] = [];
 
 }
