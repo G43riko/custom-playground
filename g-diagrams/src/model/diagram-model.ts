@@ -88,7 +88,7 @@ export class DiagramModel {
 
     public addEntity<T extends DiagramEntity>(entity: T): T {
         if (this.entityMap.has(entity.name)) {
-            throw new Error("Entity with name already exists");
+            throw new Error("Entity with name '" + entity.name + "' already exists");
         }
         this.entitiesNames.push(entity.name);
         this.entityMap.set(entity.name, entity);

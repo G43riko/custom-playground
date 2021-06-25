@@ -11,7 +11,6 @@
 </head>
 <body>
 <div id="myDiagramDiv" style="border: solid 1px black; width:100%; height:600px"></div>
-
 <script>
     // show visibility or access as a single character at the beginning of each property or method
     function convertVisibility(v) {
@@ -98,7 +97,7 @@
     function init() {
         const $ = go.GraphObject.make;
 
-        const myDiagram = $(
+        myDiagram = $(
             go.Diagram,
             "myDiagramDiv",
             {
@@ -310,5 +309,62 @@
 
     window.addEventListener('DOMContentLoaded', init);
 </script>
+<script>
+    function addSaveImageButton(background = "white") {
+        const button = document.createElement("button");
+        button.innerText = "Save full image";
+        button.onclick = () => {
+            const image = myDiagram.makeImage({
+                background,
+                scale: 1,
+            });
+
+            const link = document.createElement("a");
+            link.href = image.src;
+            link.download = "something";
+            document.body.append(link);
+            link.click();
+
+            document.body.removeChild(link);
+        }
+        document.body.append(button);
+    }
+
+    function addSaveSvgButton(background = "white") {
+        const button = document.createElement("button");
+        button.innerText = "Save as svg";
+        button.onclick = () => {
+            const image = myDiagram.makeSvg({});
+
+            const link = document.createElement("a");
+            link.href = image.src;
+            link.download = "something";
+            document.body.append(link);
+            link.click();
+
+            document.body.removeChild(link);
+        }
+        document.body.append(button);
+    }
+
+    function addOpenImageButton(background = "white") {
+        const button = document.createElement("button");
+        button.innerText = "Open full image";
+        button.onclick = () => {
+            const image = myDiagram.makeImage({
+                background,
+                scale: 1,
+            });
+
+            const win = window.open("", "__blank");
+            win.document.body.append(image);
+        }
+        document.body.append(button);
+    }
+
+    addOpenImageButton();
+    addSaveImageButton();
+</script>
+
 </body>
 </html>

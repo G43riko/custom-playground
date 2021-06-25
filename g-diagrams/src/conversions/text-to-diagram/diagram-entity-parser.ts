@@ -65,7 +65,6 @@ export class DiagramEntityParser extends DiagramAbstractParser {
         const name = headerTokens[headerTokens.length - 1];
         const rawType = headerTokens[headerTokens.length - 2];
 
-
         const type = ParseDiagramEntityType(rawType);
         if (!type) {
             throw new Error("Cannot parse type " + rawType);

@@ -1,6 +1,11 @@
 import {DiagramAccessModifier} from "../class/common/diagram-access-modifier";
 import {DiagramEntityType} from "../class/entity/diagram-entity-type";
 
+
+// tslint:disable-next-line:no-var-requires
+const jsdom = require("jsdom");
+const {JSDOM} = jsdom;
+
 type Nullable<T> = {
     [P in keyof T]?: T[P] | null;
 };
@@ -41,7 +46,7 @@ interface ElementOperationData {
     static: boolean;
 }
 
-interface ElementData {
+export interface ElementData {
     id: string;
     name: string;
     package: string;
@@ -57,27 +62,46 @@ interface ElementData {
     operations: ElementOperationData[];
 }
 
-interface PackageElementData extends ElementData {
+export interface PackageElementData extends ElementData {
     children: (ElementData | PackageElementData)[];
 }
 
-export class Uml25ToJson {
+export class Uml25ToPackageElementData {
     public static async test(): Promise<void> {
         const content = await fetch("/assets/paint/voxel.xml").then((response) => response.text());
 
-        const parser = new Uml25ToJson();
+        const parser = new Uml25ToPackageElementData();
 
         console.log(parser.parse(content));
     }
 
-    public parse(content: string): unknown {
+    public parse(content: string): PackageElementData {
 
-        const parser = new DOMParser();
+        // const dom = new JSDOM(content);
+        // // return dom.window.document;
+        // // @ts-ignore
+        // const objects = this.parseObjects(Array.from(dom.window.document.getElementsByTagName("element")).slice(0, 9900));
+
+
+        const DomParser = this.getDomParser() as any;
+        // @ts-ignore
+        const parser = new DomParser();
         const xmlDoc = parser.parseFromString(content, "text/xml");
-
+        // @ts-ignore
         const objects = this.parseObjects(Array.from(xmlDoc.getElementsByTagName("element")).slice(0, 9900));
 
         return this.organizeObjects(objects);
+    }
+
+    private getDomParser(): any {
+        if (typeof DOMParser !== "undefined") {
+            return DOMParser;
+        }
+
+        const dom = new JSDOM("");
+
+        return dom.window.DOMParser;
+
     }
 
     private organizeObjects(elements: ElementData[]): PackageElementData {

@@ -38,6 +38,7 @@ export const DiagramType = {
     StringArray: {name: DiagramTypeName.STRING, array: true},
     Number: {name: DiagramTypeName.NUMBER},
     Unknown: {name: DiagramTypeName.UNKNOWN},
+    UnknownArray: {name: DiagramTypeName.UNKNOWN, array: true},
     NumberArray: {name: DiagramTypeName.NUMBER, array: true},
     Boolean: {name: DiagramTypeName.BOOLEAN},
     BooleanArray: {name: DiagramTypeName.BOOLEAN, array: true},
@@ -93,3 +94,28 @@ export function DiagramTypeToString(type: DiagramType): string {
     return type.array ? `${typeName}[]` : typeName;
 }
 
+export function ParseDiagramType(rawType: string): DiagramType {
+    const trimmedType = rawType?.trim().replace(/[;]/g, "");
+    if (!trimmedType) {
+        return DiagramType.Unknown;
+    }
+    const isArray = trimmedType?.endsWith("[]");
+
+    if (trimmedType.match(/void([ \t])*($|\n)/i)) {
+        return DiagramType.Void;
+    }
+    if (trimmedType.match(/unknown(\[]| |\t)*($|\n)/i)) {
+        return isArray ? DiagramType.UnknownArray : DiagramType.Unknown;
+    }
+    if (trimmedType.match(/string(\[]| |\t)*($|\n)/i)) {
+        return isArray ? DiagramType.StringArray : DiagramType.String;
+    }
+    if (trimmedType.match(/number(\[]| |\t)*($|\n)/i)) {
+        return isArray ? DiagramType.NumberArray : DiagramType.Number;
+    }
+    if (trimmedType.match(/boolean(\[]| |\t)*($|\n)/i)) {
+        return isArray ? DiagramType.Boolean : DiagramType.Boolean;
+    }
+
+    return isArray ? DiagramType.LinkArray(trimmedType.replace("[]", "")) : DiagramType.Link(trimmedType);
+}

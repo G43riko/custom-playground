@@ -2,7 +2,7 @@ import {DiagramEntityParser} from "./diagram-entity-parser";
 import {ClassDiagramParserOptions} from "./class-diagram-parser-options";
 import {DiagramEntityFactory} from "../../class/diagram-entity-factory";
 import {DiagramEntity} from "../../class/entity/diagram-entity";
-import {DiagramType} from "../../class/common/diagram-type";
+import {DiagramType, ParseDiagramType} from "../../class/common/diagram-type";
 import {DiagramMethodParameter} from "../../class/method/diagram-method-parameter";
 import {DiagramMethod} from "../../class/method/diagram-method";
 import {DiagramProperty} from "../../class/property/diagram-property";
@@ -53,7 +53,7 @@ export class DiagramClassParser extends DiagramEntityParser {
             elementType: DiagramElementType.METHOD,
             access: modifiers.accessor,
             static: modifiers.static,
-            returnType: trimmedReturnType ? DiagramType.Link(trimmedReturnType) : DiagramType.Unknown,
+            returnType: trimmedReturnType ? ParseDiagramType(trimmedReturnType) : DiagramType.Unknown,
             parameters: params ? params[0].match(/\(\W*\)/) ? undefined : this.getMethodParams(params[0].trim(), this.options) : undefined,
         };
     }
@@ -64,7 +64,7 @@ export class DiagramClassParser extends DiagramEntityParser {
     public parseProperty(content: string): DiagramProperty {
         const [data, defaultValue] = content.split("=");
         const [info, rawType] = data.split(":");
-        const type = this.getTypeFromRawType(rawType);
+        const type = ParseDiagramType(rawType);
 
         const infoTokens = info.trim().split(" ");
 
@@ -101,27 +101,6 @@ export class DiagramClassParser extends DiagramEntityParser {
         };
     }
 
-    private getTypeFromRawType(rawType: string): DiagramType {
-        const trimmedType = rawType?.trim().replace(/[;]/g, "");
-        if (!trimmedType) {
-            return DiagramType.Unknown;
-        }
-        const isArray = trimmedType?.endsWith("[]");
-
-        if (trimmedType.match(/string(\[]| |\t)*($|\n)/i)) {
-            return isArray ? DiagramType.StringArray : DiagramType.String;
-        }
-        if (trimmedType.match(/number(\[]| |\t)*($|\n)/i)) {
-            return isArray ? DiagramType.NumberArray : DiagramType.Number;
-        }
-        if (trimmedType.match(/boolean(\[]| |\t)*($|\n)/i)) {
-            return isArray ? DiagramType.Boolean : DiagramType.Boolean;
-        }
-
-
-        return isArray ? DiagramType.LinkArray(trimmedType.replace("[]", "")) : DiagramType.Link(trimmedType);
-    }
-
     /**
      * @param params - `^(.*)$`
      * @param options - options to parse params
@@ -139,7 +118,7 @@ export class DiagramClassParser extends DiagramEntityParser {
                 name: propertyData.name,
                 type: propertyData.type,
                 defaultValue: propertyData.defaultValue,
-                optional: propertyData.optional,
+                optional: propertyData.optional || propertyData.defaultValue !== undefined,
             };
         });
     }

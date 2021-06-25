@@ -1,6 +1,6 @@
 import {DiagramModel} from "../../model/diagram-model";
 import * as fs from "fs";
-import {getGoModelFromModel} from "../../conversions/diagram-to-gojs-data";
+import {getGoModelJSONFromModel} from "../../conversions/diagram-to-gojs-data";
 import {DiagramParser} from "../../conversions/text-to-diagram/diagram-parser";
 
 function loadFileContentToModel(file: string): DiagramModel {
@@ -27,8 +27,7 @@ export function createWorldModel(): DiagramModel {
     // addBotItemsToModel(worldModel);
 
 
-    const goModel = getGoModelFromModel(worldModel);
-    fs.writeFileSync(__dirname + "/diagram2.js", `const diagramData = ${JSON.stringify(goModel.toJson())}`);
+    fs.writeFileSync(__dirname + "/diagram2.js", `const diagramData = ${JSON.stringify(getGoModelJSONFromModel(worldModel))}`);
 
     return worldModel;
 }

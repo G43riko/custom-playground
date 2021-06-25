@@ -3,12 +3,13 @@ import {DiagramAccessModifier} from "../class/common/diagram-access-modifier";
 import {DiagramCheckers} from "../diagram-checkers";
 import {DiagramTypeToString} from "../class/common/diagram-type";
 import * as go from "gojs";
+import {GojsData, GojsLinkData, GojsNodeData} from "./text-to-diagram/gojs-data";
 
 const $ = go.GraphObject.make;
 
-function getData(diagram: DiagramModel): { nodeData: any[], linkData: { from: number, to: number, relationship: string }[] } {
-    const nodeData: unknown[] = [];
-    const linkData: { from: number, to: number, relationship: string }[] = [];
+function getData(diagram: DiagramModel): GojsData {
+    const nodeData: GojsNodeData[] = [];
+    const linkData: GojsLinkData[] = [];
     const entityNameKeyMap = new Map<string, number>();
 
     const requireKeyFor = (entityName: string): number => {
@@ -26,7 +27,7 @@ function getData(diagram: DiagramModel): { nodeData: any[], linkData: { from: nu
     diagram.forEachEntity((entity) => {
         const key = requireKeyFor(entity.name);
 
-        const methods: unknown[] = [];
+        const methods: GojsNodeData["methods"] = [];
 
         if (DiagramCheckers.isClass(entity) || DiagramCheckers.isInterface(entity)) {
             methods.push(...entity.methods.map((method) => ({
@@ -76,6 +77,22 @@ function getData(diagram: DiagramModel): { nodeData: any[], linkData: { from: nu
     };
 }
 
+
+/**
+ * Same as {@link go.Model.toJson}
+ * @param diagram
+ */
+export function getGoModelJSONFromModel(diagram: DiagramModel): string {
+    const data = getData(diagram);
+
+    return JSON.stringify({
+        class: "GraphLinksModel",
+        copiesArrays: true,
+        copiesArrayObjects: true,
+        nodeDataArray: data.nodeData,
+        linkDataArray: data.linkData,
+    });
+}
 
 export function getGoModelFromModel(diagram: DiagramModel): go.Model {
     const data = getData(diagram);
