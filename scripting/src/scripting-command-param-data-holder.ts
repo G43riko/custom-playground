@@ -1,20 +1,20 @@
-import { CommandParamTypes } from "./command-param-types";
-import { CommandParamParserResult } from "./parsers/command-param-parser";
-import { ScriptingParserDataHolder } from "./scripting-parser-data-holder";
+import {ScriptingParamType} from "./scripting-param-type";
+import {CommandParamParserResult} from "./parsers/command-param-parser";
+import {ScriptingParserDataProvider} from "./scripting-parser-data-provider";
 
-export class CommandParamHolder {
+export class ScriptingCommandParamDataHolder {
     private constructor(
-        public readonly typeData: { type: CommandParamTypes | string; array: boolean },
-        private readonly dataHolder: ScriptingParserDataHolder,
+        public readonly typeData: { type: ScriptingParamType | string; array: boolean },
+        private readonly dataHolder: ScriptingParserDataProvider,
     ) {
     }
 
-    public static fromParameter(param: string, dataHolder: ScriptingParserDataHolder): CommandParamHolder {
-        return new CommandParamHolder(CommandParamHolder.getType(param, dataHolder), dataHolder);
+    public static fromParameter(param: string, dataHolder: ScriptingParserDataProvider): ScriptingCommandParamDataHolder {
+        return new ScriptingCommandParamDataHolder(ScriptingCommandParamDataHolder.getType(param, dataHolder), dataHolder);
     }
 
-    private static getType(parameter: string, dataHolder: ScriptingParserDataHolder): {
-        readonly type: CommandParamTypes | string;
+    private static getType(parameter: string, dataHolder: ScriptingParserDataProvider): {
+        readonly type: ScriptingParamType | string;
         readonly array: boolean;
     } {
         const match = parameter.match(/{\W*(\w+) *(\[])?}/);
@@ -28,36 +28,36 @@ export class CommandParamHolder {
                 type, array: !!match[2],
             };
         }
-        console.warn(`Type ${match[1]} is missing from dataHolder`);
+        console.warn(`Type '${match[1]}' is missing from dataHolder`);
         switch (match[1].trim()) {
             case "n":
                 return {
-                    type : CommandParamTypes.NUMBER,
+                    type: ScriptingParamType.NUMBER,
                     array: !!match[2],
                 };
             case "i":
                 return {
-                    type : CommandParamTypes.INT,
+                    type: ScriptingParamType.INT,
                     array: !!match[2],
                 };
             case "f":
                 return {
-                    type : CommandParamTypes.FLOAT,
+                    type: ScriptingParamType.FLOAT,
                     array: !!match[2],
                 };
             case "s":
                 return {
-                    type : CommandParamTypes.STRING,
+                    type: ScriptingParamType.STRING,
                     array: !!match[2],
                 };
             case "a2":
                 return {
-                    type : CommandParamTypes.POSITION_ABSOLUTE2,
+                    type: ScriptingParamType.POSITION_ABSOLUTE2,
                     array: !!match[2],
                 };
             case "t":
                 return {
-                    type : CommandParamTypes.TIME,
+                    type: ScriptingParamType.TIME,
                     array: !!match[2],
                 };
         }

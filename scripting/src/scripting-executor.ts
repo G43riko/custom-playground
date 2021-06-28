@@ -1,6 +1,6 @@
-import { ScriptingCommandExecutor } from "./executors/scripting-command-executor";
-import { ScriptingParser } from "./scripting-parser";
-import { ScriptingParserDataHolder } from "./scripting-parser-data-holder";
+import {ScriptingCommandExecutor} from "./executors/scripting-command-executor";
+import {ScriptingParser} from "./scripting-parser";
+import {ScriptingParserDataProvider} from "./scripting-parser-data-provider";
 
 export class ScriptingExecutor {
     public constructor(
@@ -14,7 +14,7 @@ export class ScriptingExecutor {
      * @param data - [command name, pattern without command name, ]
      * @param dataHolder
      */
-    public static fromRowData(data: [string, string, ScriptingCommandExecutor<unknown, unknown>][], dataHolder: ScriptingParserDataHolder): ScriptingExecutor {
+    public static fromRowData(data: [string, string, ScriptingCommandExecutor<unknown, unknown>][], dataHolder: ScriptingParserDataProvider): ScriptingExecutor {
         const parser = new ScriptingParser(data.map(([name, pattern]) => ({
             name,
             pattern: `${name} ${pattern}`,
@@ -28,7 +28,7 @@ export class ScriptingExecutor {
     }
 
     public execute(content: string): unknown[] {
-        const parsedData = this.parser.parseContent(content);
+        const parsedData = this.parser.parse(content);
 
 
         return parsedData.map((data) => {
@@ -44,7 +44,7 @@ export class ScriptingExecutor {
     }
 
     public async executeSync(content: string): Promise<unknown[]> {
-        const parsedData = this.parser.parseContent(content);
+        const parsedData = this.parser.parse(content);
 
         const result: unknown[] = [];
 

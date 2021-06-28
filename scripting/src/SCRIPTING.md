@@ -9,8 +9,9 @@
       `{t}`- tree
     - `{s}` - side
 - `{p3|p2}` - position `{i} {i} {i}?`
-    - `{r3|r2}` - relative (from player). Starts with prefix _
-    - `{a3|a2}` - absolute
+  - `{r3|r2}` - relative (from player). Starts with prefix _
+  - `{a3|a2}` - absolute
+- `{j}` - json object `{name: "Gabo", age: 21, male: true, props: {}, nicks: []}`
 
 ## List
 
