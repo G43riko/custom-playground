@@ -1,7 +1,5 @@
-import { currentEOL, FileHolder, ParsedArguments } from "g-shared-library";
-import { createStopWatch } from "gtools/node";
-import * as path from "path";
-import { FileTest } from "./file-test";
+import {currentEOL, FileHolder} from "g-shared-library";
+import {FileTest} from "./file-test";
 
 export const DOCS_TEST_KEY = "TESTED_OBJ";
 
@@ -15,7 +13,7 @@ export const utils = {
         return [
             `${utils.tabs(tabs - 1)}describe("${title}", () => {`,
             `${utils.tabs(tabs)}${text}`,
-            `${utils.tabs(tabs - 1)}});`
+            `${utils.tabs(tabs - 1)}});`,
         ].join(currentEOL);
     },
 };
@@ -47,21 +45,21 @@ export const testMethod = {
     },
 
     generateTestForInto: (fullPath: string, testFilePath = fullPath.replace(regexps.tsJsExtension, (_, extension) => ".generated.spec." + extension)) => {
-        FileHolder.writeFileSync(testFilePath, testMethod.getTestsFor(fullPath),);
+        FileHolder.writeFileSync(testFilePath, testMethod.getTestsFor(fullPath));
     },
 
-    generateForCurrentArgs(): void {
-        const fullFilePaths = ParsedArguments.createProcessArgs().globResolvedFilesSync;
-
-        console.log(fullFilePaths);
-        const generationStart = createStopWatch();
-        fullFilePaths.forEach((filePath) => {
-            const fullFilePath = path.resolve(filePath);
-            const fileStart    = createStopWatch();
-            testMethod.generateTestForInto(fullFilePath);
-            console.log("Generated performance-tests for " + fullFilePath + " in " + fileStart.getDiff());
-        });
-        console.log("Generated " + fullFilePaths.length + " files for " + generationStart.getDiff());
-
-    }
+    // generateForCurrentArgs(): void {
+    //     const fullFilePaths = ParsedArguments.createProcessArgs().globResolvedFilesSync;
+    //
+    //     console.log(fullFilePaths);
+    //     const generationStart = createStopWatch();
+    //     fullFilePaths.forEach((filePath) => {
+    //         const fullFilePath = path.resolve(filePath);
+    //         const fileStart    = createStopWatch();
+    //         testMethod.generateTestForInto(fullFilePath);
+    //         console.log("Generated performance-tests for " + fullFilePath + " in " + fileStart.getDiff());
+    //     });
+    //     console.log("Generated " + fullFilePaths.length + " files for " + generationStart.getDiff());
+    //
+    // },
 };

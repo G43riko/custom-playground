@@ -1,78 +1,87 @@
-import { Operator, parseOperator, stringifyOperator } from "./operator";
-import { DOCS_TEST_KEY, regexps } from "./utils";
+import {Operator, operatorToString, parseOperator} from "./operator";
+import {DOCS_TEST_KEY, regexps} from "./utils";
 
 export class FunctionTestCase<T = unknown> {
-    private constructor(private readonly condition: string,
-                        private readonly operator: Operator,
-                        private readonly result: T) {
+    private constructor(
+        private readonly condition: string,
+        private readonly operator: Operator,
+        private readonly result: T,
+    ) {
     }
 
     public static create<T>(rawLine: string): FunctionTestCase<T> | null {
         if (!rawLine) {
+            console.warn("Cannot create test case from empty line");
+
             return null;
         }
-        const rawTestCase  = rawLine.replace(/^\W*\\*\W*/, "");
+        const rawTestCase = rawLine.replace(/^\W*\\*\W*/, "");
         const operatorMath = rawTestCase.match(regexps.operatorPattern);
 
         if (!rawTestCase || !operatorMath) {
+            console.warn("Test case is missing or operator is not in correct format");
+
             return null;
         }
-        const operator    = parseOperator(operatorMath[0]);
-        const condition   = rawTestCase.substring(0, operatorMath.index).replace(/[;]/g, "").trim();
+        const operator = parseOperator(operatorMath[0]);
+        const condition = rawTestCase.substring(0, operatorMath.index).replace(/[;]/g, "").trim();
         const resultValue = FunctionTestCase.parseResultValue(rawTestCase.substring(operatorMath.index! + operator.length));
 
         return new FunctionTestCase(condition, operator, resultValue as T);
     }
 
     private static parseResultValue(value: string): unknown {
-        const replacedValue = value ? value.replace(/[;]/g, "").trim() : value;
+        const correctedValue = value ? value.replace(/[;]/g, "").trim() : value;
 
-        if (replacedValue === "true") {
+        // check boolean values
+        if (correctedValue === "true") {
             return true;
         }
-        if (replacedValue === "false") {
+        if (correctedValue === "false") {
             return false;
         }
 
-        if (replacedValue.indexOf("\"") === 0 && replacedValue.lastIndexOf("\"") === replacedValue.length - 1) {
-            return replacedValue.substring(1, replacedValue.length - 1);
+        // check string surrounded with "
+        if (correctedValue.indexOf("\"") === 0 && correctedValue.lastIndexOf("\"") === correctedValue.length - 1) {
+            return correctedValue.substring(1, correctedValue.length - 1);
         }
 
-        if (replacedValue === "undefined") {
+        // check special javascript types
+        if (correctedValue === "undefined") {
             return undefined;
         }
-        if (replacedValue === "null") {
+        if (correctedValue === "null") {
             return null;
         }
 
-        const parsedValue = Number(replacedValue);
+        const parsedValue = Number(correctedValue);
         if (!isNaN(parsedValue)) {
             return parsedValue;
         }
 
-        if (replacedValue.indexOf("{}") === 0) {
+        if (correctedValue.indexOf("{}") === 0) {
             return {};
         }
-        if (replacedValue.indexOf("[]") === 0) {
+        if (correctedValue.indexOf("[]") === 0) {
             return [];
         }
-        if (replacedValue.indexOf("{") === 0 && replacedValue.lastIndexOf("}") === replacedValue.length - 1) {
-            return eval(`(${replacedValue})`);
+        if (correctedValue.indexOf("{") === 0 && correctedValue.lastIndexOf("}") === correctedValue.length - 1) {
+            return eval(`(${correctedValue})`);
         }
-        if (replacedValue.indexOf("[") === 0 && replacedValue.lastIndexOf("]") === replacedValue.length - 1) {
-            const arrayItems = replacedValue.substring(1, replacedValue.length - 1).split(",");
+        if (correctedValue.indexOf("[") === 0 && correctedValue.lastIndexOf("]") === correctedValue.length - 1) {
+            const arrayItems = correctedValue.substring(1, correctedValue.length - 1).split(",");
 
             return arrayItems.map(FunctionTestCase.parseResultValue);
         }
 
-        return replacedValue;
+        return correctedValue;
     }
 
     public getTests(): string {
-        return `expect(${DOCS_TEST_KEY}.${this.condition}).${this.stringifyCondition(this.operator, this.result)};`
+        return `expect(${DOCS_TEST_KEY}.${this.condition}).${this.stringifyCondition(this.operator, this.result)};`;
     }
 
-    private stringifyCondition(operator: Operator, resultValue: unknown) {
+    private stringifyCondition(operator: Operator, resultValue: unknown): string {
         if (typeof resultValue === "boolean") {
             return `to.be.${resultValue}`;
         }
@@ -83,7 +92,7 @@ export class FunctionTestCase<T = unknown> {
             return "to.be.null";
         }
 
-        return `${stringifyOperator(operator)}(${this.stringifyResultValue(resultValue)})`;
+        return `${operatorToString(operator)}(${this.stringifyResultValue(resultValue)})`;
     }
 
     private stringifyResultValue(value: unknown): unknown {
@@ -98,6 +107,7 @@ export class FunctionTestCase<T = unknown> {
 
             return JSON.stringify(value);
         }
+
         return `"${value}"`;
     }
 }

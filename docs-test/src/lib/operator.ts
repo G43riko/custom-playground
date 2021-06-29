@@ -1,6 +1,6 @@
 export enum Operator {
-    TYPEOF     = "typeof",
-    EQUAL      = "=>",
+    TYPEOF = "typeof",
+    EQUAL = "=>",
     DEEP_EQUAL = "==>",
 }
 
@@ -17,7 +17,7 @@ export function parseOperator(operator: string): Operator {
     }
 }
 
-export function stringifyOperator(operator: Operator) {
+export function operatorToString(operator: Operator): string {
     switch (operator) {
         case Operator.DEEP_EQUAL:
             return "to.deep.equal";
