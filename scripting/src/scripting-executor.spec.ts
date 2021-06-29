@@ -1,3 +1,4 @@
+import {expect} from "chai";
 import "mocha";
 import {ScriptingParamType} from "./scripting-param-type";
 import {EchoExecutor} from "./executors/echo-executor";
@@ -8,6 +9,7 @@ import {CommandStringParser} from "./parsers/types/command-string-parser";
 import {CommandTimeParser} from "./parsers/types/command-time-parser";
 import {ScriptingExecutor} from "./scripting-executor";
 import {ScriptingParserDataProvider} from "./scripting-parser-data-provider";
+import {MathExecutor} from "./executors/math-executor";
 
 describe("Test basic executor", () => {
     it("should test basic execution", async () => {
@@ -15,6 +17,7 @@ describe("Test basic executor", () => {
             [
                 ["ECHO", "{s[]}", new EchoExecutor()],
                 ["WAIT", "{t}", new WaitExecutor()],
+                ["MATH", "{s} {n[]}", new MathExecutor()],
             ],
             ScriptingParserDataProvider.fromFlatArray([
                 [new CommandTimeParser(), ScriptingParamType.TIME, "t"],
@@ -31,11 +34,24 @@ describe("Test basic executor", () => {
             ]),
         );
 
+
+        const startTime = Date.now();
+        await executor.executeSync("WAIT 1 s");
+        expect(Date.now() - startTime).to.be.gt(1000);
+
         const result = await executor.executeSync(`
             ECHO Start
-            WAIT 1 s
+            WAIT 500 ms
             ECHO Finish succeed
             ECHO "Exit with code 0"
         `);
+        console.log("result: ", result);
+
+        expect(await executor.executeSync("MATH sum 1 2 3 4 5")).to.deep.equal([15]);
+        expect(await executor.executeSync("MATH sub 1 2 3 4 5")).to.deep.equal([-13]);
+        expect(await executor.executeSync("MATH max 1 2 3 4 5")).to.deep.equal([5]);
+        expect(await executor.executeSync("MATH min 1 2 3 4 5")).to.deep.equal([1]);
+        expect(await executor.executeSync("MATH max 1 2 3 4 5")).to.deep.equal([5]);
+        expect(await executor.executeSync("MATH mul 1 2 3 4 5")).to.deep.equal([120]);
     });
 });
