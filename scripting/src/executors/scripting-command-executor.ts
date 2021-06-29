@@ -1,4 +1,4 @@
-import {CommandParamParserFinalResult} from "../parsers/command-param-parser";
+import {ScriptingCommandParamParserResult} from "../parsers/scripting-command-param-parser-result";
 
 /**
  * @template R - Parameter type of {@link execute} function;
@@ -17,5 +17,5 @@ export interface ScriptingCommandExecutor<R = void, S = void> {
      *
      * @param data - data property of {@link CommandParserResult}
      */
-    executeRaw(data: (CommandParamParserFinalResult<R> | null)[] | null): S | Promise<S>;
+    executeRaw(data: (ScriptingCommandParamParserResult<R> | null)[] | null): S | Promise<S>;
 }

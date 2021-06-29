@@ -1,6 +1,6 @@
-import { expect } from "chai";
+import {expect} from "chai";
 import "mocha";
-import { CommandVectorParser } from "./command-vector-parser";
+import {CommandVectorParser} from "./command-vector-parser";
 
 
 describe("Test vector parser", () => {

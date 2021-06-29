@@ -2,6 +2,8 @@ export enum ScriptingParamType {
     NUMBER = "NUMBER",
     FLOAT = "FLOAT",
     INT = "INT",
+    INT_P = "INT_P",
+    INT_N = "INT_N",
     STRING = "STRING",
     TIME = "TIME",
     POSITION2 = "POSITION2",

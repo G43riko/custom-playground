@@ -1,6 +1,6 @@
-import { CommandParamParser } from "./command-param-parser";
+import {ScriptingCommandParamParser} from "../scripting-command-param-parser";
 
-export class CommandStringParser implements CommandParamParser<string> {
+export class CommandStringParser implements ScriptingCommandParamParser<string> {
     public constructor(private readonly pattern?: RegExp) {
     }
 

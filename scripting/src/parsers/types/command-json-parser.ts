@@ -1,10 +1,11 @@
-import {CommandParamParser, CommandParamParserResult} from "./command-param-parser";
+import {ScriptingCommandParamParser} from "../scripting-command-param-parser";
+import {ScriptingCommandParamParserSubResult} from "../scripting-command-param-parser-sub-result";
 
-export class CommandJSONParser<T = unknown> implements CommandParamParser<T> {
+export class CommandJSONParser<T = unknown> implements ScriptingCommandParamParser<T> {
     public constructor(private readonly allowComments = false) {
     }
 
-    public parse(value: string): CommandParamParserResult<T> | null {
+    public parse(value: string): ScriptingCommandParamParserSubResult<T> | null {
         const startingCharacterMatch = value.match(/^\W*([{[])/);
 
         if (!startingCharacterMatch) {

@@ -1,13 +1,14 @@
 import {expect} from "chai";
 import "mocha";
 import {ScriptingParamType} from "./scripting-param-type";
-import {CommandNumberParser} from "./parsers/command-number-parser";
-import {CommandPositionParser} from "./parsers/command-position-parser";
-import {CommandStringParser} from "./parsers/command-string-parser";
-import {CommandTimeParser} from "./parsers/command-time-parser";
+import {CommandNumberParser} from "./parsers/types/command-number-parser";
+import {CommandPositionParser} from "./parsers/types/command-position-parser";
+import {CommandStringParser} from "./parsers/types/command-string-parser";
+import {CommandTimeParser} from "./parsers/types/command-time-parser";
 import {ScriptingParser} from "./scripting-parser";
 import {ScriptingParserDataProvider} from "./scripting-parser-data-provider";
-import {CommandParamParserFinalResult} from "./parsers/command-param-parser";
+import {ScriptingCommandParamParserResult} from "./parsers/scripting-command-param-parser-result";
+import {ScriptingCommandParamValidator} from "./scripting-command-param-validator";
 
 describe("Test basic validator", () => {
     it("should test custom parser", () => {
@@ -51,6 +52,113 @@ describe("Test basic validator", () => {
             },
         ]);
     });
+
+    it("should test custom parameter validation", async () => {
+        const testParser = new ScriptingParser(
+            [
+                {
+                    name: "TEST",
+                    pattern: "TEST {s} {s[]}",
+                },
+                {
+                    name: "SUM",
+                    pattern: "SUM {d} {d}",
+                },
+                {
+                    name: "SUM2",
+                    pattern: "SUM2 {d[]}",
+                },
+            ],
+            ScriptingParserDataProvider.fromFlatArray([
+                [new CommandStringParser(), ScriptingParamType.STRING, "s"],
+                [new CommandNumberParser(true), ScriptingParamType.INT_P, "d", ScriptingCommandParamValidator.min(0)],
+            ]),
+        );
+
+        expect(testParser.parse("SUM 1 2")).to.deep.equal([
+            {
+                command: "SUM",
+                data: [
+                    {
+                        data: 1,
+                        rawData: "1",
+                        type: {
+                            array: false,
+                            type: "INT_P",
+                        },
+                    },
+                    {
+                        data: 2,
+                        rawData: "2",
+                        type: {
+                            array: false,
+                            type: "INT_P",
+                        },
+                    },
+                ],
+                raw: "SUM 1 2",
+            },
+        ]);
+        expect(await testParser.parseAndValidate("SUM 1 2")).to.deep.equal([
+            {
+                command: "SUM",
+                data: [
+                    {
+                        data: 1,
+                        rawData: "1",
+                        type: {
+                            array: false,
+                            type: "INT_P",
+                        },
+                        validationErrors: null,
+                    },
+                    {
+                        data: 2,
+                        rawData: "2",
+                        type: {
+                            array: false,
+                            type: "INT_P",
+                        },
+                        validationErrors: null,
+                    },
+                ],
+                validationErrors: null,
+                raw: "SUM 1 2",
+            },
+        ]);
+        expect(await testParser.parseAndValidate("SUM 1 -2")).to.deep.equal([
+            {
+                command: "SUM",
+                data: [
+                    {
+                        data: 1,
+                        rawData: "1",
+                        type: {
+                            array: false,
+                            type: "INT_P",
+                        },
+                        validationErrors: null,
+                    },
+                    {
+                        data: -2,
+                        rawData: "-2",
+                        type: {
+                            array: false,
+                            type: "INT_P",
+                        },
+                        validationErrors: [
+                            {
+                                message: "Value -2 is lower then minimal value 0",
+                            },
+                        ],
+                    },
+                ],
+                validationErrors: null,
+                raw: "SUM 1 -2",
+            },
+        ]);
+    });
+
     it("should test custom array parser", () => {
         const testParser = new ScriptingParser(
             [
@@ -92,7 +200,7 @@ describe("Test basic validator", () => {
                     name: "TEST",
                     pattern: "TEST {s[]}",
                     validator: {
-                        async validate(data: (CommandParamParserFinalResult<unknown> | null)[]): Promise<{ message: string }[] | null> {
+                        async validate(data: (ScriptingCommandParamParserResult<unknown> | null)[]): Promise<{ message: string }[] | null> {
                             if ((data[0]?.data as any).length === 3) {
                                 return null;
                             }

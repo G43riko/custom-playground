@@ -1,5 +1,5 @@
 import {ScriptingParserDataProvider} from "./scripting-parser-data-provider";
-import {CommandStringParser} from "./parsers/command-string-parser";
+import {CommandStringParser} from "./parsers/types/command-string-parser";
 
 export class EntityIdAsyncParser extends CommandStringParser {
     public constructor(

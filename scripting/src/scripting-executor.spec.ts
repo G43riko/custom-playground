@@ -2,10 +2,10 @@ import "mocha";
 import {ScriptingParamType} from "./scripting-param-type";
 import {EchoExecutor} from "./executors/echo-executor";
 import {WaitExecutor} from "./executors/wait-executor";
-import {CommandNumberParser} from "./parsers/command-number-parser";
-import {CommandPositionParser} from "./parsers/command-position-parser";
-import {CommandStringParser} from "./parsers/command-string-parser";
-import {CommandTimeParser} from "./parsers/command-time-parser";
+import {CommandNumberParser} from "./parsers/types/command-number-parser";
+import {CommandPositionParser} from "./parsers/types/command-position-parser";
+import {CommandStringParser} from "./parsers/types/command-string-parser";
+import {CommandTimeParser} from "./parsers/types/command-time-parser";
 import {ScriptingExecutor} from "./scripting-executor";
 import {ScriptingParserDataProvider} from "./scripting-parser-data-provider";
 

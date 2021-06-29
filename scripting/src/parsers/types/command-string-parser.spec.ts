@@ -1,6 +1,6 @@
-import { expect } from "chai";
+import {expect} from "chai";
 import "mocha";
-import { CommandStringParser } from "./command-string-parser";
+import {CommandStringParser} from "./command-string-parser";
 
 describe("Test string parser", () => {
     it("should parse string values", () => {

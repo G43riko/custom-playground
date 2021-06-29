@@ -1,9 +1,6 @@
-export interface CommandParamParserResult<T> {
-    readonly remains: string;
-    readonly result: T;
-}
+import {ScriptingValidatorResult} from "../scripting-validator-result";
 
-export interface CommandParamParserFinalResult<T> {
+export interface ScriptingCommandParamParserResult<T> {
     /**
      * Parsed result type
      */
@@ -24,11 +21,9 @@ export interface CommandParamParserFinalResult<T> {
     readonly rawData: string;
 
     /**
-     * parsed result values
+     * parsed result values. Is value from {@link ScriptingCommandParamParserSubResult.result}
      */
     readonly data: T;
-}
 
-export interface CommandParamParser<T> {
-    parse(value: string): CommandParamParserResult<T> | null;
+    readonly validationErrors?: ScriptingValidatorResult;
 }

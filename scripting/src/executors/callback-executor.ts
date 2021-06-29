@@ -1,5 +1,5 @@
-import {CommandParamParserFinalResult} from "../parsers/command-param-parser";
 import {ScriptingCommandExecutor} from "./scripting-command-executor";
+import {ScriptingCommandParamParserResult} from "../parsers/scripting-command-param-parser-result";
 
 export class CallbackExecutor<T = unknown, S = void> implements ScriptingCommandExecutor<T, S> {
     public constructor(private readonly callback: (data: T) => S) {
@@ -9,7 +9,7 @@ export class CallbackExecutor<T = unknown, S = void> implements ScriptingCommand
         return this.callback(data);
     }
 
-    public executeRaw(data: (CommandParamParserFinalResult<T> | null)[] | null): S {
+    public executeRaw(data: (ScriptingCommandParamParserResult<T> | null)[] | null): S {
         if (!data) {
             return null as unknown as S;
         }

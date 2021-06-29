@@ -1,6 +1,6 @@
-import { expect } from "chai";
+import {expect} from "chai";
 import "mocha";
-import { CommandNumberParser } from "./command-number-parser";
+import {CommandNumberParser} from "./command-number-parser";
 
 
 describe("Test number parser", () => {

@@ -1,7 +1,8 @@
 import {CommandNumberParser} from "./command-number-parser";
-import {CommandParamParser, CommandParamParserResult} from "./command-param-parser";
+import {ScriptingCommandParamParser} from "../scripting-command-param-parser";
+import {ScriptingCommandParamParserSubResult} from "../scripting-command-param-parser-sub-result";
 
-export class CommandTimeParser<T extends string> implements CommandParamParser<{ unit: T, duration: number }> {
+export class CommandTimeParser<T extends string> implements ScriptingCommandParamParser<{ unit: T, duration: number }> {
     private readonly numberParser = new CommandNumberParser();
     private readonly unitPattern = new RegExp("^(" + this.allowedUnits.join("|") + ")$", "i")
 
@@ -15,7 +16,7 @@ export class CommandTimeParser<T extends string> implements CommandParamParser<{
         }
     }
 
-    public parse(value: string): CommandParamParserResult<{ duration: number, unit: T }> | null {
+    public parse(value: string): ScriptingCommandParamParserSubResult<{ duration: number, unit: T }> | null {
         const numberParse = this.numberParser.parse(value);
 
         if (!numberParse) {

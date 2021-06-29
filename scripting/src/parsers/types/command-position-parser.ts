@@ -1,10 +1,11 @@
-import { CommandParamParser, CommandParamParserResult } from "./command-param-parser";
-import { CommandVectorParser } from "./command-vector-parser";
+import {ScriptingCommandParamParser} from "../scripting-command-param-parser";
+import {CommandVectorParser} from "./command-vector-parser";
+import {ScriptingCommandParamParserSubResult} from "../scripting-command-param-parser-sub-result";
 
 /**
  * this should probable parse number divided by comma
  */
-export class CommandPositionParser implements CommandParamParser<{ values: number[], absolute: boolean }> {
+export class CommandPositionParser implements ScriptingCommandParamParser<{ values: number[], absolute: boolean }> {
     private readonly vectorParser = new CommandVectorParser(this.dimensions, this.isInteger);
 
     public constructor(
@@ -15,7 +16,7 @@ export class CommandPositionParser implements CommandParamParser<{ values: numbe
     ) {
     }
 
-    public parse(value: string): CommandParamParserResult<{ values: number[], absolute: boolean }> | null {
+    public parse(value: string): ScriptingCommandParamParserSubResult<{ values: number[], absolute: boolean }> | null {
         const absolute = value.trim()[0] !== this.relativeFlag;
 
         if (this.requiredType === (absolute ? "RELATIVE" : "ABSOLUTE")) {

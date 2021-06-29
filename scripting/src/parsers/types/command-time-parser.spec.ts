@@ -1,6 +1,6 @@
-import { expect } from "chai";
+import {expect} from "chai";
 import "mocha";
-import { CommandTimeParser } from "./command-time-parser";
+import {CommandTimeParser} from "./command-time-parser";
 
 describe("Test time parser", () => {
     it("should parse time values", () => {

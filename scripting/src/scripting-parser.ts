@@ -1,34 +1,11 @@
 import {ScriptingCommandParser} from "./scripting-command-parser";
-import {CommandParamParserFinalResult} from "./parsers/command-param-parser";
 import {ScriptingCommand} from "./scripting-command";
 import {ScriptingParserDataProvider} from "./scripting-parser-data-provider";
+import {ScriptingCommandParserResult} from "./scripting-command-parser-result";
 
 export interface ScriptingParserOptions {
     readonly oneLineCommentPrefix: string;
     readonly rowDivider: string;
-}
-
-export interface CommandParserResult {
-    /**
-     * Raw command etc. 'ECHO Gabriel'
-     */
-    readonly raw: string;
-
-    /**
-     * Parsed parameter results or null if parameter cannot be parsed.
-     * This property is send to {@link ScriptingCommandExecutor.executeRaw}
-     */
-    readonly data: (CommandParamParserFinalResult<unknown> | null)[] | null;
-
-    /**
-     * Trimmed name of command
-     */
-    readonly command: string;
-
-    /**
-     * List of validation errors
-     */
-    readonly validationErrors?: { message: string }[] | null;
 }
 
 function processParams(params: Partial<ScriptingParserOptions>): ScriptingParserOptions {
@@ -70,15 +47,15 @@ export class ScriptingParser {
         return new ScriptingParser(data.map(([name, pattern]) => ({name, pattern: `${name} ${pattern}`})), dataHolder);
     }
 
-    public parse(content: string): CommandParserResult[] {
+    public parse(content: string): ScriptingCommandParserResult[] {
         const validLines = content.split(this.params.rowDivider)
             .map((row) => row.trim())
             .filter((row) => row && row.indexOf(this.params.oneLineCommentPrefix) !== 0);
 
         return validLines.map((line) => {
-            const commandMatch = line.match(/^(\w+) /);
+            const commandMatch = line.match(/^(\w+)\W/);
             if (!commandMatch) {
-                throw new Error(`Cannot determine command for row '${line}'`);
+                throw new Error(`Cannot determine command name for row '${line}'`);
             }
             const command = this.commandParserMap[commandMatch[1]];
 
@@ -95,12 +72,12 @@ export class ScriptingParser {
         });
     }
 
-    public async parseAndValidate(content: string): Promise<CommandParserResult[]> {
+    public async parseAndValidate(content: string): Promise<ScriptingCommandParserResult[]> {
         const validLines = content.split(this.params.rowDivider)
             .map((row) => row.trim())
             .filter((row) => row && row.indexOf(this.params.oneLineCommentPrefix) !== 0);
 
-        const result: CommandParserResult[] = [];
+        const result: ScriptingCommandParserResult[] = [];
 
         for (const line of validLines) {
             const commandMatch = line.match(/^(\w+) /);
@@ -117,10 +94,24 @@ export class ScriptingParser {
 
             // eslint-disable-next-line no-await-in-loop
             const validationErrors = data ? await command.validate(data) : null;
+            if (!data || !validationErrors) {
+                result.push({
+                    data,
+                    validationErrors: null,
+                    raw: line,
+                    command: commandMatch[1],
+                });
+
+                break;
+            }
+
+            if (validationErrors.commandErrors) {
+                console.assert(validationErrors.commandErrors.length === data.length, "Something is wrong");
+            }
 
             result.push({
-                data,
-                validationErrors,
+                data: validationErrors ? data.map((item, i) => Object.assign({}, item, {validationErrors: validationErrors.parameterErrors[i]})) : data,
+                validationErrors: validationErrors?.commandErrors,
                 raw: line,
                 command: commandMatch[1],
             });

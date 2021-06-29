@@ -1,10 +1,10 @@
-import { CommandNumberParser } from "./command-number-parser";
-import { CommandParamParser } from "./command-param-parser";
+import {CommandNumberParser} from "./command-number-parser";
+import {ScriptingCommandParamParser} from "../scripting-command-param-parser";
 
 /**
  * this should probable parse number divided by comma
  */
-export class CommandVectorParser implements CommandParamParser<number[]> {
+export class CommandVectorParser implements ScriptingCommandParamParser<number[]> {
     private readonly numberParser = new CommandNumberParser(this.isInteger);
 
     public constructor(private readonly dimensions: number, private readonly isInteger?: boolean) {
@@ -12,7 +12,7 @@ export class CommandVectorParser implements CommandParamParser<number[]> {
 
     public parse(value: string): { remains: string, result: number[] } | null {
         const result: number[] = [];
-        let remains            = value;
+        let remains = value;
 
         for (let i = 0; i < this.dimensions; i++) {
             const tmpResult = this.numberParser.parse(remains);
