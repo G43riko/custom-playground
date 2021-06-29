@@ -2,7 +2,13 @@ export enum ScriptingParamType {
     NUMBER = "NUMBER",
     FLOAT = "FLOAT",
     INT = "INT",
+    /**
+     * Positive integer
+     */
     INT_P = "INT_P",
+    /**
+     * Negative integer
+     */
     INT_N = "INT_N",
     STRING = "STRING",
     TIME = "TIME",

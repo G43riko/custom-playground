@@ -2,9 +2,13 @@ import {ScriptingCommandParamParser} from "../scripting-command-param-parser";
 import {ScriptingCommandParamParserSubResult} from "../scripting-command-param-parser-sub-result";
 
 export class CommandJSONParser<T = unknown> implements ScriptingCommandParamParser<T> {
-    public constructor(private readonly allowComments = false) {
+    public constructor(private readonly _allowComments = false) {
     }
 
+    /**
+     * TODO: remove comments from string if {@link _allowComments} is set to true
+     * @param value
+     */
     public parse(value: string): ScriptingCommandParamParserSubResult<T> | null {
         const startingCharacterMatch = value.match(/^\W*([{[])/);
 

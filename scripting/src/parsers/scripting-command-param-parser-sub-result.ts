@@ -1,5 +1,5 @@
 /**
- * Is returned from {@link CommandParamParser.parse} method
+ * Is returned from {@link ScriptingCommandParamParser.parse} method
  */
 export interface ScriptingCommandParamParserSubResult<T> {
     readonly remains: string;

@@ -2,19 +2,14 @@ import {ScriptingValidatorResult} from "../scripting-validator-result";
 
 export interface ScriptingCommandParamParserResult<T> {
     /**
-     * Parsed result type
+     * Type name etc. STRING, NUMBER
      */
-    readonly type: {
-        /**
-         * Type name etc. STRING, NUMBER
-         */
-        readonly type: string;
+    readonly type: string;
 
-        /**
-         * true if type value is array
-         */
-        readonly array: boolean;
-    };
+    /**
+     * true if type value is array
+     */
+    readonly array: boolean;
     /**
      * Raw, not parsed parameter
      */

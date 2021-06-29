@@ -35,11 +35,13 @@ export class CommandStringParser implements ScriptingCommandParamParser<string> 
             return null;
         }
         const startIndex = value.indexOf(startMatch[2]);
-        const endMatch   = value.match(/\w(\W|$)/) as RegExpMatchArray;
+        const endMatch = value.match(/\w(\W|$)/) as RegExpMatchArray;
+
+        const nextCharacterPosition = (endMatch.index ?? 0) + 1;
 
         return {
-            result : value.substring(startIndex, endMatch.index! + 1),
-            remains: value.substr(endMatch.index! + 1),
+            result: value.substring(startIndex, nextCharacterPosition),
+            remains: value.substr(nextCharacterPosition),
         };
     }
 }

@@ -86,7 +86,8 @@ export class ScriptingCommandParser {
             return {
                 rawData,
                 data: parserSubResult.result,
-                type: parameter.typeData,
+                type: parameter.type,
+                array: parameter.array,
             };
         });
     }

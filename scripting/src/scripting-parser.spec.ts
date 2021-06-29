@@ -31,10 +31,8 @@ describe("Test basic validator", () => {
                     {
                         data: "gabo",
                         rawData: "gabo",
-                        type: {
-                            array: false,
-                            type: "STRING",
-                        },
+                        array: false,
+                        type: "STRING",
                     },
                     {
                         data: [
@@ -42,10 +40,8 @@ describe("Test basic validator", () => {
                             "vysoky",
                         ],
                         rawData: "je vysoky",
-                        type: {
-                            array: true,
-                            type: "STRING",
-                        },
+                        array: true,
+                        type: "STRING",
                     },
                 ],
                 raw: "TEST gabo je vysoky",
@@ -82,18 +78,14 @@ describe("Test basic validator", () => {
                     {
                         data: 1,
                         rawData: "1",
-                        type: {
-                            array: false,
-                            type: "INT_P",
-                        },
+                        array: false,
+                        type: "INT_P",
                     },
                     {
                         data: 2,
                         rawData: "2",
-                        type: {
-                            array: false,
-                            type: "INT_P",
-                        },
+                        array: false,
+                        type: "INT_P",
                     },
                 ],
                 raw: "SUM 1 2",
@@ -106,19 +98,15 @@ describe("Test basic validator", () => {
                     {
                         data: 1,
                         rawData: "1",
-                        type: {
-                            array: false,
-                            type: "INT_P",
-                        },
+                        array: false,
+                        type: "INT_P",
                         validationErrors: null,
                     },
                     {
                         data: 2,
                         rawData: "2",
-                        type: {
-                            array: false,
-                            type: "INT_P",
-                        },
+                        array: false,
+                        type: "INT_P",
                         validationErrors: null,
                     },
                 ],
@@ -133,19 +121,15 @@ describe("Test basic validator", () => {
                     {
                         data: 1,
                         rawData: "1",
-                        type: {
-                            array: false,
-                            type: "INT_P",
-                        },
+                        array: false,
+                        type: "INT_P",
                         validationErrors: null,
                     },
                     {
                         data: -2,
                         rawData: "-2",
-                        type: {
-                            array: false,
-                            type: "INT_P",
-                        },
+                        array: false,
+                        type: "INT_P",
                         validationErrors: [
                             {
                                 message: "Value -2 is lower then minimal value 0",
@@ -183,10 +167,8 @@ describe("Test basic validator", () => {
                             "vysoky",
                         ],
                         rawData: "gabo je vysoky",
-                        type: {
-                            array: true,
-                            type: "STRING",
-                        },
+                        array: true,
+                        type: "STRING",
                     },
                 ],
                 raw: "TEST gabo je vysoky",
@@ -230,10 +212,9 @@ describe("Test basic validator", () => {
                             "vysoky",
                         ],
                         rawData: "gabo je vysoky",
-                        type: {
-                            array: true,
-                            type: "STRING",
-                        },
+                        array: true,
+                        type: "STRING",
+                        validationErrors: null,
                     },
                 ],
                 validationErrors: null,
@@ -252,10 +233,9 @@ describe("Test basic validator", () => {
                             "vysoky",
                         ],
                         rawData: "gabo je fakt vysoky",
-                        type: {
-                            array: true,
-                            type: "STRING",
-                        },
+                        array: true,
+                        type: "STRING",
+                        validationErrors: null,
                     },
                 ],
                 validationErrors: [

@@ -28,14 +28,12 @@ export class ScriptingParser {
         params: Partial<ScriptingParserOptions> = {},
     ) {
         this.params = processParams(params);
-        this.commandParserMap = commands.reduce((acc, command) => {
-            return Object.assign(
-                acc,
-                {
-                    [command.name]: ScriptingCommandParser.createFromCommandAndParserDataHolder(command, dataHolder),
-                },
-            );
-        }, {});
+        this.commandParserMap = commands.reduce((acc, command) => Object.assign(
+            acc,
+            {
+                [command.name]: ScriptingCommandParser.createFromCommandAndParserDataHolder(command, dataHolder),
+            },
+        ), {});
     }
 
     /**

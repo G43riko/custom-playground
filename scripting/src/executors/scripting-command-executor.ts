@@ -15,7 +15,7 @@ export interface ScriptingCommandExecutor<R = void, S = void> {
     /**
      * Should make additionally checks and calls {@link execute} method
      *
-     * @param data - data property of {@link CommandParserResult}
+     * @param data - data property of {@link ScriptingCommandParserResult}
      */
     executeRaw(data: (ScriptingCommandParamParserResult<R> | null)[] | null): S | Promise<S>;
 }

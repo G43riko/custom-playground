@@ -28,16 +28,15 @@ export class MathExecutor implements ScriptingCommandExecutor<{ operator: string
         }
     }
 
-    public executeRaw(data: (ScriptingCommandParamParserResult<{ operator: string, numbers: [] }> | null)[] | null): number {
-        if (!data || data.length < 2) {
+    public executeRaw(data: (ScriptingCommandParamParserResult<{ operator: string, numbers: number[] }> | null)[] | null): number {
+        if (!data || !data[0] || !data[1]) {
             throw new Error("Invalid parameters. Math operators require `MATH {operator} {num[]}` ");
-
         }
 
 
         return this.execute({
-            operator: data[0]!.data as any,
-            numbers: data[1]!.data as any,
+            operator: data[0].data as any,
+            numbers: data[1].data as any,
         });
     }
 }

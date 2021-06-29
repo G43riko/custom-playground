@@ -23,7 +23,7 @@ export class ScriptingParserDataProvider {
         const {
             parserByType,
             typeByPattern,
-            validatorByType
+            validatorByType,
         } = param.reduce((acc, [parser, type, pattern, validator]) => ({
             parserByType: Object.assign(acc.parserByType, {[type]: parser}),
             typeByPattern: Object.assign(acc.typeByPattern, {[pattern]: type.trim()}),
