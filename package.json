@@ -12,7 +12,6 @@
       "g-diagrams",
       "docs-test",
       "scripting",
-      "dependency-graph",
       "dependency-injector",
       "local-database"
     ],
