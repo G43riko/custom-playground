@@ -10,8 +10,6 @@ export declare class PerfTestHolder {
     private readonly parser;
     private readonly runner;
     private readonly analyzer;
-
     constructor(fileContent: string, options?: PerfTestOptions, printer?: PerfTestPrinter);
-
     runAllTests(): void;
 }

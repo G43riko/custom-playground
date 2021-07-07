@@ -20,7 +20,6 @@ var PerfTestHolder = /** @class */ (function () {
         this.runner = new perf_test_runner_1.PerfTestRunner(this.options);
         this.analyzer = new perf_test_analyzer_1.PerfTestAnalyzer();
     }
-
     PerfTestHolder.prototype.runAllTests = function () {
         this.printer.printTestTitle(this.parser.extractHeader("title"));
         var beforeAll = this.parser.extractHeader("beforeAll");

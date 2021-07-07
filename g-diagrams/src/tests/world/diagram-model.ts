@@ -1,8 +1,10 @@
+// @ts-nocheck
+
 enum DiagramAccessModifier {
-    PUBLIC = "PUBLIC",
+    PUBLIC    = "PUBLIC",
     PROTECTED = "PROTECTED",
-    PRIVATE = "PRIVATE",
-    PACKAGE = "PACKAGE",
+    PRIVATE   = "PRIVATE",
+    PACKAGE   = "PACKAGE",
 }
 
 //--

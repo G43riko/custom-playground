@@ -14,7 +14,6 @@
 - `{j}` - json object `{name: "Gabo", age: 21, male: true, props: {}, nicks: []}`
 
 ## Usage
-
 ```typescript
 const parser = CommonParser.extends([
     ["id", "EntityId", new EntityIdParser()]
@@ -26,7 +25,6 @@ const executor = new CustomExecutor([
 
 executor.executorRow("DEL id1 id2 id3")
 ```
-
 ## List
 
 - set block `{b} {p[]}`

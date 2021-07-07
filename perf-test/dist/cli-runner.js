@@ -29,7 +29,6 @@ var fs = __importStar(require("fs"));
 var CliRunner = /** @class */ (function () {
     function CliRunner() {
     }
-
     CliRunner.start = function () {
         var parsedArgs = g_shared_library_1.ParsedArguments.createProcessArgs();
         var filePath = parsedArgs.firstResolvedFile;

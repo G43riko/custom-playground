@@ -9,7 +9,6 @@ var PerfTestParser = /** @class */ (function () {
         this.header = header;
         this.data = this.processTestContents(testContents);
     }
-
     PerfTestParser.prototype.extractHeader = function (key) {
         var result = this.header.match(new RegExp(key + headerSelector, "i"));
         return this.getLastMatch(result);

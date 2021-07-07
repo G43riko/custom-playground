@@ -9,13 +9,11 @@
 - Usage
 
 Current state: 6.7.2021
-
 ```typescript
 const model = new DiagramModel();
 const errors = model.validate();
 
 ```
-
 ## Use cases
 
 - add/remove object from list to diagram

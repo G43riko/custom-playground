@@ -4,6 +4,8 @@
     "main": "index.js",
     "license": "MIT",
     "scripts": {
+        "build": "webpack --config webpack.config.js",
+        "build:prod": "webpack --mode production --config webpack.config.js"
     },
     "dependencies": {
         "typescript": "^4.2.4",

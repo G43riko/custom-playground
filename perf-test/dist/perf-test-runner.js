@@ -5,7 +5,6 @@ var PerfTestRunner = /** @class */ (function () {
     function PerfTestRunner(options) {
         this.options = options;
     }
-
     PerfTestRunner.prototype.runTest = function (test, thisArg) {
         var count = 0;
         var now = Date.now();

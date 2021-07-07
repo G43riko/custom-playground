@@ -5,7 +5,6 @@ var perf_test_printer_html_1 = require("./printers/perf-test-printer-html");
 var BrowserRunner = /** @class */ (function () {
     function BrowserRunner() {
     }
-
     BrowserRunner.start = function () {
         var tester = new BrowserRunner();
         tester.appendTo("body");

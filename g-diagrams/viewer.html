@@ -69,30 +69,11 @@
     </div>
 </div>
 </body>
-<!--<div class="mermaid">-->
-<!--    graph TD-->
-<!--    A[Start] &ndash;&gt; C{Answer Question?}-->
-<!--    C &ndash;&gt;|Yes| D[Do Something]-->
-<!--    C &ndash;&gt;|No| E[Do Something]-->
-<!--</div>-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
 <script>
     const area = document.getElementById("main-input");
     const preview = document.querySelector(".preview .container-content");
     area.oninput = () => {
-        // preview.textContent = area.value?.toUpperCase()?.trim();
-        let counter = 2
-        mermaid.initialize({startOnLoad: false})
-        mermaid.render(
-            'preview' + counter++,
-            'graph TB\na-->b',
-            (svgGraph) => {
-                console.log(svgGraph);
-                preview.innerHTML = "";
-                preview.innerHTML = svgGraph;
-
-            }
-        );
+        preview.textContent = area.value?.toUpperCase()?.trim();
     }
 </script>
 </html>
