@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .viewer-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: absolute;
+        }
+
+        .container {
+            flex: 1 1 50%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .code-input {
+            background: red;
+        }
+
+        .preview {
+            background: blueviolet;
+        }
+
+        .container-header {
+            background: green;
+            flex: 0 0 80px;
+        }
+
+        .container-content {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            overflow: hidden;
+        }
+    </style>
+
+    <script crossorigin="anonymous"
+            integrity="sha512-gWqaPfGsZiCkYB6e5mNN4SMRpEvLGItLBqgOAoyLSKtDxWS2O1YPcOeGTy8d8l00gqc8rVue9ae/ncZqhmfj4g=="
+            referrerpolicy="no-referrer"
+            src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+
+</head>
+<body>
+<div class="viewer-wrapper">
+    <div class="code-input container">
+        <div class="container-header">
+            <select id="languageSelector" name="">
+                <option value="typescript">Typescript</option>
+                <option value="javascript">Javascript</option>
+                <option value="java">Java</option>
+                <option value="python">Python</option>
+            </select>
+        </div>
+        <div class="container-content">
+            <pre data-lang="typescript" id="CodeBlock" style="width:100%;height:100%;border:1px solid grey">
+        enum DiagramAccessModifier {
+    PUBLIC    = "PUBLIC",
+    PROTECTED = "PROTECTED",
+    PRIVATE   = "PRIVATE",
+    PACKAGE   = "PACKAGE",
+}
+
+//--
+type DiagramType = string;
+
+//--
+interface DiagramProperty {
+    readonly name: string;
+    readonly type: DiagramType;
+    readonly accessor: DiagramAccessModifier;
+}
+
+//--
+interface DiagramMethodParameter {
+    readonly name: string;
+    readonly type: DiagramType;
+}
+
+//--
+interface DiagramMethod {
+    readonly parameters: DiagramMethodParameter[];
+    readonly name: string;
+    readonly returnType: DiagramType;
+    readonly accessor: DiagramAccessModifier;
+}
+
+//--
+interface DiagramEntity {
+    readonly properties: DiagramProperty[];
+    readonly accessor: DiagramAccessModifier;
+}
+
+//--
+interface DiagramClass extends DiagramEntity {
+    readonly methods: DiagramMethod[];
+
+}
+
+//--
+interface DiagramParserOptions {
+    readonly errorOnUnknownType: boolean;
+    readonly listOfGlobalTypes: string[];
+    readonly prefixAccessorMap;
+    readonly defaultAccessModifier: DiagramAccessModifier;
+    readonly entityDivider: string;
+}
+
+//--
+interface DiagramMethodParser {
+    parseMethod(): void;
+}
+
+//--
+abstract class DiagramAbstractParser {
+    protected readonly options: DiagramParserOptions;
+}
+
+//--
+class DiagramParser extends DiagramAbstractParser {
+
+}
+
+//--
+class DiagramEntityParser extends DiagramAbstractParser {
+    public parseEntityBasic(content: string): DiagramEntity;
+}
+
+//--
+class DiagramClassParser extends DiagramEntityParser implements DiagramMethodParser {
+
+}
+
+//--
+class DiagramEnumParser extends DiagramEntityParser {
+
+}
+
+//--
+interface DiagramContextValidationResult {
+
+}
+
+//--
+class DiagramContext {
+
+}
+
+//--
+class DiagramWorldContext extends DiagramContext {
+    public addProperty(property: DiagramProperty): void;
+
+    public addMethod(method: DiagramMethod): void;
+
+    public addEntity(entity: DiagramEntity): void;
+
+    public defineTypes(customTypes: DiagramType[]): void
+
+    public validate(): DiagramContextValidationResult;
+}
+
+//--
+class DiagramEntityContext extends DiagramContext {
+    public hasPublic(name: string): boolean
+
+    public validate(worldContext: DiagramWorldContext): DiagramContextValidationResult
+}
+
+//--
+class DiagramGenericContextInstance extends DiagramContext {
+    public validate(worldContext: DiagramWorldContext, entityContext: DiagramEntityContext): DiagramContextValidationResult
+}
+    </pre>
+        </div>
+    </div>
+    <div class="preview container">
+        <div class="container-header"></div>
+        <div class="container-content" id="preview">
+            <div id="ModelWrapper" style="width:100%;height:100%;border:1px solid grey"></div>
+            <pre data-lang="typescript" id="CodePreview"
+                 style="display: none; width:100%;height:100%;border:1px solid grey"></pre>
+        </div>
+    </div>
+</div>
+</body>
+</html>

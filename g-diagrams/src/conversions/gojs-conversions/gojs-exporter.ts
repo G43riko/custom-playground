@@ -83,13 +83,14 @@ function convertDashArrayFromArrow(r: string): number[] {
     }
 }
 
-export function RenderInto(id: string, data: go.Model): void {
+export function CreateDiagramInElement(id: string, options: { animation?: boolean } = {}): go.Diagram {
     const myDiagram = $(
         go.Diagram,
         id,
         {
-            "undoManager.isEnabled": true,
-            layout                 : $(go.TreeLayout,
+            "undoManager.isEnabled"     : true,
+            "animationManager.isEnabled": options.animation ?? false,
+            layout                      : $(go.TreeLayout,
                 { // this only lays out in trees nodes connected by "generalization" links
                     angle            : 90,
                     path             : go.TreeLayout.PathSource,  // links go from child to parent
@@ -299,6 +300,6 @@ export function RenderInto(id: string, data: go.Model): void {
             new go.Binding("toArrow", "relationship", convertToArrow),
         ),
     );
-    // set up a few example class nodes and relationships
-    myDiagram.model        = go.Model.fromJson(data);
+
+    return myDiagram;
 }
