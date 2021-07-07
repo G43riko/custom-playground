@@ -1,7 +1,7 @@
 export enum DiagramElementType {
-    METHOD = "METHOD",
-    ENTITY = "ENTITY",
-    PROPERTY = "PROPERTY",
-    GENERIC = "GENERIC",
+    METHOD    = "METHOD",
+    ENTITY    = "ENTITY",
+    PROPERTY  = "PROPERTY",
+    GENERIC   = "GENERIC",
     PRIMITIVE = "PRIMITIVE",
 }

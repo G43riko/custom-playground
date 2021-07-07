@@ -1,5 +1,5 @@
 import { PerfTestHolder } from "./perf-test-holder";
-import { PerfTestPrinterHtml } from "./perf-test-printer-html";
+import { PerfTestPrinterHtml } from "./printers/perf-test-printer-html";
 
 class BrowserRunner {
     public static start(): void {

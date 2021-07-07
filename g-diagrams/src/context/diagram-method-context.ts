@@ -1,13 +1,13 @@
-import {DiagramMethod} from "../class/method/diagram-method";
-import {DiagramWorldContext} from "./diagram-world-context";
-import {DiagramEntityContext} from "./diagram-entity-context";
+import { DiagramGeneric } from "../class/common/diagram-generic";
+import { DiagramType, DiagramTypeName } from "../class/common/diagram-type";
+import { DiagramMethod } from "../class/method/diagram-method";
 import {
     DiagramContextValidationResult,
     DiagramContextValidationResultInstance,
 } from "./diagram-context-validation-result";
-import {DiagramGenericContextInstance} from "./diagram-generic-context";
-import {DiagramGeneric} from "../class/common/diagram-generic";
-import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
+import { DiagramEntityContext } from "./diagram-entity-context";
+import { DiagramGenericContextInstance } from "./diagram-generic-context";
+import { DiagramWorldContext } from "./diagram-world-context";
 
 export class DiagramMethodContext extends DiagramGenericContextInstance {
     public constructor(private readonly method: DiagramMethod) {
@@ -30,10 +30,10 @@ export class DiagramMethodContext extends DiagramGenericContextInstance {
      * @param entityContext
      */
     public validate(worldContext: DiagramWorldContext, entityContext: DiagramEntityContext): DiagramContextValidationResult {
-        const validationResult = new DiagramContextValidationResultInstance();
+        const validationResult           = new DiagramContextValidationResultInstance();
         const returnTypeValidationResult = this.canResolveType(this.method.returnType, worldContext, entityContext.generics);
         if (!returnTypeValidationResult) {
-            validationResult.addError("Cannot determine return control (" + this.method.returnType.name + ") for method " + entityContext.entity.name + "." + this.method.name);
+            validationResult.addError(`Cannot determine return control (${this.method.returnType.name}) for method ${entityContext.entity.name}.${this.method.name}`);
         }
         this.method.parameters?.forEach((parameter, index) => {
             const parameterValidationResult = this.canResolveType(
@@ -43,7 +43,7 @@ export class DiagramMethodContext extends DiagramGenericContextInstance {
             );
 
             if (!parameterValidationResult) {
-                validationResult.addError("Cannot determine control (" + parameter.type.name + ") for " + index + " nth parameter of  " + entityContext.entity.name + "." + this.method.name + " named " + parameter.name);
+                validationResult.addError(`Cannot determine control (${parameter.type.name}) for ${index} nth parameter of  ${entityContext.entity.name}.${this.method.name} named ${parameter.name}`);
             }
         });
 
@@ -57,10 +57,10 @@ export class DiagramMethodContext extends DiagramGenericContextInstance {
     ): boolean {
         const name = type.name === DiagramTypeName.LINK ? type.className : type.name;
         if (!name) {
-            throw new Error("Cannot get name from type " + JSON.stringify(type));
+            throw new Error(`Cannot get name from type ${JSON.stringify(type)}`);
         }
 
-        // if it global name etc STRING, NUMBER...
+        // if it is global name etc. STRING, NUMBER...
         if (name in DiagramTypeName) {
             return true;
         }

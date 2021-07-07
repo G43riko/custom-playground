@@ -1,31 +1,32 @@
+import { expect } from "chai";
 import "mocha";
-import {expect} from "chai";
-import {DiagramModel} from "../model/diagram-model";
-import {DiagramEntityFactory} from "./diagram-entity-factory";
-import {DiagramType, DiagramTypeName} from "./common/diagram-type";
-import {DiagramAccessModifier} from "./common/diagram-access-modifier";
+import { DiagramModel } from "../model/diagram-model";
+import { DiagramAccessModifier } from "./common/diagram-access-modifier";
+import { DiagramType, DiagramTypeName } from "./common/diagram-type";
+import { DiagramEntityFactory } from "./diagram-entity-factory";
 
 
 function createAdvancedModel(): DiagramModel {
-    const personClass = DiagramEntityFactory.createClass("Person")
+    const personClass = DiagramEntityFactory
+        .createClass("Person")
         .addPublicProperty("Age", DiagramType.Number)
         .addPublicProperty("Children", {name: DiagramTypeName.LINK, className: "Person", array: true})
         .addPublicProperty("Name", DiagramType.String, "Jon Doe")
         .addProperty("Type", DiagramType.String, DiagramAccessModifier.PUBLIC, {
-            static: true,
-            final: true,
+            static      : true,
+            final       : true,
             defaultValue: "Person",
         })
         .addPublicFinalProperty("Id", {name: "UUID"})
         .addPublicMethod("introduce", DiagramType.String)
         .addGenerics({
-            name: "GENDER",
+            name        : "GENDER",
             defaultValue: DiagramType.Union("MAN", "WOMAN", "UNKNOWN"),
-            extends: DiagramType.String,
+            extends     : DiagramType.String,
         })
         .addPublicMethod("setGender", DiagramType.Void, {
-            name: "gender",
-            type: {name: "GENDER"},
+            name        : "gender",
+            type        : {name: "GENDER"},
             defaultValue: "UNKNOWN",
         })
         .addPublicGenericMethod(
@@ -33,7 +34,7 @@ function createAdvancedModel(): DiagramModel {
             DiagramType.Void,
             [
                 {
-                    name: "T",
+                    name   : "T",
                     extends: DiagramType.String,
                 },
             ],
@@ -42,8 +43,8 @@ function createAdvancedModel(): DiagramModel {
                 type: {name: "T"},
             },
             {
-                name: "validate",
-                type: DiagramType.Boolean,
+                name    : "validate",
+                type    : DiagramType.Boolean,
                 optional: true,
             },
         )
@@ -58,13 +59,15 @@ function createAdvancedModel(): DiagramModel {
 }
 
 function createSimpleModel(): DiagramModel {
-    const dateClass = DiagramEntityFactory.createClass("Date")
+    const dateClass = DiagramEntityFactory
+        .createClass("Date")
         .addPublicProperty("day", DiagramType.Number)
         .addPublicProperty("year", DiagramType.Number)
         .addPublicProperty("month", DiagramType.Number)
         .build();
 
-    const personClass = DiagramEntityFactory.createClass("Person")
+    const personClass = DiagramEntityFactory
+        .createClass("Person")
         .addPublicProperty("Gender", DiagramType.Union("MALE", "FEMALE"))
         .addPublicProperty("givenName", DiagramType.String)
         .addPublicProperty("familyName", DiagramType.String)
@@ -85,14 +88,14 @@ describe("Test basic diagram validation", () => {
         const simpleDiagram = createSimpleModel();
         const advancedModel = createAdvancedModel();
         expect(simpleDiagram.validate()).to.deep.equal({
-            errors: [],
+            errors    : [],
             resultCode: "SUCCESS",
-            warnings: [],
+            warnings  : [],
         });
         expect(advancedModel.validate()).to.deep.equal({
-            errors: [],
+            errors    : [],
             resultCode: "SUCCESS",
-            warnings: [],
+            warnings  : [],
         });
     });
 });

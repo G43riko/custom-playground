@@ -5,15 +5,15 @@
     "private": true,
     "homepage": "https://github.com/G43riko/custom-playground#readme",
     "workspaces": [
-      "@g43/ecs",
-      "g-shared-library",
-      "perf-test",
-      "faces",
-      "g-diagrams",
-      "docs-test",
-      "scripting",
-      "dependency-injector",
-      "local-database"
+        "@g43/ecs",
+        "g-shared-library",
+        "perf-test",
+        "faces",
+        "g-diagrams",
+        "docs-test",
+        "scripting",
+        "dependency-injector",
+        "local-database"
     ],
     "author": {
         "email": "gcsollei@hotmail.com",

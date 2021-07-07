@@ -1,17 +1,17 @@
-import {DiagramAccessModifier} from "../class/common/diagram-access-modifier";
-import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
-import {DiagramEntity} from "../class/entity/diagram-entity";
-import {DiagramCheckers} from "../diagram-checkers";
-import {DiagramWorldContext} from "./diagram-world-context";
+import { DiagramAccessModifier } from "../class/common/diagram-access-modifier";
+import { DiagramType, DiagramTypeName } from "../class/common/diagram-type";
+import { DiagramEntity } from "../class/entity/diagram-entity";
+import { DiagramEntityType } from "../class/entity/diagram-entity-type";
+import { DiagramMethod } from "../class/method/diagram-method";
+import { DiagramProperty } from "../class/property/diagram-property";
+import { DiagramCheckers } from "../diagram-checkers";
 import {
     DiagramContextValidationResult,
     DiagramContextValidationResultInstance,
 } from "./diagram-context-validation-result";
-import {DiagramGenericContextInstance} from "./diagram-generic-context";
-import {DiagramMethodContext} from "./diagram-method-context";
-import {DiagramMethod} from "../class/method/diagram-method";
-import {DiagramProperty} from "../class/property/diagram-property";
-import {DiagramEntityType} from "../class/entity/diagram-entity-type";
+import { DiagramGenericContextInstance } from "./diagram-generic-context";
+import { DiagramMethodContext } from "./diagram-method-context";
+import { DiagramWorldContext } from "./diagram-world-context";
 
 export class DiagramEntityContext extends DiagramGenericContextInstance {
     private readonly childContextMap = new Map<string, DiagramMethodContext | DiagramEntityContext>();
@@ -36,7 +36,7 @@ export class DiagramEntityContext extends DiagramGenericContextInstance {
         } else if (DiagramCheckers.isEnum(entity)) {
             entity.properties.forEach((property) => this.addItem(property));
         } else {
-            throw new Error("Cannot create entityContext from " + entity);
+            throw new Error(`Cannot create entityContext from ${entity}`);
         }
     }
 
@@ -80,7 +80,7 @@ export class DiagramEntityContext extends DiagramGenericContextInstance {
             const canResolveExtends = this.canResolveType(this.entity.parentExtend, worldContext);
 
             if (!canResolveExtends) {
-                validationResult.addError("Cannot resolve extends type (" + JSON.stringify(this.entity.parentExtend) + ") for entity " + this.entity.name);
+                validationResult.addError(`Cannot resolve extends type (${JSON.stringify(this.entity.parentExtend)}) for entity ${this.entity.name}`);
             }
         }
 
@@ -93,7 +93,7 @@ export class DiagramEntityContext extends DiagramGenericContextInstance {
                 const canResolveImplements = this.canResolveType(impl, worldContext);
 
                 if (!canResolveImplements) {
-                    validationResult.addError("Cannot resolve implements type (" + JSON.stringify(impl) + ") for entity " + this.entity.name);
+                    validationResult.addError(`Cannot resolve implements type (${JSON.stringify(impl)}) for entity ${this.entity.name}`);
                 }
             });
         }
@@ -108,16 +108,16 @@ export class DiagramEntityContext extends DiagramGenericContextInstance {
             if (DiagramCheckers.isProperty(value)) {
                 const result = this.canResolveType(value.type, worldContext);
                 if (!result) {
-                    validationResult.addError("Cannot resolve type (" + JSON.stringify(value.type) + ") for property " + this.entity.name + "." + value.name);
+                    validationResult.addError(`Cannot resolve type (${JSON.stringify(value.type)}) for property ${this.entity.name}.${value.name}`);
                 }
             } else if (DiagramCheckers.isMethod(value)) {
                 const methodContext = this.childContextMap.get(value.name);
                 if (!methodContext) {
-                    throw new Error("Cannot find context for method " + value.name);
+                    throw new Error(`Cannot find context for method ${value.name}`);
                 }
                 validationResult.addValidationResult(methodContext.validate(worldContext, this));
             } else {
-                validationResult.addError("Validation for " + JSON.stringify(value) + " is not implemented");
+                validationResult.addError(`Validation for ${JSON.stringify(value)} is not implemented`);
             }
         });
 
@@ -135,10 +135,10 @@ export class DiagramEntityContext extends DiagramGenericContextInstance {
     ): boolean {
         const name = type.name === DiagramTypeName.LINK ? type.className : type.name;
         if (!name) {
-            throw new Error("Cannot get name from type " + JSON.stringify(type));
+            throw new Error(`Cannot get name from type ${JSON.stringify(type)}`);
         }
 
-        // if it global name etc STRING, NUMBER...
+        // if it is a global name etc. STRING, NUMBER...
         if (name in DiagramTypeName) {
             return true;
         }

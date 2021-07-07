@@ -5,7 +5,8 @@
     "types": "./dist/index.d.ts",
     "license": "MIT",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "run": "ts-node ./src/utils/parameter-parser-demo.ts --boolean --string gabo --string2 'super name' --number 23"
     },
     "dependencies": {
     },

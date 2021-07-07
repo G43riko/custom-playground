@@ -36,6 +36,7 @@ module.exports = {
             "always",
         ],
         "no-undef": "off",
+        "prefer-template": "error",
         "no-await-in-loop": "error",
         "no-template-curly-in-string": "error",
         "default-param-last": "error",

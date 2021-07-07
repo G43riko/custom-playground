@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .viewer-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: absolute;
+        }
+
+        .container {
+            flex: 1 1 50%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .code-input {
+            background: red;
+        }
+
+        .preview {
+            background: blueviolet;
+        }
+
+        .container-header {
+            background: green;
+            flex: 0 0 80px;
+        }
+
+        .container-content {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            overflow: auto;
+        }
+
+        .code-input .container-content {
+            overflow: hidden;
+        }
+
+        textarea {
+            width: calc(100% - 18px);
+            resize: none;
+            height: calc(100% - 18px);
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="viewer-wrapper">
+    <div class="code-input container">
+        <div class="container-header"></div>
+        <div class="container-content">
+            <textarea id="main-input" name=""></textarea>
+        </div>
+    </div>
+    <div class="preview container">
+        <div class="container-header"></div>
+        <div class="container-content" id="preview"></div>
+    </div>
+</div>
+</body>
+<!--<div class="mermaid">-->
+<!--    graph TD-->
+<!--    A[Start] &ndash;&gt; C{Answer Question?}-->
+<!--    C &ndash;&gt;|Yes| D[Do Something]-->
+<!--    C &ndash;&gt;|No| E[Do Something]-->
+<!--</div>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+<script>
+    const area = document.getElementById("main-input");
+    const preview = document.querySelector(".preview .container-content");
+    area.oninput = () => {
+        // preview.textContent = area.value?.toUpperCase()?.trim();
+        let counter = 2
+        mermaid.initialize({startOnLoad: false})
+        mermaid.render(
+            'preview' + counter++,
+            'graph TB\na-->b',
+            (svgGraph) => {
+                console.log(svgGraph);
+                preview.innerHTML = "";
+                preview.innerHTML = svgGraph;
+
+            }
+        );
+    }
+</script>
+</html>

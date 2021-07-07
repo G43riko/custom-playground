@@ -1,14 +1,14 @@
-import {AdvancedDiagramType, DiagramType} from "../../class/common/diagram-type";
-import {DiagramModel} from "../../model/diagram-model";
-import {DiagramEntityFactory} from "../../class/diagram-entity-factory";
-import {DiagramLink} from "../../model/diagram-link";
+import { AdvancedDiagramType, DiagramType } from "../../class/common/diagram-type";
+import { DiagramEntityFactory } from "../../class/diagram-entity-factory";
+import { DiagramLink } from "../../model/diagram-link";
+import { DiagramModel } from "../../model/diagram-model";
 
 class BotTypes {
-    public static readonly BotId = DiagramType.Link("BotId");
-    public static readonly Bot = DiagramType.Link("Bot");
-    public static readonly BotType = DiagramType.Link("BotType");
+    public static readonly BotId       = DiagramType.Link("BotId");
+    public static readonly Bot         = DiagramType.Link("Bot");
+    public static readonly BotType     = DiagramType.Link("BotType");
     public static readonly BotActivity = DiagramType.Link("BotActivity");
-    public static readonly Bots = DiagramType.LinkArray("Bot");
+    public static readonly Bots        = DiagramType.LinkArray("Bot");
 }
 
 export function addBotItemsToModel(model: DiagramModel): void {

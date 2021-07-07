@@ -1,112 +1,112 @@
+import { expect } from "chai";
 import "mocha";
-import {expect} from "chai";
-import {DiagramParserTexts} from "./diagram-parser-texts";
-import {DiagramParser} from "./diagram-parser";
+import { DiagramParser } from "./diagram-parser";
+import { DiagramParserTexts } from "./diagram-parser-texts";
 
 
 describe("Test DiagramParser", () => {
     it("Parse basic text", async () => {
-        const parser = new DiagramParser();
+        const parser        = new DiagramParser();
         const parsedDiagram = parser.parse(DiagramParserTexts.diagram1);
 
         // to.NOT.deep.equal because of undefined properties in result
         expect(parsedDiagram).to.not.deep.equal([
             {
-                "name": "PersonId",
-                "type": "string",
+                "name"       : "PersonId",
+                "type"       : "string",
                 "elementType": "PRIMITIVE",
             },
             {
-                "elementType": "ENTITY",
-                "name": "AbstractPerson",
-                "access": "PUBLIC",
-                "type": "CLASS",
-                "properties": [
+                "elementType"     : "ENTITY",
+                "name"            : "AbstractPerson",
+                "access"          : "PUBLIC",
+                "type"            : "CLASS",
+                "properties"      : [
                     {
-                        "name": "id",
-                        "type": {
-                            "name": "LINK",
+                        "name"       : "id",
+                        "type"       : {
+                            "name"     : "LINK",
                             "className": " PersonId",
                         },
-                        "final": true,
-                        "abstract": false,
-                        "static": false,
-                        "access": "PUBLIC",
-                        "optional": false,
+                        "final"      : true,
+                        "abstract"   : false,
+                        "static"     : false,
+                        "access"     : "PUBLIC",
+                        "optional"   : false,
                         "elementType": "PROPERTY",
                     },
                     {
-                        "name": "#name",
-                        "type": {
-                            "name": "LINK",
+                        "name"       : "#name",
+                        "type"       : {
+                            "name"     : "LINK",
                             "className": " string",
                         },
-                        "final": false,
-                        "abstract": false,
-                        "static": false,
-                        "access": "PUBLIC",
-                        "optional": false,
+                        "final"      : false,
+                        "abstract"   : false,
+                        "static"     : false,
+                        "access"     : "PUBLIC",
+                        "optional"   : false,
                         "elementType": "PROPERTY",
                     },
                     {
-                        "name": "alive",
+                        "name"        : "alive",
                         "defaultValue": "true",
-                        "type": {
+                        "type"        : {
                             "name": "LINK",
                         },
-                        "final": false,
-                        "abstract": false,
-                        "static": false,
-                        "access": "PUBLIC",
-                        "optional": false,
-                        "value": " true",
-                        "elementType": "PROPERTY",
+                        "final"       : false,
+                        "abstract"    : false,
+                        "static"      : false,
+                        "access"      : "PUBLIC",
+                        "optional"    : false,
+                        "value"       : " true",
+                        "elementType" : "PROPERTY",
                     },
                     {
-                        "name": "age",
+                        "name"        : "age",
                         "defaultValue": "0",
-                        "type": {
-                            "name": "LINK",
+                        "type"        : {
+                            "name"     : "LINK",
                             "className": " number ",
                         },
-                        "final": false,
-                        "abstract": false,
-                        "static": false,
-                        "access": "PUBLIC",
-                        "optional": false,
-                        "value": " 0",
-                        "elementType": "PROPERTY",
+                        "final"       : false,
+                        "abstract"    : false,
+                        "static"      : false,
+                        "access"      : "PUBLIC",
+                        "optional"    : false,
+                        "value"       : " 0",
+                        "elementType" : "PROPERTY",
                     },
                 ],
-                "methods": [
+                "methods"         : [
                     {
-                        "name": "toString",
-                        "abstract": false,
-                        "final": false,
-                        "access": "PUBLIC",
-                        "static": false,
-                        "returnType": {
-                            "name": "LINK",
+                        "name"       : "toString",
+                        "abstract"   : false,
+                        "final"      : false,
+                        "access"     : "PUBLIC",
+                        "static"     : false,
+                        "returnType" : {
+                            "name"     : "LINK",
                             "className": "string",
                         },
                         "elementType": "METHOD",
                     },
                     {
-                        "name": "setName",
-                        "abstract": false,
-                        "final": false,
-                        "access": "PROTECTED",
-                        "static": false,
-                        "returnType": {
-                            "name": "LINK",
+                        "name"       : "setName",
+                        "abstract"   : false,
+                        "final"      : false,
+                        "access"     : "PROTECTED",
+                        "static"     : false,
+                        "returnType" : {
+                            "name"     : "LINK",
                             "className": "void",
                         },
-                        "parameters": [
+                        "parameters" : [
                             {
-                                "index": 0,
-                                "name": "name",
-                                "type": {
-                                    "name": "LINK",
+                                "index"   : 0,
+                                "name"    : "name",
+                                "type"    : {
+                                    "name"     : "LINK",
                                     "className": " string",
                                 },
                                 "optional": false,
@@ -115,40 +115,40 @@ describe("Test DiagramParser", () => {
                         "elementType": "METHOD",
                     },
                     {
-                        "name": "setAge",
-                        "abstract": false,
-                        "final": false,
-                        "access": "PRIVATE",
-                        "static": false,
-                        "returnType": {
-                            "name": "LINK",
+                        "name"       : "setAge",
+                        "abstract"   : false,
+                        "final"      : false,
+                        "access"     : "PRIVATE",
+                        "static"     : false,
+                        "returnType" : {
+                            "name"     : "LINK",
                             "className": "void",
                         },
-                        "parameters": [
+                        "parameters" : [
                             {
-                                "index": 0,
-                                "name": "name",
-                                "type": {
-                                    "name": "LINK",
+                                "index"   : 0,
+                                "name"    : "name",
+                                "type"    : {
+                                    "name"     : "LINK",
                                     "className": " number",
                                 },
                                 "optional": false,
                             },
                             {
-                                "index": 1,
-                                "name": "force",
-                                "type": {
+                                "index"       : 1,
+                                "name"        : "force",
+                                "type"        : {
                                     "name": "LINK",
                                 },
                                 "defaultValue": "true",
-                                "optional": false,
+                                "optional"    : false,
                             },
                         ],
                         "elementType": "METHOD",
                     },
                 ],
-                "generics": [],
-                "abstract": true,
+                "generics"        : [],
+                "abstract"        : true,
                 "parentImplements": [],
             },
         ]);

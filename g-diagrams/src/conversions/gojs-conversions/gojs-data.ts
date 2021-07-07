@@ -1,6 +1,6 @@
-import {DiagramLinkType} from "../../model/diagram-link-type";
-import {DiagramEntityType} from "../../class/entity/diagram-entity-type";
-import {DiagramAccessModifier} from "../../class/common/diagram-access-modifier";
+import { DiagramAccessModifier } from "../../class/common/diagram-access-modifier";
+import { DiagramEntityType } from "../../class/entity/diagram-entity-type";
+import { DiagramLinkType } from "../../model/diagram-link-type";
 
 export interface GojsNodeData {
     readonly key: number;

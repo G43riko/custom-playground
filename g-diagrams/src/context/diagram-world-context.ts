@@ -1,17 +1,17 @@
-import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
-import {DiagramContext} from "./diagram-context";
-import {DiagramEntityContext} from "./diagram-entity-context";
+import { DiagramType, DiagramTypeName } from "../class/common/diagram-type";
+import { DiagramEntity } from "../class/entity/diagram-entity";
+import { DiagramMethod } from "../class/method/diagram-method";
+import { DiagramProperty } from "../class/property/diagram-property";
+import { DiagramCheckers } from "../diagram-checkers";
+import { DiagramContext } from "./diagram-context";
 import {
     DiagramContextValidationResult,
-    DiagramContextValidationResultInstance
+    DiagramContextValidationResultInstance,
 } from "./diagram-context-validation-result";
-import {DiagramEntity} from "../class/entity/diagram-entity";
-import {DiagramMethod} from "../class/method/diagram-method";
-import {DiagramProperty} from "../class/property/diagram-property";
-import {DiagramCheckers} from "../diagram-checkers";
+import { DiagramEntityContext } from "./diagram-entity-context";
 
 export class DiagramWorldContext extends DiagramContext {
-    private readonly entitiesContextMap = new Map<string, DiagramEntityContext>();
+    private readonly entitiesContextMap         = new Map<string, DiagramEntityContext>();
     private readonly customTypes: DiagramType[] = [];
 
     /**
@@ -76,7 +76,7 @@ export class DiagramWorldContext extends DiagramContext {
             if (DiagramCheckers.isEntity(item)) {
                 const entityContext = this.entitiesContextMap.get(item.name);
                 if (!entityContext) {
-                    throw new Error("Cannot find context for entity " + item);
+                    throw new Error(`Cannot find context for entity ${item}`);
                 }
                 const entityValidationResult = entityContext.validate(this);
                 validationResult.addValidationResult(entityValidationResult);
@@ -108,10 +108,10 @@ export class DiagramWorldContext extends DiagramContext {
     ): boolean {
         const name = type.name === DiagramTypeName.LINK ? type.className : type.name;
         if (!name) {
-            throw new Error("Cannot get name from type " + JSON.stringify(type));
+            throw new Error(`Cannot get name from type ${JSON.stringify(type)}`);
         }
 
-        // if it global name etc STRING, NUMBER...
+        // if it is global name etc. STRING, NUMBER...
         if (name in DiagramTypeName) {
             return true;
         }

@@ -1,4 +1,4 @@
-import {DiagramAccessModifier} from "../../class/common/diagram-access-modifier";
+import { DiagramAccessModifier } from "../../class/common/diagram-access-modifier";
 
 export interface ClassDiagramParserOptions {
     readonly errorOnUnknownType: boolean;

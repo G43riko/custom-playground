@@ -1,17 +1,22 @@
-import {ClassDiagramParserOptions} from "./class-diagram-parser-options";
-import {DiagramAccessModifier} from "../../class/common/diagram-access-modifier";
-import {DiagramElementType} from "../../class/common/diagram-element-type";
-import {DiagramEntityFactory} from "../../class/diagram-entity-factory";
-import {DiagramEntity} from "../../class/entity/diagram-entity";
-import {DiagramEntityType} from "../../class/entity/diagram-entity-type";
-import {DiagramModel} from "../../model/diagram-model";
-import {DiagramCheckers} from "../../diagram-checkers";
-import {DiagramClassParser} from "./diagram-class-parser";
-import {DiagramEnumParser} from "./diagram-enum-parser";
-import {DiagramAbstractParser} from "./diagram-abstract-parser";
-import {DiagramLink} from "../../model/diagram-link";
+import { DiagramAccessModifier } from "../../class/common/diagram-access-modifier";
+import { DiagramElementType } from "../../class/common/diagram-element-type";
+import { DiagramEntityFactory } from "../../class/diagram-entity-factory";
+import { DiagramEntity } from "../../class/entity/diagram-entity";
+import { DiagramEntityType } from "../../class/entity/diagram-entity-type";
+import { DiagramCheckers } from "../../diagram-checkers";
+import { DiagramLink } from "../../model/diagram-link";
+import { DiagramModel } from "../../model/diagram-model";
+import { ClassDiagramParserOptions } from "./class-diagram-parser-options";
+import { DiagramAbstractParser } from "./diagram-abstract-parser";
+import { DiagramClassParser } from "./diagram-class-parser";
+import { DiagramEnumParser } from "./diagram-enum-parser";
 
 /**
+ * Is used to parse diagram and create DiagramModel
+ * TODO:
+ *   - should be renamed to TypescriptDiagramParser
+ *   - Primitive parser should be added to parser `type PersonId = string`
+ *
  * type PersonId = string
  * -
  * abstract class AbstractPerson {
@@ -25,12 +30,12 @@ import {DiagramLink} from "../../model/diagram-link";
  */
 export class DiagramParser extends DiagramAbstractParser {
     private readonly classParser = new DiagramClassParser(this.options);
-    private readonly enumParser = new DiagramEnumParser(this.options);
+    private readonly enumParser  = new DiagramEnumParser(this.options);
 
     public constructor(options: Partial<ClassDiagramParserOptions> = {}) {
         super(Object.assign({
             defaultAccessModifier: DiagramAccessModifier.PUBLIC,
-            entityDivider: "--",
+            entityDivider        : "--",
         }, options) as ClassDiagramParserOptions);
     }
 
@@ -50,8 +55,8 @@ export class DiagramParser extends DiagramAbstractParser {
     }
 
     public parseToDiagram(content: string): DiagramModel {
-        const parseResult = this.parse(content);
-        const result = new DiagramModel();
+        const parseResult                      = this.parse(content);
+        const result                           = new DiagramModel();
         const createdEntities: DiagramEntity[] = [];
 
         parseResult.forEach((item) => {
@@ -64,7 +69,7 @@ export class DiagramParser extends DiagramAbstractParser {
 
                 return createdEntities.push(createdEntity);
             }
-            console.warn("Cannot map item to diagram: " + JSON.stringify(item));
+            console.warn(`Cannot map item to diagram: ${JSON.stringify(item)}`);
         });
 
         if (this.options.generateAllLinks || this.options.generateLinksFromExtends) {
@@ -99,8 +104,8 @@ export class DiagramParser extends DiagramAbstractParser {
 
         return {
             elementType: DiagramElementType.PRIMITIVE,
-            name: match[1],
-            type: match[2],
+            name       : match[1],
+            type       : match[2],
         };
     }
 

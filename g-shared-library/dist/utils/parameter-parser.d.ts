@@ -1,15 +1,31 @@
 export declare class ParsedArguments {
+    /**
+     * node/ts-node
+     */
     private readonly runner;
+    /**
+     * path to script.
+     */
     private readonly script;
+    /**
+     * Real params
+     */
     private readonly params;
+    private readonly processedParameters;
+
     private constructor();
+
     get first(): string;
+
     get firstResolvedFile(): string;
+
     get globSync(): string[];
+
     get globFilesSync(): string[];
 
-    hasFlag(flag: string): boolean;
+    static createProcessArgs(args?: string[]): ParsedArguments;
 
     get globResolvedFilesSync(): string[];
-    static createProcessArgs(args?: string[]): ParsedArguments;
+
+    hasFlag(flag: string): boolean;
 }

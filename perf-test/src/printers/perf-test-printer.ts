@@ -1,5 +1,5 @@
 import { currentEOL } from "g-shared-library";
-import { PerfTestAnalyzerResult } from "./types/perf-test-analyzer-result";
+import { PerfTestAnalyzerResult } from "../types/perf-test-analyzer-result";
 
 export class PerfTestPrinter {
     public printTestTitle(title: string): void {

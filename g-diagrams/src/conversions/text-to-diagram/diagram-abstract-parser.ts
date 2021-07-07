@@ -1,5 +1,5 @@
-import {ClassDiagramParserOptions} from "./class-diagram-parser-options";
-import {DiagramAccessModifier} from "../../class/common/diagram-access-modifier";
+import { DiagramAccessModifier } from "../../class/common/diagram-access-modifier";
+import { ClassDiagramParserOptions } from "./class-diagram-parser-options";
 
 /**
  * type PersonId = string
@@ -25,9 +25,9 @@ export abstract class DiagramAbstractParser {
     } {
         const defaultModifiers = {
             accessor: options.defaultAccessModifier,
-            static: false,
+            static  : false,
             abstract: false,
-            final: false,
+            final   : false,
         };
 
         let haveAccessModifier = false;

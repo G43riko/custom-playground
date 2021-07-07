@@ -1,5 +1,5 @@
 export interface PerfTest {
     readonly title: string;
-    readonly content: Function;
+    readonly content: () => void;
     readonly header: string;
 }

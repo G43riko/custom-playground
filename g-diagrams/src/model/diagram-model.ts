@@ -1,17 +1,25 @@
-import {DiagramGeneric} from "../class/common/diagram-generic";
-import {DiagramType, DiagramTypeName} from "../class/common/diagram-type";
-import {DiagramClass} from "../class/entity/diagram-class";
-import {DiagramEntity} from "../class/entity/diagram-entity";
-import {DiagramWorldContext} from "../context/diagram-world-context";
-import {DiagramContextValidationResult} from "../context/diagram-context-validation-result";
-import {DiagramCheckers} from "../diagram-checkers";
-import {DiagramLink} from "./diagram-link";
+import { DiagramGeneric } from "../class/common/diagram-generic";
+import { DiagramType, DiagramTypeName } from "../class/common/diagram-type";
+import { DiagramEntity } from "../class/entity/diagram-entity";
+import { DiagramContextValidationResult } from "../context/diagram-context-validation-result";
+import { DiagramWorldContext } from "../context/diagram-world-context";
+import { DiagramCheckers } from "../diagram-checkers";
+import { DiagramLink } from "./diagram-link";
 
+/**
+ * TODO:
+ *   add method to add data from another model
+ *   allow to serialize model
+ *   allow to deserialize model
+ *   allow to export XML/JSON/UML/GoJS/Typescript/Java/PHP
+ *   options
+ *      - error on duplicate name or override previous name
+ */
 export class DiagramModel {
-    private readonly entityMap = new Map<DiagramEntity["name"], DiagramEntity>();
+    private readonly entityMap                              = new Map<DiagramEntity["name"], DiagramEntity>();
     private readonly entitiesNames: DiagramEntity["name"][] = [];
-    private readonly customTypes: DiagramType[] = [];
-    private readonly links: DiagramLink[] = []
+    private readonly customTypes: DiagramType[]             = [];
+    private readonly links: DiagramLink[]                   = []
 
     public static getAllRequiredTypesOfDiagramModel(diagramModel: DiagramModel): DiagramType[] {
         const result: DiagramType[] = [];
@@ -40,7 +48,7 @@ export class DiagramModel {
     public static getAllRequiredTypesOfEntity(diagramClass: DiagramEntity): DiagramType[] {
         const result: DiagramType[] = diagramClass.properties.map((property) => property.type);
 
-        const addGenerics = (generics: DiagramGeneric[]) => {
+        const addGenerics = (generics: DiagramGeneric[]): void => {
             generics.forEach((generic) => {
                 if (generic.extends) {
                     result.push(generic.extends);
@@ -88,7 +96,7 @@ export class DiagramModel {
 
     public addEntity<T extends DiagramEntity>(entity: T): T {
         if (this.entityMap.has(entity.name)) {
-            throw new Error("Entity with name '" + entity.name + "' already exists");
+            throw new Error(`Entity with name '${entity.name}' already exists`);
         }
         this.entitiesNames.push(entity.name);
         this.entityMap.set(entity.name, entity);
@@ -96,8 +104,10 @@ export class DiagramModel {
         return entity;
     }
 
-    public validate(): DiagramContextValidationResult {
-        const worldContext = new DiagramWorldContext();
+    /**
+     * @param worldContext - optional parameter which could be custom world context
+     */
+    public validate(worldContext = new DiagramWorldContext()): DiagramContextValidationResult {
         // add all custom types to world context;
         worldContext.defineTypes(...this.customTypes);
 

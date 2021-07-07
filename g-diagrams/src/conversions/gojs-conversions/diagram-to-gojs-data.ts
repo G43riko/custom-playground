@@ -1,16 +1,16 @@
-import {DiagramModel} from "../../model/diagram-model";
-import {DiagramAccessModifier} from "../../class/common/diagram-access-modifier";
-import {DiagramCheckers} from "../../diagram-checkers";
-import {DiagramTypeToString} from "../../class/common/diagram-type";
 import * as go from "gojs";
-import {GojsData, GojsLinkData, GojsNodeData} from "./gojs-data";
+import { DiagramAccessModifier } from "../../class/common/diagram-access-modifier";
+import { DiagramTypeToString } from "../../class/common/diagram-type";
+import { DiagramCheckers } from "../../diagram-checkers";
+import { DiagramModel } from "../../model/diagram-model";
+import { GojsData, GojsLinkData, GojsNodeData } from "./gojs-data";
 
 const $ = go.GraphObject.make;
 
 function getData(diagram: DiagramModel, onlyTypes?: string[]): GojsData {
     const nodeData: GojsNodeData[] = [];
     const linkData: GojsLinkData[] = [];
-    const entityNameKeyMap = new Map<string, number>();
+    const entityNameKeyMap         = new Map<string, number>();
 
     const requireKeyFor = (entityName: string): number => {
         const existingKey = entityNameKeyMap.get(entityName);
@@ -31,9 +31,9 @@ function getData(diagram: DiagramModel, onlyTypes?: string[]): GojsData {
 
         if (DiagramCheckers.isClass(entity) || DiagramCheckers.isInterface(entity)) {
             methods.push(...entity.methods.map((method) => ({
-                name: method.name,
+                name      : method.name,
                 entityType: entity.type,
-                type: DiagramTypeToString(method.returnType),
+                type      : DiagramTypeToString(method.returnType),
                 parameters: (method.parameters ?? []).map((parameter) => ({
                     name: parameter.name,
                     type: DiagramTypeToString(parameter.type),
@@ -43,29 +43,29 @@ function getData(diagram: DiagramModel, onlyTypes?: string[]): GojsData {
         }
         nodeData.push({
             key,
-            methods: methods.length ? methods : undefined,
-            name: entity.name,
+            methods   : methods.length ? methods : undefined,
+            name      : entity.name,
             entityType: entity.type,
             properties: entity.properties.map((property) => ({
-                name: property.name,
-                type: DiagramTypeToString(property.type),
+                name      : property.name,
+                type      : DiagramTypeToString(property.type),
                 visibility: property.access ?? DiagramAccessModifier.PUBLIC,
             })),
         });
     });
 
     diagram.forEachLink((link) => {
-        const toName = link.to.className ?? link.to.name ?? "";
+        const toName   = link.to.className ?? link.to.name ?? "";
         const fromName = link.from.className ?? link.from.name ?? "";
 
-        const to = requireKeyFor(toName);
+        const to   = requireKeyFor(toName);
         const from = requireKeyFor(fromName);
         if (!to) {
-            throw new Error("Cannot get index for 'to' name " + toName + "(" + JSON.stringify(link.to) + ")");
+            throw new Error(`Cannot get index for 'to' name ${toName}(${JSON.stringify(link.to)})`);
         }
 
         if (!from) {
-            throw new Error("Cannot get index for 'from' name " + fromName + "(" + JSON.stringify(link.from) + ")");
+            throw new Error(`Cannot get index for 'from' name ${fromName}(${JSON.stringify(link.from)})`);
         }
         linkData.push({to, from, relationship: link.type});
     });
@@ -97,24 +97,24 @@ export function getGoModelJSONFromModel(diagram: DiagramModel, onlyTypes?: strin
     const data = getData(diagram, onlyTypes);
 
     return JSON.stringify({
-        class: "GraphLinksModel",
-        copiesArrays: true,
+        class             : "GraphLinksModel",
+        copiesArrays      : true,
         copiesArrayObjects: true,
-        nodeDataArray: data.nodeData,
-        linkDataArray: data.linkData,
+        nodeDataArray     : data.nodeData,
+        linkDataArray     : data.linkData,
     });
 }
 
 export function getGoModelFromModel(diagram: DiagramModel, onlyTypes?: string[]): go.Model {
     const data = getData(diagram, onlyTypes);
 
-    // setup a few example class nodes and relationships
+    // set up a few example class nodes and relationships
     return $(go.GraphLinksModel,
         {
-            copiesArrays: true,
+            copiesArrays      : true,
             copiesArrayObjects: true,
-            nodeDataArray: data.nodeData,
-            linkDataArray: data.linkData,
+            nodeDataArray     : data.nodeData,
+            linkDataArray     : data.linkData,
         });
 
 }

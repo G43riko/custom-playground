@@ -1,4 +1,4 @@
-import {DiagramType} from "../common/diagram-type";
+import { DiagramType } from "../common/diagram-type";
 
 export interface DiagramMethodParameter {
     readonly index?: number;

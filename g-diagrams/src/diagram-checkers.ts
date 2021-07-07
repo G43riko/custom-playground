@@ -1,12 +1,12 @@
-import {DiagramElementType} from "./class/common/diagram-element-type";
-import {DiagramGeneric} from "./class/common/diagram-generic";
-import {DiagramClass} from "./class/entity/diagram-class";
-import {DiagramEntity} from "./class/entity/diagram-entity";
-import {DiagramEntityType} from "./class/entity/diagram-entity-type";
-import {DiagramEnum} from "./class/entity/diagram-enum";
-import {DiagramInterface} from "./class/entity/diagram-interface";
-import {DiagramMethod} from "./class/method/diagram-method";
-import {DiagramProperty} from "./class/property/diagram-property";
+import { DiagramElementType } from "./class/common/diagram-element-type";
+import { DiagramGeneric } from "./class/common/diagram-generic";
+import { DiagramClass } from "./class/entity/diagram-class";
+import { DiagramEntity } from "./class/entity/diagram-entity";
+import { DiagramEntityType } from "./class/entity/diagram-entity-type";
+import { DiagramEnum } from "./class/entity/diagram-enum";
+import { DiagramInterface } from "./class/entity/diagram-interface";
+import { DiagramMethod } from "./class/method/diagram-method";
+import { DiagramProperty } from "./class/property/diagram-property";
 
 export class DiagramCheckers {
     public static isProperty(item: any): item is DiagramProperty {

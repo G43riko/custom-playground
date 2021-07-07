@@ -6,6 +6,15 @@
 ## TODO
 
 - create _functions_ which would be alternative to methods but without parent entity
+- Usage
+
+Current state: 6.7.2021
+
+```typescript
+const model = new DiagramModel();
+const errors = model.validate();
+
+```
 
 ## Use cases
 

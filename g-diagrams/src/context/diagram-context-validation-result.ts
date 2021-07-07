@@ -11,8 +11,8 @@ export interface DiagramContextValidationResult {
 export class DiagramContextValidationResultInstance {
     private readonly holder: DiagramContextValidationResult = {
         resultCode: "SUCCESS",
-        errors: [],
-        warnings: [],
+        errors    : [],
+        warnings  : [],
     }
 
     public addError(error: string): this {
@@ -38,8 +38,8 @@ export class DiagramContextValidationResultInstance {
     public getResult(): DiagramContextValidationResult {
         return {
             resultCode: this.holder.resultCode === "ERROR" || this.holder.errors?.length ? "ERROR" : "SUCCESS",
-            errors: this.holder.errors,
-            warnings: this.holder.warnings,
+            errors    : this.holder.errors,
+            warnings  : this.holder.warnings,
         };
     }
 

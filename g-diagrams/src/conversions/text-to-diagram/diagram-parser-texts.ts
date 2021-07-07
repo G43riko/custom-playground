@@ -1,5 +1,5 @@
 export class DiagramParserTexts {
-    public static readonly diagram1 = `
+    public static readonly diagram1         = `
 type PersonId = string
 --
 abstract class AbstractPerson {

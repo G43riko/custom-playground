@@ -1,6 +1,6 @@
-import {DiagramAccessModifier} from "../common/diagram-access-modifier";
-import {DiagramElementType} from "../common/diagram-element-type";
-import {DiagramType} from "../common/diagram-type";
+import { DiagramAccessModifier } from "../common/diagram-access-modifier";
+import { DiagramElementType } from "../common/diagram-element-type";
+import { DiagramType } from "../common/diagram-type";
 
 export interface DiagramProperty<T = any> {
     readonly elementType: DiagramElementType.PROPERTY;

@@ -1,13 +1,13 @@
-import {DiagramGeneric, DiagramGenericToString} from "./diagram-generic";
+import { DiagramGeneric, DiagramGenericToString } from "./diagram-generic";
 
 export enum DiagramTypeName {
-    STRING = "STRING",
-    NUMBER = "NUMBER",
+    STRING  = "STRING",
+    NUMBER  = "NUMBER",
     BOOLEAN = "BOOLEAN",
-    VOID = "VOID",
-    LINK = "LINK",
+    VOID    = "VOID",
+    LINK    = "LINK",
     UNKNOWN = "UNKNOWN",
-    UNION = "UNION",
+    UNION   = "UNION",
 }
 
 export interface DiagramType {
@@ -24,35 +24,37 @@ export interface DiagramType {
 
 export const AdvancedDiagramType = {
     Observable: (type: DiagramType): DiagramType => ({
-        name: "Observable",
-        generics: [{
-            name: DiagramTypeToString(type),
-        }],
+        name    : "Observable",
+        generics: [
+            {
+                name: DiagramTypeToString(type),
+            },
+        ],
     }),
 };
 
 // TODO: add Observable
 // tslint:disable-next-line:variable-name
 export const DiagramType = {
-    String: {name: DiagramTypeName.STRING},
-    StringArray: {name: DiagramTypeName.STRING, array: true},
-    Number: {name: DiagramTypeName.NUMBER},
-    Unknown: {name: DiagramTypeName.UNKNOWN},
+    String      : {name: DiagramTypeName.STRING},
+    StringArray : {name: DiagramTypeName.STRING, array: true},
+    Number      : {name: DiagramTypeName.NUMBER},
+    Unknown     : {name: DiagramTypeName.UNKNOWN},
     UnknownArray: {name: DiagramTypeName.UNKNOWN, array: true},
-    NumberArray: {name: DiagramTypeName.NUMBER, array: true},
-    Boolean: {name: DiagramTypeName.BOOLEAN},
+    NumberArray : {name: DiagramTypeName.NUMBER, array: true},
+    Boolean     : {name: DiagramTypeName.BOOLEAN},
     BooleanArray: {name: DiagramTypeName.BOOLEAN, array: true},
-    Union: (...enumValues: string[]): DiagramType => ({enumValues, name: DiagramTypeName.UNION}),
-    Void: {name: DiagramTypeName.VOID},
+    Union       : (...enumValues: string[]): DiagramType => ({enumValues, name: DiagramTypeName.UNION}),
+    Void        : {name: DiagramTypeName.VOID},
 
     /**
      * Link to entity
      * @param targetName - entity name
      */
-    Link: (targetName: string): DiagramType => ({name: DiagramTypeName.LINK, className: targetName}),
+    Link       : (targetName: string): DiagramType => ({name: DiagramTypeName.LINK, className: targetName}),
     LinkGeneric: (targetName: string, ...generics: DiagramGeneric[]): DiagramType => ({
         generics,
-        name: DiagramTypeName.LINK,
+        name     : DiagramTypeName.LINK,
         className: targetName,
     }),
 

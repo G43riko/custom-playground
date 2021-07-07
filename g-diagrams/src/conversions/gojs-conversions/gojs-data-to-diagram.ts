@@ -1,7 +1,7 @@
-import {GojsData} from "./gojs-data";
-import {DiagramModel} from "../../model/diagram-model";
-import {DiagramType, ParseDiagramType} from "../../class/common/diagram-type";
-import {DiagramEntityFactory} from "../../class/diagram-entity-factory";
+import { DiagramType, ParseDiagramType } from "../../class/common/diagram-type";
+import { DiagramEntityFactory } from "../../class/diagram-entity-factory";
+import { DiagramModel } from "../../model/diagram-model";
+import { GojsData } from "./gojs-data";
 
 export function GojsDataToDiagram(data: GojsData): DiagramModel {
     const model = new DiagramModel();
@@ -15,16 +15,16 @@ export function GojsDataToDiagram(data: GojsData): DiagramModel {
 
         node.properties.forEach((property) => {
             factory.addPropertyRaw({
-                name: property.name,
-                type: ParseDiagramType(property.type),
+                name  : property.name,
+                type  : ParseDiagramType(property.type),
                 access: property.visibility,
             });
         });
         (node.methods ?? []).forEach((method) => {
             factory.addMethodRaw({
-                name: method.name,
+                name      : method.name,
                 returnType: ParseDiagramType(method.type),
-                access: method.visibility,
+                access    : method.visibility,
                 parameters: method.parameters.map((parameter) => ({
                     name: parameter.name,
                     type: ParseDiagramType(parameter.type),
@@ -35,19 +35,19 @@ export function GojsDataToDiagram(data: GojsData): DiagramModel {
 
     data.linkData.forEach((link) => {
         const from = nodeKeyNameMap.get(link.from);
-        const to = nodeKeyNameMap.get(link.to);
+        const to   = nodeKeyNameMap.get(link.to);
 
         if (!from) {
-            throw new Error("Cannot find from object by key " + link.from);
+            throw new Error(`Cannot find from object by key ${link.from}`);
         }
 
         if (!to) {
-            throw new Error("Cannot find to object by key " + link.to);
+            throw new Error(`Cannot find to object by key ${link.to}`);
         }
 
         model.addLink({
             from: DiagramType.Link(from),
-            to: DiagramType.Link(to),
+            to  : DiagramType.Link(to),
             type: link.relationship,
         });
     });

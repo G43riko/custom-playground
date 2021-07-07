@@ -1,4 +1,4 @@
-import {DiagramType, DiagramTypeToString} from "./diagram-type";
+import { DiagramType, DiagramTypeToString } from "./diagram-type";
 
 export interface DiagramGeneric {
     readonly name: string;

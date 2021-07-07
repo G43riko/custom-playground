@@ -1,17 +1,16 @@
-import {DiagramAccessModifier, DiagramAccessModifierToString} from "../class/common/diagram-access-modifier";
-import {DiagramGeneric, DiagramGenericToString} from "../class/common/diagram-generic";
-import {DiagramTypeToString} from "../class/common/diagram-type";
-import {DiagramClass} from "../class/entity/diagram-class";
-import {DiagramMethod} from "../class/method/diagram-method";
-import {DiagramMethodParameter} from "../class/method/diagram-method-parameter";
-import {DiagramProperty} from "../class/property/diagram-property";
+import { DiagramAccessModifier, DiagramAccessModifierToString } from "../class/common/diagram-access-modifier";
+import { DiagramGeneric, DiagramGenericToString } from "../class/common/diagram-generic";
+import { DiagramTypeToString } from "../class/common/diagram-type";
+import { DiagramClass } from "../class/entity/diagram-class";
+import { DiagramMethod } from "../class/method/diagram-method";
+import { DiagramMethodParameter } from "../class/method/diagram-method-parameter";
+import { DiagramProperty } from "../class/property/diagram-property";
 
 const keyWords = {
-    static: "static",
-    final: "final", // const, readonly
+    static  : "static",
+    final   : "final", // const, readonly
     abstract: "abstract",
 };
-
 
 
 function getGenerics(generics: DiagramGeneric[]): string {
@@ -70,7 +69,7 @@ function getDataFromMethod(param: DiagramMethod): string[] {
 
 export function getDataFromClass(param: DiagramClass): { titles: string[], data: string[][] } {
     const data: string[][] = [];
-    const title: string = [
+    const title: string    = [
         DiagramAccessModifierToString(param.access || DiagramAccessModifier.PUBLIC),
         param.abstract ? keyWords.abstract : "",
         param.final ? keyWords.final : "",

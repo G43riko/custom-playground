@@ -4,7 +4,7 @@
     "scripts": {
         "build": "tsc",
         "run:default": "node ./src/bench.js ./performance-tests/addToArray.js",
-        "run": "ts-node ./src/cli-runner.ts ./performance-tests/addToArray.js",
+        "run": "ts-node ./src/cli-runner.ts ./performance-tests/addToArray.js --encoding utf8",
         "run:memory": "ts-node ./src/cli-runner.ts ./performance-tests/addToArray.js --memory"
     },
     "license": "MIT",

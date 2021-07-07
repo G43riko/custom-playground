@@ -1,8 +1,8 @@
-import {DiagramAccessModifier} from "../common/diagram-access-modifier";
-import {DiagramElementType} from "../common/diagram-element-type";
-import {DiagramGeneric} from "../common/diagram-generic";
-import {DiagramType} from "../common/diagram-type";
-import {DiagramMethodParameter} from "./diagram-method-parameter";
+import { DiagramAccessModifier } from "../common/diagram-access-modifier";
+import { DiagramElementType } from "../common/diagram-element-type";
+import { DiagramGeneric } from "../common/diagram-generic";
+import { DiagramType } from "../common/diagram-type";
+import { DiagramMethodParameter } from "./diagram-method-parameter";
 
 export interface DiagramMethod {
     readonly elementType: DiagramElementType.METHOD;
@@ -17,4 +17,3 @@ export interface DiagramMethod {
     readonly access?: DiagramAccessModifier;
     readonly content?: string;
 }
-

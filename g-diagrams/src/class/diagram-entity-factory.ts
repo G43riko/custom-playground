@@ -1,26 +1,26 @@
-import {DiagramAccessModifier} from "./common/diagram-access-modifier";
-import {DiagramElementType} from "./common/diagram-element-type";
-import {DiagramGeneric} from "./common/diagram-generic";
-import {DiagramType} from "./common/diagram-type";
-import {DiagramClass} from "./entity/diagram-class";
-import {DiagramEntity} from "./entity/diagram-entity";
-import {DiagramEntityType} from "./entity/diagram-entity-type";
-import {DiagramEnum} from "./entity/diagram-enum";
-import {DiagramInterface} from "./entity/diagram-interface";
-import {DiagramMethod} from "./method/diagram-method";
-import {DiagramMethodParameter} from "./method/diagram-method-parameter";
-import {DiagramProperty} from "./property/diagram-property";
+import { DiagramAccessModifier } from "./common/diagram-access-modifier";
+import { DiagramElementType } from "./common/diagram-element-type";
+import { DiagramGeneric } from "./common/diagram-generic";
+import { DiagramType } from "./common/diagram-type";
+import { DiagramClass } from "./entity/diagram-class";
+import { DiagramEntity } from "./entity/diagram-entity";
+import { DiagramEntityType } from "./entity/diagram-entity-type";
+import { DiagramEnum } from "./entity/diagram-enum";
+import { DiagramInterface } from "./entity/diagram-interface";
+import { DiagramMethod } from "./method/diagram-method";
+import { DiagramMethodParameter } from "./method/diagram-method-parameter";
+import { DiagramProperty } from "./property/diagram-property";
 
 const defaultAccess = DiagramAccessModifier.PUBLIC;
 
 export class DiagramEntityFactory<T extends DiagramEntity> {
     private readonly properties: DiagramProperty[] = [];
-    private readonly methods: DiagramMethod[] = [];
+    private readonly methods: DiagramMethod[]      = [];
     private parentExtend?: DiagramType;
-    private parentImplements: DiagramType[] = [];
-    private readonly generics: DiagramGeneric[] = [];
-    private access: DiagramAccessModifier = defaultAccess;
-    private abstract = false;
+    private parentImplements: DiagramType[]        = [];
+    private readonly generics: DiagramGeneric[]    = [];
+    private access: DiagramAccessModifier          = defaultAccess;
+    private abstract                               = false;
 
     public constructor(
         private readonly type: DiagramEntityType,
@@ -141,21 +141,21 @@ export class DiagramEntityFactory<T extends DiagramEntity> {
             case DiagramEntityType.ENUM:
                 return this.buildEnum() as unknown as T;
             default:
-                throw new Error("Cannot build entity with type " + this.type);
+                throw new Error(`Cannot build entity with type ${this.type}`);
         }
     }
 
     private buildClass(): DiagramClass {
         return {
-            elementType: DiagramElementType.ENTITY,
-            name: this.name,
-            access: this.access || defaultAccess,
-            type: DiagramEntityType.CLASS,
-            properties: this.properties,
-            methods: this.methods,
-            generics: this.generics,
-            abstract: this.abstract,
-            parentExtend: this.parentExtend,
+            elementType     : DiagramElementType.ENTITY,
+            name            : this.name,
+            access          : this.access || defaultAccess,
+            type            : DiagramEntityType.CLASS,
+            properties      : this.properties,
+            methods         : this.methods,
+            generics        : this.generics,
+            abstract        : this.abstract,
+            parentExtend    : this.parentExtend,
             parentImplements: this.parentImplements,
         };
     }
@@ -163,22 +163,22 @@ export class DiagramEntityFactory<T extends DiagramEntity> {
     private buildEnum(): DiagramEnum {
         return {
             elementType: DiagramElementType.ENTITY,
-            name: this.name,
-            access: this.access || defaultAccess,
-            type: DiagramEntityType.ENUM,
-            properties: this.properties,
+            name       : this.name,
+            access     : this.access || defaultAccess,
+            type       : DiagramEntityType.ENUM,
+            properties : this.properties,
         };
     }
 
     private buildInterface(): DiagramInterface {
         return {
-            elementType: DiagramElementType.ENTITY,
-            name: this.name,
-            access: this.access || defaultAccess,
-            type: DiagramEntityType.INTERFACE,
-            properties: this.properties,
-            methods: this.methods,
-            generics: this.generics,
+            elementType : DiagramElementType.ENTITY,
+            name        : this.name,
+            access      : this.access || defaultAccess,
+            type        : DiagramEntityType.INTERFACE,
+            properties  : this.properties,
+            methods     : this.methods,
+            generics    : this.generics,
             parentExtend: this.parentExtend,
         };
     }

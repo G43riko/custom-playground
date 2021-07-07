@@ -1,7 +1,7 @@
 import { PerfTestAnalyzer } from "./perf-test-analyzer";
 import { PerfTestParser } from "./perf-test-parser";
-import { PerfTestPrinter } from "./perf-test-printer";
 import { PerfTestRunner } from "./perf-test-runner";
+import { PerfTestPrinter } from "./printers/perf-test-printer";
 
 export interface PerfTestOptions {
     testMemory?: boolean;

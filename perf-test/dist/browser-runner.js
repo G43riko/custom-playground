@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", {value: true});
 var perf_test_holder_1 = require("./perf-test-holder");
-var perf_test_printer_html_1 = require("./perf-test-printer-html");
+var perf_test_printer_html_1 = require("./printers/perf-test-printer-html");
 var BrowserRunner = /** @class */ (function () {
     function BrowserRunner() {
     }
@@ -33,7 +33,7 @@ var BrowserRunner = /** @class */ (function () {
         targetElement.append(outputWrapper);
     };
     BrowserRunner.prototype.onChange = function (testContent, outputWrapper) {
-        var tests = new perf_test_holder_1.PerfTestHolder(testContent, new perf_test_printer_html_1.PerfTestPrinterHtml(outputWrapper));
+        var tests = new perf_test_holder_1.PerfTestHolder(testContent, {}, new perf_test_printer_html_1.PerfTestPrinterHtml(outputWrapper));
         tests.runAllTests();
     };
     return BrowserRunner;

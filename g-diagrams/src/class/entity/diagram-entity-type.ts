@@ -2,9 +2,9 @@
  * TODO: add PRIMITIVE, PACKAGE
  */
 export enum DiagramEntityType {
-    CLASS = "CLASS",
+    CLASS     = "CLASS",
     INTERFACE = "INTERFACE",
-    ENUM = "ENUM",
+    ENUM      = "ENUM",
 }
 
 

@@ -1,8 +1,8 @@
 export enum DiagramAccessModifier {
-    PUBLIC = "PUBLIC",
+    PUBLIC    = "PUBLIC",
     PROTECTED = "PROTECTED",
-    PRIVATE = "PRIVATE",
-    PACKAGE = "PACKAGE",
+    PRIVATE   = "PRIVATE",
+    PACKAGE   = "PACKAGE",
 }
 
 export function parseDiagramAccessModifier(param: string): DiagramAccessModifier | null {
@@ -16,7 +16,7 @@ export function parseDiagramAccessModifier(param: string): DiagramAccessModifier
         case DiagramAccessModifier.PACKAGE:
             return DiagramAccessModifier.PACKAGE;
         default:
-            console.warn("Cannot parse DiagramAccessModifier " + param);
+            console.warn(`Cannot parse DiagramAccessModifier ${param}`);
 
             return null;
     }
@@ -33,7 +33,7 @@ export function DiagramAccessModifierToString(param: DiagramAccessModifier | nul
         case DiagramAccessModifier.PROTECTED:
             return "/";
         default:
-            console.warn("Cannot parse DiagramAccessModifier " + param);
+            console.warn(`Cannot parse DiagramAccessModifier ${param}`);
 
             return "";
 

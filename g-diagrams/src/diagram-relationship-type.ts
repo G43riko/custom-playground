@@ -1,4 +1,4 @@
 export enum DiagramRelationshipType {
-    EXTENDS = "EXTENDS",
+    EXTENDS    = "EXTENDS",
     IMPLEMENTS = "IMPLEMENTS",
 }
