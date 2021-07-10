@@ -59,7 +59,7 @@ export class DiagramWorldContext extends DiagramContext {
         }
 
         // Check if any child context provides searched name
-        // TODO: is this really required? This should probably only check if type is not one of child entities
+        // TODO: is this really required? This should probably only check if value is not one of child entities
         for (const context of Array.from(this.entitiesContextMap.values())) {
             if (context.hasPublic(name)) {
                 return true;

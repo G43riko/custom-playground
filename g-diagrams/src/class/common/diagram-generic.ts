@@ -6,10 +6,10 @@ export interface DiagramGeneric {
     readonly defaultValue?: DiagramType;
 }
 
-export function DiagramGenericToString(generic: DiagramGeneric): string {
+export function DiagramGenericToString(generic: DiagramGeneric, nameMap?: { [name: string]: string }): string {
     return [
         generic.name,
-        generic.extends ? `extends ${DiagramTypeToString(generic.extends)}` : "",
-        generic.defaultValue ? `= ${DiagramTypeToString(generic.defaultValue)}` : "",
+        generic.extends ? `extends ${DiagramTypeToString(generic.extends, nameMap)}` : undefined,
+        generic.defaultValue ? `= ${DiagramTypeToString(generic.defaultValue, nameMap)}` : undefined,
     ].filter((e) => e).join(" ");
 }

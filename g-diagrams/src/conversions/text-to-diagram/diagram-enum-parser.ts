@@ -16,7 +16,7 @@ export class DiagramEnumParser extends DiagramEntityParser {
     }
 
     /**
-     * TODO: check if type is not number or boolean or object
+     * TODO: check if value is not number or boolean or object
      */
     private getParsedEnumProperty(content: string): DiagramProperty {
         const [data, value] = content.split("=");

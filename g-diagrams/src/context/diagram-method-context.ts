@@ -19,7 +19,7 @@ export class DiagramMethodContext extends DiagramGenericContextInstance {
     }
 
     /**
-     * 1. validate return type
+     * 1. validate return value
      * 2. validate each parameters
      *
      * TODO:

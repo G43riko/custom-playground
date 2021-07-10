@@ -9,7 +9,7 @@ import { ClassDiagramParserOptions } from "./class-diagram-parser-options";
 import { DiagramEntityParser } from "./diagram-entity-parser";
 
 /**
- * Is used to parse Interfaces and Entities
+ * Is used to parseType Interfaces and Entities
  */
 export class DiagramClassParser extends DiagramEntityParser {
     public parseClassBody(bodyActiveRows: string[], factory: DiagramEntityFactory<DiagramEntity>): void {
@@ -49,7 +49,7 @@ export class DiagramClassParser extends DiagramEntityParser {
     }
 
     /**
-     * TODO: determine type from default value
+     * TODO: determine value from default value
      */
     public parseProperty(content: string): DiagramProperty {
         const [data, defaultValue] = content.split("=");
@@ -106,7 +106,7 @@ export class DiagramClassParser extends DiagramEntityParser {
 
     /**
      * @param params - `^(.*)$`
-     * @param options - options to parse params
+     * @param options - options to parseType params
      * @private
      */
     private getMethodParams(params: string, options: ClassDiagramParserOptions): DiagramMethodParameter[] {

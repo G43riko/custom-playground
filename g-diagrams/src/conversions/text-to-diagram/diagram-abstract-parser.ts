@@ -2,7 +2,7 @@ import { DiagramAccessModifier } from "../../class/common/diagram-access-modifie
 import { ClassDiagramParserOptions } from "./class-diagram-parser-options";
 
 /**
- * type PersonId = string
+ * value PersonId = string
  * -
  * abstract class AbstractPerson {
  *     public readonly id: PersonId

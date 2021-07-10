@@ -6,7 +6,7 @@ import { DiagramParserTexts } from "./diagram-parser-texts";
 describe("Test text to diagram parser", () => {
     xit("Parse basic text", async () => {
         const parser        = new DiagramParserTexts();
-        const parsedDiagram = null; //parser.parse(DiagramParserTexts.diagram1);
+        const parsedDiagram = null; //parser.parseType(DiagramParserTexts.diagram1);
 
         // to.NOT.deep.equal because of undefined properties in result
         expect(parsedDiagram).to.not.deep.equal([

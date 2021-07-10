@@ -1,10 +1,10 @@
-import {expect} from "chai";
+import { expect } from "chai";
 import "mocha";
-import {CommandJSONParser} from "./command-json-parser";
+import { CommandJSONParser } from "./command-json-parser";
 
 
 describe("Test json parser", () => {
-    it("should parse empty json values", () => {
+    it("should parseType empty json values", () => {
         const parser = new CommandJSONParser();
         expect(parser.parse("{}")).to.deep.eq({result: {}, remains: ""});
         expect(parser.parse("   {}")).to.deep.eq({result: {}, remains: ""});
@@ -14,16 +14,16 @@ describe("Test json parser", () => {
         expect(parser.parse("   []")).to.deep.eq({result: [], remains: ""});
         expect(parser.parse("[]   ")).to.deep.eq({result: [], remains: "   "});
     });
-    it("should parse nested array json", () => {
+    it("should parseType nested array json", () => {
         const parser = new CommandJSONParser();
         expect(parser.parse("[[[], []], [{}, []]]")).to.deep.eq({result: [[[], []], [{}, []]], remains: ""});
         expect(parser.parse("   [[[], []], [{}, []]]")).to.deep.eq({result: [[[], []], [{}, []]], remains: ""});
         expect(parser.parse("[[[], []], [{}, []]]   ")).to.deep.eq({result: [[[], []], [{}, []]], remains: "   "});
     });
-    it("should parse all object types json values", () => {
+    it("should parseType all object types json values", () => {
         const parser = new CommandJSONParser();
         expect(parser.parse("{\"a\": \"A\", \"b\": 1, \"c\": true, \"d\": {}, \"e\": []}")).to.deep.eq({
-            result: {
+            result : {
                 a: "A",
                 b: 1,
                 c: true,

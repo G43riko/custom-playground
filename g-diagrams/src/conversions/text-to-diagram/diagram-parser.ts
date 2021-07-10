@@ -3,6 +3,7 @@ import { DiagramElementType } from "../../class/common/diagram-element-type";
 import { DiagramEntityFactory } from "../../class/diagram-entity-factory";
 import { DiagramEntity } from "../../class/entity/diagram-entity";
 import { DiagramEntityType } from "../../class/entity/diagram-entity-type";
+import { DiagramPrimitive } from "../../class/entity/diagram-primitive";
 import { DiagramCheckers } from "../../diagram-checkers";
 import { DiagramLink } from "../../model/diagram-link";
 import { DiagramModel } from "../../model/diagram-model";
@@ -10,14 +11,14 @@ import { ClassDiagramParserOptions } from "./class-diagram-parser-options";
 import { DiagramAbstractParser } from "./diagram-abstract-parser";
 import { DiagramClassParser } from "./diagram-class-parser";
 import { DiagramEnumParser } from "./diagram-enum-parser";
+import { DiagramPrimitiveParser } from "./diagram-primitive-parser";
 
 /**
- * Is used to parse diagram and create DiagramModel
+ * Is used to parseType diagram and create DiagramModel
  * TODO:
  *   - should be renamed to TypescriptDiagramParser
- *   - Primitive parser should be added to parser `type PersonId = string`
  *
- * type PersonId = string
+ * value PersonId = string
  * -
  * abstract class AbstractPerson {
  *     public readonly id: PersonId
@@ -29,8 +30,9 @@ import { DiagramEnumParser } from "./diagram-enum-parser";
  * }
  */
 export class DiagramParser extends DiagramAbstractParser {
-    private readonly classParser = new DiagramClassParser(this.options);
-    private readonly enumParser  = new DiagramEnumParser(this.options);
+    private readonly classParser     = new DiagramClassParser(this.options);
+    private readonly enumParser      = new DiagramEnumParser(this.options);
+    private readonly primitiveParser = new DiagramPrimitiveParser(this.options);
 
     public constructor(options: Partial<ClassDiagramParserOptions> = {}) {
         super(Object.assign({
@@ -39,19 +41,17 @@ export class DiagramParser extends DiagramAbstractParser {
         }, options) as ClassDiagramParserOptions);
     }
 
-    public parse(content: string): any[] {
+    public parse(content: string): (DiagramPrimitive | DiagramEntity)[] {
         const entities = content.split(this.options.entityDivider);
 
-        const result = entities.map((entityContent) => {
+        return entities.map((entityContent) => {
             const trimmedEntityContent = entityContent.trim();
             if (trimmedEntityContent.startsWith("type")) {
-                return this.parsePrimitive(trimmedEntityContent, this.options);
+                return this.primitiveParser.parseType(trimmedEntityContent);
             }
 
             return this.parseEntity(trimmedEntityContent);
-        });
-
-        return result;
+        }).filter((item) => item) as (DiagramEntity | DiagramPrimitive)[];
     }
 
     public parseToDiagram(content: string): DiagramModel {
@@ -61,7 +61,7 @@ export class DiagramParser extends DiagramAbstractParser {
 
         parseResult.forEach((item) => {
             if (item.elementType === DiagramElementType.PRIMITIVE) {
-                return result.defineType({name: item.name, className: item.type});
+                return result.defineType({name: item.name, className: item.value.className});
             }
 
             if (DiagramCheckers.isEntity(item)) {
@@ -95,21 +95,6 @@ export class DiagramParser extends DiagramAbstractParser {
         return result;
     }
 
-    private parsePrimitive(content: string, options: ClassDiagramParserOptions): { name: string, type: string, elementType: DiagramElementType.PRIMITIVE } | null {
-        const match = content.match(/type\W+([a-zA-Z0-6_-]+)\W+=\W([a-zA-Z0-6_-]+)/);
-
-        if (!match) {
-            return null;
-        }
-
-        return {
-            elementType: DiagramElementType.PRIMITIVE,
-            name       : match[1],
-            type       : match[2],
-        };
-    }
-
-
     private parseEntity(content: string): DiagramEntity {
         const {modifiers, name, bodyRows, type, rawExtends, rawImplements} = this.classParser.parseEntityBasic(content);
 
@@ -122,10 +107,14 @@ export class DiagramParser extends DiagramAbstractParser {
                 this.enumParser.parseExtends(rawExtends, factory);
                 this.enumParser.parseImplements(rawImplements, factory);
                 break;
-            default:
+            case DiagramEntityType.CLASS:
+            case DiagramEntityType.INTERFACE:
                 this.classParser.parseClassBody(bodyRows, factory);
                 this.classParser.parseExtends(rawExtends, factory);
                 this.classParser.parseImplements(rawImplements, factory);
+                break;
+            default:
+                console.warn(`Cannot parse entity with type '${type}'`);
         }
 
         return factory.build();

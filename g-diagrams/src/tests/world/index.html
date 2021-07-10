@@ -132,7 +132,7 @@
                 new go.Binding("text", "name").makeTwoWay(),
                 new go.Binding("isUnderline", "scope", s => s[0] === 'c'),
             ),
-            // property type, if known
+            // property value, if known
             $(
                 go.TextBlock,
                 "",
@@ -175,7 +175,7 @@
                 // this does not permit adding/editing/removing of parameters via inplace edits
                 new go.Binding("text", "parameters", parr => `(${parr.map((par) => `${par.name}: ${par.type}`).join(", ")})`)
             ),
-            // method return type, if any
+            // method return value, if any
             $(
                 go.TextBlock,
                 "",

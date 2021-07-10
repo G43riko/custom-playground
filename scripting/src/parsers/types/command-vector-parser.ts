@@ -1,8 +1,8 @@
-import {CommandNumberParser} from "./command-number-parser";
-import {ScriptingCommandParamParser} from "../scripting-command-param-parser";
+import { ScriptingCommandParamParser } from "../scripting-command-param-parser";
+import { CommandNumberParser } from "./command-number-parser";
 
 /**
- * this should probable parse number divided by comma
+ * this should probable parseType number divided by comma
  */
 export class CommandVectorParser implements ScriptingCommandParamParser<number[]> {
     private readonly numberParser = new CommandNumberParser(this.isInteger);

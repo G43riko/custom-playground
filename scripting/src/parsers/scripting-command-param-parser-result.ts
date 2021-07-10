@@ -1,4 +1,4 @@
-import {ScriptingValidatorResult} from "../scripting-validator-result";
+import { ScriptingValidatorResult } from "../scripting-validator-result";
 
 export interface ScriptingCommandParamParserResult<T> {
     /**
@@ -7,7 +7,7 @@ export interface ScriptingCommandParamParserResult<T> {
     readonly type: string;
 
     /**
-     * true if type value is array
+     * true if value value is array
      */
     readonly array: boolean;
     /**

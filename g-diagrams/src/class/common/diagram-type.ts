@@ -1,13 +1,14 @@
 import { DiagramGeneric, DiagramGenericToString } from "./diagram-generic";
 
 export enum DiagramTypeName {
-    STRING  = "STRING",
-    NUMBER  = "NUMBER",
-    BOOLEAN = "BOOLEAN",
-    VOID    = "VOID",
-    LINK    = "LINK",
-    UNKNOWN = "UNKNOWN",
-    UNION   = "UNION",
+    STRING       = "STRING",
+    NUMBER       = "NUMBER",
+    BOOLEAN      = "BOOLEAN",
+    VOID         = "VOID",
+    LINK         = "LINK",
+    UNKNOWN      = "UNKNOWN",
+    UNION        = "UNION",
+    INTERSECTION = "INTERSECTION",
 }
 
 export interface DiagramType {
@@ -17,7 +18,7 @@ export interface DiagramType {
      */
     readonly className?: string;
     readonly array?: boolean;
-    readonly enumValues?: string[];
+    readonly enumValues?: DiagramType[];
     readonly generics?: DiagramGeneric[];
 }
 
@@ -44,8 +45,29 @@ export const DiagramType = {
     NumberArray : {name: DiagramTypeName.NUMBER, array: true},
     Boolean     : {name: DiagramTypeName.BOOLEAN},
     BooleanArray: {name: DiagramTypeName.BOOLEAN, array: true},
-    Union       : (...enumValues: string[]): DiagramType => ({enumValues, name: DiagramTypeName.UNION}),
     Void        : {name: DiagramTypeName.VOID},
+
+    /**
+     * Intersections of types
+     * @example
+     *   Warrior & Archer => DiagramType.Intersection(DiagramType.Link("Warrior"), DiagramType.Link("Archer"));
+     * @param enumValues
+     * @constructor
+     */
+    Intersection: (...enumValues: (DiagramType)[]): DiagramType => ({enumValues, name: DiagramTypeName.INTERSECTION}),
+
+    /**
+     * Union of types or string
+     * @example
+     *   "RICK" | "ERIK" | "ZUZANA" => DiagramType.Union("RICK", "ERIK", "ZUZANA");
+     *   Warrior | Archer => DiagramType.Union(DiagramType.Link("Warrior"), DiagramType.Link("Archer"));
+     * @param enumValues
+     * @constructor
+     */
+    Union: (...enumValues: (string | DiagramType)[]): DiagramType => ({
+        enumValues: enumValues.map((name) => typeof name === "string" ? {name} : name),
+        name      : DiagramTypeName.UNION,
+    }),
 
     /**
      * Link to entity
@@ -66,13 +88,13 @@ export const DiagramType = {
     // Observable: AdvancedDiagramType.Observable,
 };
 
-export function DiagramTypeToString(type: DiagramType): string {
+export function DiagramTypeToString(type: DiagramType, nameMap: { [name: string]: string } = {}): string {
     const generics = (): string => {
         if (!type.generics?.length) {
             return "";
         }
 
-        return `<${type.generics.map(DiagramGenericToString).join(", ")}>`;
+        return `<${type.generics.map((e) => DiagramGenericToString(e)).join(", ")}>`;
     };
 
 
@@ -87,7 +109,7 @@ export function DiagramTypeToString(type: DiagramType): string {
     }
 
     const realName = type.name === DiagramTypeName.LINK ? type.className : type.name;
-    const typeName = realName + generics();
+    const typeName = (realName && nameMap[realName] || realName) + generics();
 
     if (typeName.match(/[< |]/)) {
         return type.array ? `(${typeName})[]` : typeName;

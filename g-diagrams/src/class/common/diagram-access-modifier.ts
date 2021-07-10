@@ -6,7 +6,7 @@ export enum DiagramAccessModifier {
 }
 
 export function parseDiagramAccessModifier(param: string): DiagramAccessModifier | null {
-    switch (param?.toUpperCase()) {
+    switch (param?.trim().toUpperCase()) {
         case DiagramAccessModifier.PUBLIC:
             return DiagramAccessModifier.PUBLIC;
         case DiagramAccessModifier.PROTECTED:

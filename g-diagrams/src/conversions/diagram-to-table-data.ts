@@ -18,7 +18,7 @@ function getGenerics(generics: DiagramGeneric[]): string {
         return "";
     }
 
-    return `<${generics.map(DiagramGenericToString).join(", ")}>`;
+    return `<${generics.map((e) => DiagramGenericToString(e)).join(", ")}>`;
 }
 
 function getDataFromProperty(param: DiagramProperty): string[] {
@@ -77,8 +77,8 @@ export function getDataFromClass(param: DiagramClass): { titles: string[], data:
         getGenerics(param.generics ?? []),
     ].filter((e) => e).join(" ");
 
-    data.push(...param.properties.map(getDataFromProperty));
-    data.push(...param.methods.map(getDataFromMethod));
+    data.push(...param.properties.map((prop) => getDataFromProperty(prop)));
+    data.push(...param.methods.map((meth) => getDataFromMethod(meth)));
 
     return {data, titles: [title]};
 }

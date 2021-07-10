@@ -1,9 +1,9 @@
-import {expect} from "chai";
+import { expect } from "chai";
 import "mocha";
-import {CommandStringParser} from "./command-string-parser";
+import { CommandStringParser } from "./command-string-parser";
 
 describe("Test string parser", () => {
-    it("should parse string values", () => {
+    it("should parseType string values", () => {
         const parser = new CommandStringParser();
         expect(parser.parse("Gabo")).to.deep.eq({result: "Gabo", remains: ""});
         expect(parser.parse("   Gabo")).to.deep.eq({result: "Gabo", remains: ""});
@@ -15,7 +15,7 @@ describe("Test string parser", () => {
         expect(parser.parse("\"Gabo Gabo\"   ")).to.deep.eq({result: "Gabo Gabo", remains: "   "});
         expect(parser.parse("   \"Gabo Gabo\"   ")).to.deep.eq({result: "Gabo Gabo", remains: "   "});
     });
-    it("should parse string values with pattern", () => {
+    it("should parseType string values with pattern", () => {
         const parser = new CommandStringParser(/aB/i);
         expect(parser.parse("Gabo")).to.deep.eq({result: "Gabo", remains: ""});
         expect(parser.parse("   Gabo")).to.deep.eq({result: "Gabo", remains: ""});

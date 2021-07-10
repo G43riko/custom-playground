@@ -2,6 +2,7 @@ import { DiagramAccessModifier } from "./common/diagram-access-modifier";
 import { DiagramElementType } from "./common/diagram-element-type";
 import { DiagramGeneric } from "./common/diagram-generic";
 import { DiagramType } from "./common/diagram-type";
+import { DiagramMethodFactory } from "./diagram-method-factory";
 import { DiagramClass } from "./entity/diagram-class";
 import { DiagramEntity } from "./entity/diagram-entity";
 import { DiagramEntityType } from "./entity/diagram-entity-type";
@@ -126,6 +127,13 @@ export class DiagramEntityFactory<T extends DiagramEntity> {
 
     public addPublicMethod(name: string, returnType: DiagramType, ...parameters: DiagramMethodParameter[]): this {
         return this.addMethod(name, returnType, DiagramAccessModifier.PUBLIC, parameters);
+    }
+
+    public addMethodUsingFactory(name: string, method: (factor: DiagramMethodFactory) => void): this {
+        const factory = new DiagramMethodFactory(name);
+        method(factory);
+
+        return this.addMethodRaw(factory.build());
     }
 
     public addPrivateMethod(name: string, returnType: DiagramType, ...parameters: DiagramMethodParameter[]): this {

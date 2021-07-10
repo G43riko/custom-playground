@@ -22,7 +22,7 @@ describe("Test World context", () => {
             name       : "someProperty",
             access     : DiagramAccessModifier.PUBLIC,
             elementType: DiagramElementType.PROPERTY,
-            // type: DiagramType.Boolean,
+            // value: DiagramType.Boolean,
             type: {
                 name: "GABO",
             },

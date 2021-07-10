@@ -1,9 +1,9 @@
-import {expect} from "chai";
+import { expect } from "chai";
 import "mocha";
-import {CommandTimeParser} from "./command-time-parser";
+import { CommandTimeParser } from "./command-time-parser";
 
 describe("Test time parser", () => {
-    it("should parse time values", () => {
+    it("should parseType time values", () => {
         const parser = new CommandTimeParser();
         expect(parser.parse("123 s")).to.deep.eq({result: {duration: 123, unit: "S"}, remains: ""});
         expect(parser.parse("   123 s")).to.deep.eq({result: {duration: 123, unit: "S"}, remains: ""});

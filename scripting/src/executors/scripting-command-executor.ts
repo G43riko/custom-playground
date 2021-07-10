@@ -1,8 +1,8 @@
-import {ScriptingCommandParamParserResult} from "../parsers/scripting-command-param-parser-result";
+import { ScriptingCommandParamParserResult } from "../parsers/scripting-command-param-parser-result";
 
 /**
- * @template R - Parameter type of {@link execute} function;
- * @template S - Result type of {@link execute} and {@link executeRaw} functions;
+ * @template R - Parameter value of {@link execute} function;
+ * @template S - Result value of {@link execute} and {@link executeRaw} functions;
  */
 export interface ScriptingCommandExecutor<R = void, S = void> {
     /**

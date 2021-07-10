@@ -1,9 +1,9 @@
-import {ScriptingParamType} from "./scripting-param-type";
-import {ScriptingParserDataProvider} from "./scripting-parser-data-provider";
-import {ScriptingCommandParamParserSubResult} from "./parsers/scripting-command-param-parser-sub-result";
-import {ScriptingCommandParamValidator} from "./scripting-command-param-validator";
-import {ScriptingCommandParamParser} from "./parsers/scripting-command-param-parser";
-import {ScriptingValidatorResult} from "./scripting-validator-result";
+import { ScriptingCommandParamParser } from "./parsers/scripting-command-param-parser";
+import { ScriptingCommandParamParserSubResult } from "./parsers/scripting-command-param-parser-sub-result";
+import { ScriptingCommandParamValidator } from "./scripting-command-param-validator";
+import { ScriptingParamType } from "./scripting-param-type";
+import { ScriptingParserDataProvider } from "./scripting-parser-data-provider";
+import { ScriptingValidatorResult } from "./scripting-validator-result";
 
 export class ScriptingCommandParamDataHolder<T = unknown> {
     private constructor(
@@ -19,7 +19,7 @@ export class ScriptingCommandParamDataHolder<T = unknown> {
         const parser = dataHolder.getParserByType<T>(type.type);
 
         if (!parser) {
-            throw new Error("Cannot resolve parser for type " + this);
+            throw new Error("Cannot resolve parser for value " + this);
         }
 
         return new ScriptingCommandParamDataHolder<T>(

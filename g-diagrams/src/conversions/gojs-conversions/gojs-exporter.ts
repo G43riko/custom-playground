@@ -1,82 +1,85 @@
 import * as go from "gojs";
+import { DiagramAccessModifier } from "../../class/common/diagram-access-modifier";
+import { DiagramEntityType } from "../../class/entity/diagram-entity-type";
+import { DiagramLinkType } from "../../model/diagram-link-type";
 
 const $ = go.GraphObject.make;
 
 // show visibility or access as a single character at the beginning of each property or method
-function convertVisibility(v: string): string {
-    switch (v) {
-        case "PUBLIC":
+function convertVisibility(accessModifier: DiagramAccessModifier): string {
+    switch (accessModifier) {
+        case DiagramAccessModifier.PUBLIC:
             return "+";
-        case "PRIVATE":
+        case DiagramAccessModifier.PRIVATE:
             return "-";
-        case "PROTECTED":
+        case DiagramAccessModifier.PROTECTED:
             return "#";
-        case "PACKAGE":
+        case DiagramAccessModifier.PACKAGE:
             return "~";
         default:
-            return v;
+            return accessModifier;
     }
 }
 
-function convertEntityTypeToBGColor(type: string): string {
+function convertEntityTypeToBGColor(type: DiagramEntityType): string {
     switch (type) {
-        case "INTERFACE":
+        case DiagramEntityType.INTERFACE:
             return "mediumpurple";
-        case "ENUM":
+        case DiagramEntityType.ENUM:
             return "palegreen";
         default:
             return "lightyellow";
     }
 }
 
-function convertIsTreeLink(r: string): boolean {
-    switch (r) {
-        case "GENERALIZATION":
-        case "REALIZATION":
+function convertIsTreeLink(linkType: DiagramLinkType): boolean {
+    switch (linkType) {
+        case DiagramLinkType.GENERALIZATION:
+        case DiagramLinkType.REALIZATION:
             return true;
         default:
             return false;
     }
 }
 
-function convertFromArrow(r: string): string {
-    switch (r) {
-        case "GENERALIZATION":
+function convertFromArrow(linkType: DiagramLinkType): string {
+    switch (linkType) {
+        case DiagramLinkType.GENERALIZATION:
             return "";
         default:
             return "";
     }
 }
 
-function convertToArrow(r: string): string {
-    switch (r) {
-        case "GENERALIZATION":
-        case "REALIZATION":
+function convertToArrow(linkType: DiagramLinkType): string {
+    switch (linkType) {
+        case DiagramLinkType.GENERALIZATION:
+        case DiagramLinkType.REALIZATION:
             return "Triangle";
-        case "AGGREGATION":
-        case "COMPOSITION":
+        case DiagramLinkType.AGGREGATION:
+        case DiagramLinkType.COMPOSITION:
             return "StretchedDiamond";
         default:
             return "";
     }
 }
 
-function convertColorFromArrow(r: string): string {
-    switch (r) {
-        case "GENERALIZATION":
-        case "AGGREGATION":
-        case "REALIZATION":
+function convertColorFromArrow(linkType: DiagramLinkType): string {
+    switch (linkType) {
+        case DiagramLinkType.GENERALIZATION:
+        case DiagramLinkType.AGGREGATION:
+        case DiagramLinkType.REALIZATION:
             return "white";
-        case "COMPOSITION":
+        case DiagramLinkType.COMPOSITION:
             return "black";
         default:
             return "";
     }
 }
 
-function convertDashArrayFromArrow(r: string): number[] {
-    switch (r) {
-        case "REALIZATION":
+function convertDashArrayFromArrow(linkType: DiagramLinkType): number[] {
+    switch (linkType) {
+        case DiagramLinkType.REALIZATION:
             return [9, 3];
         default:
             return [];
@@ -120,7 +123,7 @@ export function CreateDiagramInElement(id: string, options: { animation?: boolea
             new go.Binding("text", "name").makeTwoWay(),
             new go.Binding("isUnderline", "scope", (s) => s[0] === "c"),
         ),
-        // property type, if known
+        // property value, if known
         $(
             go.TextBlock,
             "",
@@ -164,7 +167,7 @@ export function CreateDiagramInElement(id: string, options: { animation?: boolea
             new go.Binding("text", "parameters", (parr) =>
                 `(${parr.map((par: { name: string, type: string }) => `${par.name}: ${par.type}`).join(", ")})`),
         ),
-        // method return type, if any
+        // method return value, if any
         $(
             go.TextBlock,
             "",

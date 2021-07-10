@@ -1,9 +1,9 @@
-import {ScriptingCommandParamParser} from "../scripting-command-param-parser";
-import {CommandVectorParser} from "./command-vector-parser";
-import {ScriptingCommandParamParserSubResult} from "../scripting-command-param-parser-sub-result";
+import { ScriptingCommandParamParser } from "../scripting-command-param-parser";
+import { ScriptingCommandParamParserSubResult } from "../scripting-command-param-parser-sub-result";
+import { CommandVectorParser } from "./command-vector-parser";
 
 /**
- * this should probable parse number divided by comma
+ * this should probable parseType number divided by comma
  */
 export class CommandPositionParser implements ScriptingCommandParamParser<{ values: number[], absolute: boolean }> {
     private readonly vectorParser = new CommandVectorParser(this.dimensions, this.isInteger);

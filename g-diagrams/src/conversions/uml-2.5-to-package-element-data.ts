@@ -192,7 +192,7 @@ export class Uml25ToPackageElementData {
                 operation.documentation = documentation.getAttribute("value");
             }
 
-            const type = element.getElementsByTagName("type")[0];
+            const type = element.getElementsByTagName("value")[0];
             if (type) {
                 operation.returnType = type.getAttribute("type");
                 operation.abstract   = Boolean(type.getAttribute("isAbstract"));
@@ -253,7 +253,7 @@ export class Uml25ToPackageElementData {
                 case null:
                     return type ?? "";
                 default:
-                    console.warn("Unknown type ", type);
+                    console.warn("Unknown value ", type);
 
                     return type;
             }
@@ -265,7 +265,7 @@ export class Uml25ToPackageElementData {
                 return nameAttribute;
             }
 
-            if (element.hasAttribute("xmi:type") || element.hasAttribute("geometry")) {
+            if (element.hasAttribute("xmi:value") || element.hasAttribute("geometry")) {
                 return "UNKNOWN";
             }
 
@@ -301,7 +301,7 @@ export class Uml25ToPackageElementData {
                 case "NoteLink":
                     return "noteLink";
                 default:
-                    console.log("Unknown link type ", type);
+                    console.log("Unknown link value ", type);
 
                     return type;
             }
@@ -311,7 +311,7 @@ export class Uml25ToPackageElementData {
             const id                            = element.getAttribute("xmi:idref");
             const result: Nullable<ElementData> = {
                 id,
-                type      : parseXmlType(element.getAttribute("xmi:type")),
+                type      : parseXmlType(element.getAttribute("xmi:value")),
                 name      : getName(element),
                 accessor  : this.parseScope(element.getAttribute("scope")),
                 attributes: this.parseAttributes(Array.from(element.getElementsByTagName("attribute"))),
