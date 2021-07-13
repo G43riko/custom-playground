@@ -16,10 +16,9 @@ import { DiagramLink } from "./diagram-link";
  *      - error on duplicate name or override previous name
  */
 export class DiagramModel {
-    private readonly entityMap                              = new Map<DiagramEntity["name"], DiagramEntity>();
-    private readonly entitiesNames: DiagramEntity["name"][] = [];
-    private readonly customTypes: DiagramType[]             = [];
-    private readonly links: DiagramLink[]                   = []
+    private readonly entityMap                  = new Map<DiagramEntity["name"], DiagramEntity>();
+    private readonly customTypes: DiagramType[] = [];
+    private readonly links: DiagramLink[]       = []
 
     public static getAllRequiredTypesOfDiagramModel(diagramModel: DiagramModel): DiagramType[] {
         const result: DiagramType[] = [];
@@ -98,7 +97,6 @@ export class DiagramModel {
         if (this.entityMap.has(entity.name)) {
             throw new Error(`Entity with name '${entity.name}' already exists`);
         }
-        this.entitiesNames.push(entity.name);
         this.entityMap.set(entity.name, entity);
 
         return entity;
@@ -112,12 +110,7 @@ export class DiagramModel {
         worldContext.defineTypes(...this.customTypes);
 
         // create and add to world context for each entity
-        this.entitiesNames.forEach((entityName) => {
-            const entity = this.entityMap.get(entityName);
-            if (entity) {
-                worldContext.addEntity(entity);
-            }
-        });
+        this.entityMap.forEach((entity) => worldContext.addEntity(entity));
 
         return worldContext.validate();
     }
