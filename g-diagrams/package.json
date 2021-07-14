@@ -6,7 +6,7 @@
     "scripts": {
         "build:demo": "webpack --config webpack.config.js",
         "serve:demo": "webpack server --config webpack.config.js --port 8081 --open",
-        "build:demo:prod": "webpack --mode production --config webpack.config.js",
+        "build:demo:prod": "webpack --mode production --config webpack.config.js --no-watch --output-path ../dist/diagram",
         "build:lib:prod": "webpack --mode production --config webpack-diagram.config.js"
     },
     "dependencies": {
