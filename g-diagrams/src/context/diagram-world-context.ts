@@ -117,10 +117,8 @@ export class DiagramWorldContext extends DiagramContext {
         }
 
         // global classes
-        if (this.hasAnywhere(name)) {
-            return true;
-        }
+        return this.hasAnywhere(name);
 
-        return false;
+
     }
 }

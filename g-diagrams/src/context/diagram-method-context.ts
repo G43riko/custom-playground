@@ -76,11 +76,9 @@ export class DiagramMethodContext extends DiagramGenericContextInstance {
         }
 
         // global classes
-        if (worldContext.hasAnywhere(name)) {
-            return true;
-        }
+        return worldContext.hasAnywhere(name);
 
-        return false;
+
     }
 
 

@@ -1,8 +1,8 @@
 import { editor as MonacoEditor } from "monaco-editor";
 
 export class PlaygroundEditor {
-    private editor?: MonacoEditor.IStandaloneCodeEditor;
-    private editorModel?: MonacoEditor.ITextModel
+    private readonly editor?: MonacoEditor.IStandaloneCodeEditor;
+    private readonly editorModel?: MonacoEditor.ITextModel
 
     public constructor(
         private readonly element: HTMLElement,
