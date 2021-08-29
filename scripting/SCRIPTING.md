@@ -25,6 +25,11 @@ const executor = new CustomExecutor([
 
 executor.executorRow("DEL id1 id2 id3")
 ```
+
+## Demo
+
+GRID
+
 ## List
 
 - set block `{b} {p[]}`

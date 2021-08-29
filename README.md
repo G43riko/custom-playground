@@ -7,6 +7,10 @@ This monorepo contains several packages with tools to simplify typescript develo
 [Face detections](https://g43riko.github.io/custom-playground/face-detection)
 [Face recognition](https://g43riko.github.io/custom-playground/face-recognition)
 
+## [Diagram](g-diagrams)
+
+[Playground](https://g43riko.github.io/custom-playground/diagram)
+
 ## [Dependency injector](dependency-injector#readme)
 
 Custom DI module for resolving dependencies in typescript

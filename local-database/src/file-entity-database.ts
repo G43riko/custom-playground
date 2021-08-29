@@ -52,7 +52,7 @@ export class FileEntityDatabase<Value, Key extends keyof Value = keyof Value> ex
                 const id = item[this.key];
                 const existingItem = data.find((e) => e[this.key] === id);
                 if (existingItem) {
-                    throw new Error("Item with id " + id + " already exists");
+                    throw new Error(`Item with id ${id} already exists`);
                 }
 
                 return this.setData([...data, item]);

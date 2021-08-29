@@ -23,7 +23,7 @@ export class StatefulDataAccessor {
         return this.rawData$.pipe(first());
     }
 
-    public writeFile(data: string): Observable<string> {
+    public writeData(data: string): Observable<string> {
         return this.dataAccessor.writeFile(data).pipe(
             tap(() => this.dataChangedSource$.next()),
         );
